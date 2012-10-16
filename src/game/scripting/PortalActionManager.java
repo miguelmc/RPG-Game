@@ -1,7 +1,7 @@
 package game.scripting;
 
-import game.Main;
 import game.entities.Portal;
+import game.structure.MapManager;
 
 import org.lwjgl.util.Point;
 
@@ -10,12 +10,12 @@ public class PortalActionManager extends AbstractScriptManager{
 	private Portal portal;
 	
 	public int playerFacingDir(){
-		return Main.getMapManager().getCurrentMap().getPlayer().getFacingDir();
+		return getPlayer().getFacingDir();
 	}
 
 	public void setPosition(int x, int y){
-		Main.getMapManager().getCurrentMap().getPlayer().setPosition(x, y);
-		Main.getMapManager().getCurrentMap().centerView();
+		getPlayer().setPosition(x, y);
+		MapManager.getMap().centerView();
 	}
 	
 	public void setPosition(Point pos){
@@ -36,7 +36,7 @@ public class PortalActionManager extends AbstractScriptManager{
 	
 	public void setMap(int id){
 		super.setMap(id, new Point(0, 0));
-		setPosition(Main.getMapManager().getCurrentMap().getPortalByID(getID()).position());
+		setPosition(MapManager.getMap().getPortalByID(getID()).position());
 	}
 	
 	public void setPortal(Portal portal){

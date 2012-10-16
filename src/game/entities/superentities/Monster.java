@@ -113,6 +113,7 @@ public class Monster extends SuperEntity {
 		
 		Util.useFont("Arial", Font.BOLD, 10, Color.white);
 		float xTraslation = width/2-(Util.getTextWidth(getName()))/2;
+		
 		Util.write(getName(), ((getX() - getMap().getOffSet().getX())*Slot.SIZE + xTraslation), (getY() - getMap().getOffSet().getY())*Slot.SIZE - (float)(Slot.SIZE*.3));
 		
 		super.UIRender();
@@ -124,7 +125,6 @@ public class Monster extends SuperEntity {
 			return;
 
 		if (angry) {
-			glColor3f(1f, 0f, 0f);
 			super.render();
 			glColor3f(1f, 1f, 1f);
 		} else {

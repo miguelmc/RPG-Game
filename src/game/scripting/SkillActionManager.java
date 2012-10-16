@@ -1,16 +1,16 @@
 package game.scripting;
 
-import game.Main;
 import game.entities.superentities.Monster;
 import game.entities.superentities.Player;
 import game.features.SkillAttack;
 import game.structure.Map;
+import game.structure.MapManager;
 import game.structure.Slot;
 import game.util.Util;
 
 import org.lwjgl.util.Point;
 
-public class SkillActionManager {
+public class SkillActionManager extends AbstractScriptManager{
 	
 	private SkillAttack activeAttack;
 	private Point origin;
@@ -26,15 +26,14 @@ public class SkillActionManager {
 		for(Point p: location){
 			Point pos = Util.addRelPoints(origin, p, facingDir);
 			if(activeAttack.getSkill().getAttacker() instanceof Player){
-				Map map = Main.getMapManager().getCurrentMap();
+				Map map = MapManager.getMap();
 				Monster monster = map.getMonsterAt(pos);
 				if(monster != null){
-					monster.hit((int)(Main.getMapManager().getCurrentMap().getPlayer().getDamage()*dmg + .5f));
+					monster.hit((int)(getPlayer().getDamage()*dmg + .5f));
 				}
 			}else if(activeAttack.getSkill().getAttacker() instanceof Monster){
-				Player pl = Main.getMapManager().getCurrentMap().getPlayer();
-				if(pl.position().equals(pos))
-					pl.hit((int)(activeAttack.getSkill().getAttacker().getDamage()*dmg + .5f));
+				if(getPlayer().position().equals(pos))
+					getPlayer().hit((int)(activeAttack.getSkill().getAttacker().getDamage()*dmg + .5f));
 			}
 			
 		}
@@ -51,14 +50,14 @@ public class SkillActionManager {
 	public boolean hasMonsterAt(Point p){
 		if(activeAttack.getSkill().getAttacker() instanceof Player){
 			Point pos = Util.addRelPoints(origin, p, facingDir);
-			for(Slot s: Main.getMapManager().getCurrentMap().getAllSlots()){
+			for(Slot s: MapManager.getMap().getAllSlots()){
 				if(s.get(Slot.MONSTER) != null)
 					if(s.get(Slot.MONSTER).position().equals(pos))
 						return true;
 			}
 		}
 		if(activeAttack.getSkill().getAttacker() instanceof Monster)
-			return Main.getMapManager().getCurrentMap().getPlayer().position().equals(Util.addRelPoints(origin, p, facingDir));
+			return getPlayer().position().equals(Util.addRelPoints(origin, p, facingDir));
 		return false;
 	}
 	
@@ -75,6 +74,6 @@ public class SkillActionManager {
 	}
 	
 	public boolean hasObjectAt(Point p){
-		return !Main.getMapManager().getCurrentMap().getStrongEntitiesAt(p).isEmpty();
+		return !MapManager.getMap().getStrongEntitiesAt(p).isEmpty();
 	}
 }

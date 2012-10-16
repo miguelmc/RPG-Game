@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-import game.Main;
+import game.structure.MapManager;
 import game.structure.Slot;
 
 import org.lwjgl.util.Dimension;
@@ -66,7 +66,7 @@ public class SubImage{
 		glEnable(GL_TEXTURE_2D);
 		spriteSheet.bind();
 		glLoadIdentity();
-		glTranslatef(x - Main.getMapManager().getCurrentMap().getOffSet().getX()*Slot.SIZE, y - Main.getMapManager().getCurrentMap().getOffSet().getY()*Slot.SIZE, 0);
+		glTranslatef(x - MapManager.getMap().getOffSet().getX()*Slot.SIZE, y - MapManager.getMap().getOffSet().getY()*Slot.SIZE, 0);
 		glBegin(GL_QUADS);
 			glTexCoord2f(pos.getX()/w, pos.getY()/h);
 			glVertex2f(flips[flipClockWise][0].getX(), flips[flipClockWise][0].getY());

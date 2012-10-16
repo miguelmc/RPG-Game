@@ -36,7 +36,6 @@ import org.newdawn.slick.opengl.TextureLoader;
  * Includes some useful methods for the game.
  * <br><br>
  * 
- * @author Alfredo_Altamirano
  */
 public class Util {
 	
@@ -68,8 +67,6 @@ public class Util {
 	 * @see #write
 	 * @see #getFontHeight
 	 * @see #getTextWidth
-	 * 
-	 * @author Alfredo Altamirano
 	 */
 	@SuppressWarnings("unchecked")
 	public static void useFont(String fontName, int style, int size, Color c){
@@ -123,7 +120,6 @@ public class Util {
 	 * @param y
 	 * 			- Vertical position in pixels to be drawn. (Origin at upper-left corner)
 	 * @see #useFont
-	 * @author Alfredo Altamirano
 	 */
 	public static void write(String text, float x, float y){		
 		currentFont.drawString(x, y, text);
@@ -142,7 +138,6 @@ public class Util {
 	 * @return
 	 * 			- Height in pixels.
 	 * @see #useFont
-	 * @author Alfredo Altamirano
 	 */
 	public static int getFontHeight(){
 		return currentFont.getHeight("Q");
@@ -160,7 +155,6 @@ public class Util {
 	 * @return
 	 * 			- Width in pixels.
 	 * @see #useFont
-	 * @author Alfredo Altamirano
 	 */
 	public static int getTextWidth(String str){
 		return currentFont.getWidth(str);
@@ -186,7 +180,6 @@ public class Util {
 	 * 			- String array of the tokenized text.
 	 * @see #useFont
 	 * @see #getTextWidth
-	 * @author Alfredo Altamirano
 	 */
 	public static String[] tokenizeText(String text, int widthLimit, int maxLines){
 		ArrayList<String> tokens = new ArrayList<String>();
@@ -247,7 +240,6 @@ public class Util {
 	 *             if the file <tt>"res/"+path+".png"</tt> is not found.
 	 * @throws IOException
 	 * @see org.newdawn.slick.opengl.Texture
-	 * @author Alfredo Altamirano
 	 */
 	public static Texture getTexture(String path){
 		try {
@@ -305,7 +297,6 @@ public class Util {
 	 * @param flipY
 	 * 			- TODO
 	 * @see org.newdawn.slick.opengl.Texture
-	 * @author Alfredo Altamirano
 	 */
 	public static void render(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX, int flipY){
 		

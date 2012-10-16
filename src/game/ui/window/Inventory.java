@@ -16,6 +16,7 @@ import game.entities.item.EquipItem;
 import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.features.Stat;
+import game.structure.MapManager;
 import game.structure.Slot;
 import game.util.Util;
 
@@ -31,7 +32,7 @@ import org.newdawn.slick.opengl.Texture;
 
 public class Inventory extends Window{
 
-	List<Item> items = Main.getMapManager().getCurrentMap().getPlayer().getItems();
+	List<Item> items = MapManager.getMap().getPlayer().getItems();
 	private int click = -1;
 	private long timeOfClick = 0L;
 	private boolean itemGrabbed = false;
@@ -95,12 +96,12 @@ public class Inventory extends Window{
 			}else if(getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1) == click && click<=items.size()-1 && click>=0){
 				Item item = items.get(click);
 				if(item instanceof UsableItem){
-					Main.getMapManager().getCurrentMap().getPlayer().useItem(item);
+					MapManager.getMap().getPlayer().useItem(item);
 				}else if(item instanceof EquipItem){
 					EquipItem equip = (EquipItem)item;
-					Main.getMapManager().getCurrentMap().getPlayer().removeEquip(equip.getType());
-					Main.getMapManager().getCurrentMap().getPlayer().addEquip(equip);
-					Main.getMapManager().getCurrentMap().getPlayer().removeItem(item);
+					MapManager.getMap().getPlayer().removeEquip(equip.getType());
+					MapManager.getMap().getPlayer().addEquip(equip);
+					MapManager.getMap().getPlayer().removeItem(item);
 				}
 				click = -1;
 			}
@@ -126,7 +127,7 @@ public class Inventory extends Window{
 			Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX()+7+32*(i%5)+3, getPosition().getY()+30+32*(i/5));
 		}
 		
-		Util.write(Integer.toString(Main.getMapManager().getCurrentMap().getPlayer().getGold()), getPosition().getX() + 37, getPosition().getY() + size.getHeight() - 25);
+		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), getPosition().getX() + 37, getPosition().getY() + size.getHeight() - 25);
 		
 		int mouseHover = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
 		

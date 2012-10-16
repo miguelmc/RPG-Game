@@ -1,16 +1,9 @@
 package game.entities.superentities;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-
+import static game.features.Stat.ATK;
+import static game.features.Stat.MAXHP;
+import static game.features.Stat.MAXMP;
+import static game.features.Stat.STR;
 import game.Main;
 import game.entities.NPC;
 import game.entities.Portal;
@@ -19,16 +12,20 @@ import game.entities.item.EquipItem.EquipType;
 import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.features.Quest;
-import static game.features.Stat.*;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.Point;
-
 import game.structure.Map;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
 import game.util.Util;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.Point;
 
 public class Player extends SuperEntity{
 	
@@ -39,7 +36,7 @@ public class Player extends SuperEntity{
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
-	private static int expReq[], invincibleRenderCounter = 0;
+	private static int invincibleRenderCounter = 0;
 	private long nextAtk = 0L, invincibleTimer = 0L, nextMove = 0L;
 	private boolean invincible = false, invincibleRender = false;
 	
@@ -64,22 +61,6 @@ public class Player extends SuperEntity{
 		stats.put(EXTRA+STR.ID, 0);
 				
 	}
-	
-	public static void initialize(){
-		
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File("data/player/expTable.txt")));
-			expReq = new int[MAX_LEVEL];
-			for(int i=0;i<MAX_LEVEL;i++)
-				expReq[i] = Integer.parseInt(reader.readLine());
-			reader.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("File not found: data/player/expTable.dat");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	public void input(){
 	
@@ -334,7 +315,7 @@ public class Player extends SuperEntity{
 	}
 	
 	public void gainExp(int amount){
-		int expToLevel = expReq[level-1]-exp;
+		int expToLevel = getExpReq()-exp;
 		if(amount >= expToLevel){
 			exp = amount - expToLevel;
 			levelUp();
@@ -373,7 +354,7 @@ public class Player extends SuperEntity{
 	}
 
 	public int getExpReq() {
-		return expReq[level-1];
+		return level*10;
 	}
 	
 	public int getLevel() {
@@ -470,6 +451,10 @@ public class Player extends SuperEntity{
 	
 	public EquipItem getEquip(int type){
 		return equips.get(type);
+	}
+
+	public void stopActions() {
+		
 	}
 	
 }

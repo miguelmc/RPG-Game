@@ -4,16 +4,16 @@ import game.util.Util;
 
 import org.lwjgl.util.Point;
 
+/**
+ * Instance of an object which is invicible and is the building block of an object bigger than 1 tile
+ */
+
 public class Block extends Object {
 
 	public Block() {
 		super(Integer.parseInt("6700", 16));
 		setStrong();
 		setInvisible(true);
-	}
-	
-	public void render(){
-		
 	}
 	
 	public void setPosition(Point p){

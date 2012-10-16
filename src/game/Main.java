@@ -13,7 +13,6 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 import game.entities.Entity;
-import game.structure.Map;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
@@ -27,18 +26,17 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Dimension;
-import org.lwjgl.util.Point;
 
 public class Main {
 	
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
-	private static MapManager mapManager;
 		
 	public Main(){
 		
-		loadConfigurations();
+		loadConfigurations(); //reads game configurations from config xml file
 		
+		//create window
 		try {
 			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM.getHeight()));
 			Display.setTitle(NAME);
@@ -48,16 +46,17 @@ public class Main {
 			System.exit(1); 
 		}
 		
+		//initializes opengl setting and static initialization for game objects
 		init();
 		
 		//Game Loop
 		while(!Display.isCloseRequested()){ // as long as close button is not pressed
 			
-			input();
-			mapManager.update(); // update callback for the current map
+			input(); 
+			MapManager.update(); // updates the current map
 			
 			glClear(GL_COLOR_BUFFER_BIT); // clears the screen
-			mapManager.render(); // render callback for the current map
+			MapManager.render(); // render the active map
 			UserInterface.render(); // renders the interface
 			
 			Display.update(); //update the screen
@@ -80,35 +79,33 @@ public class Main {
     	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable transparency
     	
     	//init Game
-		Entity.initialize();
-		mapManager = new MapManager(new Map(0), new Map(1));
-		mapManager.setMap(0, new Point(4, 5));
-		UserInterface.init();
+		Entity.initialize(); // reads npc names (there's no xml for each npc so all the names are in a single file)
+		
+		MapManager.init(); //creates the maps
+		UserInterface.init(); //loads fonts and textures for windows
 		
 	}
-
+	
 	private void input() {
+		//give input to the map and windows unless the messagebox is active
 		
-		while(Keyboard.next()){
+		while(Keyboard.next()){ // checks for a keyboard event
 			if(MsgBoxManager.isActive()){
 				MsgBoxManager.input();
 			}else{
-				mapManager.input();
+				MapManager.input();
 				Window.input();
 			}
 		}
 		
-		while(Mouse.next()){
+		while(Mouse.next()){ //checks for a mouse event
 			Window.mouseInput();
 		}
 		
 	}
 	
-	public static MapManager getMapManager(){
-		return mapManager;
-	}
-	
 	private void loadConfigurations() {
+
 		XMLParser parser = new XMLParser("game_config.xml");
 		
 		NAME = parser.getAttribute("GAME", "name");

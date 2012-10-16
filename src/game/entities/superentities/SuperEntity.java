@@ -23,13 +23,13 @@ public abstract class SuperEntity extends Entity {
 	public SuperEntity(int id) {
 		super(id);
 		//TODO set superEntity to have 3 textures always
-		if(this.getClass() == Player.class){
+		if(this instanceof Player){
 			textures[0] = Util.getTexture("player/" + hexID() + "/back.png");
 			textures[1] = Util.getTexture("player/" + hexID() + "/side.png");
 			textures[2] = Util.getTexture("player/" + hexID() + "/front.png");
 			textures[3] = textures[1];
 			setTexture(textures[DOWN]);
-		}else if(this.getClass() == Monster.class){
+		}else if(this instanceof Monster){
 			textures[0] = Util.getTexture("monster/" + hexID() + "/texture.png");
 			textures[1] = Util.getTexture("monster/" + hexID() + "/texture.png");
 			textures[2] = Util.getTexture("monster/" + hexID() + "/texture.png");
@@ -189,5 +189,11 @@ public abstract class SuperEntity extends Entity {
 
 	public void setMaxHP(int maxHP) {
 		this.maxHP = maxHP;
+	}
+	
+	public void stopAllActions() {
+		for(Skill skill: skills){
+			skill.stopAll();
+		}
 	}
 }

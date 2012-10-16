@@ -1,6 +1,5 @@
 package game.structure;
 
-import game.Main;
 
 public abstract class GameObject {
 
@@ -38,11 +37,10 @@ public abstract class GameObject {
 	}
 	
 	public static Map getMap(){
-		return Main.getMapManager().getCurrentMap();
+		return MapManager.getMap();
 	}
 	
 	public boolean isEntity(){
-		//TODO not tested
 		return (id() & 0x2000) == 0x2000;
 	}
 	

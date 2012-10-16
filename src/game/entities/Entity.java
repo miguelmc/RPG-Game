@@ -4,7 +4,6 @@ import game.entities.item.EquipItem;
 import game.entities.item.EtcItem;
 import game.entities.item.UsableItem;
 import game.entities.superentities.Monster;
-import game.entities.superentities.Player;
 import game.structure.GameObject;
 import game.util.Util;
 
@@ -53,7 +52,8 @@ public abstract class Entity extends GameObject{
 	}
 
 	public void render(){
-		Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffSet(), renderSize());
+		if(!isInvisible())
+			Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffSet(), renderSize());
 	}
 	
 	public void midRender(){}
@@ -102,7 +102,6 @@ public abstract class Entity extends GameObject{
 
 	public static void initialize() {
 		NPC.initialize();
-		Player.initialize();
 	}
 	
 	protected void setStrong(){

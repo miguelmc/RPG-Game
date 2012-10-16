@@ -1,17 +1,20 @@
 package game.ui;
 
-import static org.lwjgl.opengl.GL11.*;
-
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
 import game.entities.superentities.Player;
 import game.features.Stat;
+import game.structure.MapManager;
 import game.ui.window.Window;
+import game.util.Util;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
-
-import game.util.Util;
 
 public class UserInterface {
 
@@ -36,7 +39,7 @@ public class UserInterface {
 		
 		//HP BAR
 		int width = 128;
-		int limit = (int)(width*Main.getMapManager().getCurrentMap().getPlayer().getHP()/Main.getMapManager().getCurrentMap().getPlayer().getStat(Player.TOTAL+Stat.MAXHP.ID));
+		int limit = (int)(width*MapManager.getMap().getPlayer().getHP()/MapManager.getMap().getPlayer().getStat(Player.TOTAL+Stat.MAXHP.ID));
 		glColor4f(1f, 0f, 0f, .6f);
 		glBegin(GL_QUADS);
 			glVertex2f(10, 10);
@@ -54,7 +57,7 @@ public class UserInterface {
 		glColor4f(0f, 0f, 0f, 1f);
 		
 		//MP BAR
-		limit = (int)(width*Main.getMapManager().getCurrentMap().getPlayer().getMP()/Main.getMapManager().getCurrentMap().getPlayer().getStat(Player.TOTAL+Stat.MAXMP.ID));
+		limit = (int)(width*MapManager.getMap().getPlayer().getMP()/MapManager.getMap().getPlayer().getStat(Player.TOTAL+Stat.MAXMP.ID));
 		glColor4f(0f, 0f, 1f, .6f);
 		glBegin(GL_QUADS);
 			glVertex2f(200, 10);
@@ -72,7 +75,7 @@ public class UserInterface {
 		glColor4f(0f, 0f, 0f, 1f);
 		
 		//EXP BAR
-		limit = (int)(width*Main.getMapManager().getCurrentMap().getPlayer().getExp()/Main.getMapManager().getCurrentMap().getPlayer().getExpReq());
+		limit = (int)(width*MapManager.getMap().getPlayer().getExp()/MapManager.getMap().getPlayer().getExpReq());
 		glColor4f(1f, .5f, 0f, .6f);
 		glBegin(GL_QUADS);
 			glVertex2f(390, 10);
@@ -90,8 +93,8 @@ public class UserInterface {
 		glColor4f(0f, 0f, 0f, 1f);
 		
 		Util.useFont("Courier New",	Font.BOLD, 28, Color.white);
-		Util.write(Main.getMapManager().getCurrentMap().getName(), 10, 40);
-		Util.write(Integer.toString(Main.getMapManager().getCurrentMap().getPlayer().getLevel()), (float)(Main.DIM.getWidth() - 30), 5f);
+		Util.write(MapManager.getMap().getName(), 10, 40);
+		Util.write(Integer.toString(MapManager.getMap().getPlayer().getLevel()), (float)(Main.DIM.getWidth() - 30), 5f);
 				
 		if(MsgBoxManager.isActive())
 			MsgBoxManager.render();

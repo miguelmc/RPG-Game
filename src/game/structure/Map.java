@@ -26,15 +26,14 @@ import org.newdawn.slick.opengl.Texture;
 public class Map extends GameObject{
 	
 	private String NAME;
-	private Point offset = new Point(0, 0);
+	private Point offset = new Point(0, 0); //for rendering purposes
 	private Dimension size = new Dimension();
 	private Player player;
 	private Slot[][] matrix;
-	private TextureManager textureManager = new TextureManager();
+	private TextureManager textureManager = new TextureManager(); //holds all textures used by the map
 	private List<Spawner> spawners = new ArrayList<Spawner>();
 	
-	
-	public final static int VIEW_LIMIT = 4;
+	public final static int VIEW_LIMIT = 4; // Tiles away from the side to move the camera
 	
 	public Map(int id){
 		this(id, null);
@@ -47,8 +46,8 @@ public class Map extends GameObject{
 	}
 	
 	private void loadTextures(TextureManager prevTexManager) {
+		//loads all texture of the map, recycle some from the previous map
 		
-		//TODO load items of monsters
 		//TODO recycle equipped items, and inventory
 		
 		List<Slot> slots = getAllSlots();
@@ -135,7 +134,7 @@ public class Map extends GameObject{
 				Point position = new Point(Integer.parseInt(data.get("x")), Integer.parseInt(data.get("y")));
 				add(Entity.createEntity(Integer.parseInt(data.get("id"), 16)), position);
 				if(xmlElement.equals("Monsters")){
-					spawners.add(new Spawner((Monster) get(position).get(Slot.MONSTER), 5000));
+					spawners.add(new Spawner((Monster) get(position).get(Slot.MONSTER), 2000));
 				}
 			}
 		}	
@@ -158,7 +157,7 @@ public class Map extends GameObject{
 	
 	public void render(){
 		
-		//Do not render slot by slot, but by entity type
+		//Do not render slot by slot, but by entity type (i.e. first all tiles, then all items, etc)
 		for(int i=0; i<7; i++){
 			for(Slot s: getAllSlots()){
 				Entity entity = s.get(i);
@@ -185,10 +184,26 @@ public class Map extends GameObject{
 		
 	}
 	
-	public void add(Entity entity, Point position){
+	/**
+	 * 
+	 * <br>
+	 * <b>add</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void add(Entity entity, Point position) </tt>
+	 * </p>
+	 * Adds the entity to the slot in the position pos in the map.
+	 * <br><br>
+	 * @param entity
+	 * 			- The entity to add to the map.
+	 * @param position
+	 * 			- The position in the map to which the entity will be added.
+	 * @see game.entities.Entity.#setPosition;
+	 */
+	public void add(Entity entity, Point pos){
 				
-		entity.modifyPos(new Point(position)); // new Point to prevent it from being modified				
-		get(position).set(entity);
+		entity.modifyPos(new Point(pos)); // new Point to prevent it from being modified				
+		get(pos).set(entity);
 		
 		if(entity instanceof Object){
 			for(Block block: ((Object)entity).getBlocks()){
@@ -197,12 +212,29 @@ public class Map extends GameObject{
 		}
 				
 		if(entity instanceof Player){
-			player = (Player)entity;
-			centerView();
+			player = (Player)entity; //save a reference to the player
+			centerView(); // center the view to the player
 		}
 				
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>moveView</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void moveView(int horizontal, int vertical) </tt>
+	 * </p>
+	 * Moves the camera in the map.
+	 * <br><br>
+	 * @param horizontal
+	 * 			- The number of tiles to move horizontally.
+	 * @param vertical
+	 * 			- The number of tiles to move vertically.
+	 * @see #centerView
+	 * @see #resetCamera
+	 */
 	public void moveView(int horizontal, int vertical){
 		if(getSize().getWidth() > Main.GRIDSIZE.getWidth())
 			offset.setX(offset.getX() + horizontal);

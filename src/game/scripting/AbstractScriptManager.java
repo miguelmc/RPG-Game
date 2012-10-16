@@ -1,51 +1,55 @@
 package game.scripting;
 
-import org.lwjgl.util.Point;
-
-import game.Main;
 import game.entities.superentities.Player;
 import game.features.Stat;
+import game.structure.MapManager;
+
+import org.lwjgl.util.Point;
 
 public abstract class AbstractScriptManager {
-
+	
 	public void setHP(int hp){
-		Main.getMapManager().getCurrentMap().getPlayer().setHP(hp);
+		getPlayer().setHP(hp);
 	}
 	
 	public int getHP(){
-		return Main.getMapManager().getCurrentMap().getPlayer().getHP();
+		return getPlayer().getHP();
 	}
 	
 	public int getMaxHP(){
-		return Main.getMapManager().getCurrentMap().getPlayer().getStat(Player.TOTAL+Stat.MAXHP.ID);
+		return getPlayer().getStat(Player.TOTAL+Stat.MAXHP.ID);
 	}
 	
 	public void setMP(int mp){
-		Main.getMapManager().getCurrentMap().getPlayer().setMP(mp);
+		getPlayer().setMP(mp);
 	}
 	
 	public int getMP(){
-		return Main.getMapManager().getCurrentMap().getPlayer().getMP();
+		return getPlayer().getMP();
 	}
 	
 	public int getMaxMP(){
-		return Main.getMapManager().getCurrentMap().getPlayer().getStat(Player.TOTAL+Stat.MAXMP.ID);
+		return getPlayer().getStat(Player.TOTAL+Stat.MAXMP.ID);
 	}
 	
 	public void setMap(int id, Point p){
-		Main.getMapManager().setMap(id, p);
+		MapManager.setMap(id, p);
 	}
 	
 	public int getMapID(){
-		return Main.getMapManager().getCurrentMap().id();
+		return MapManager.getMap().id();
 	}
 	
 	public String getMapName(){
-		return Main.getMapManager().getCurrentMap().getName();
+		return MapManager.getMap().getName();
 	}
 	
 	public void gainGold(int amount){
-		Main.getMapManager().getCurrentMap().getPlayer().gainGold(amount);
+		getPlayer().gainGold(amount);
+	}
+	
+	protected Player getPlayer(){
+		return MapManager.getMap().getPlayer();
 	}
 	
 }

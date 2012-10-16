@@ -2,59 +2,63 @@ package game.structure;
 
 import game.entities.superentities.Player;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.lwjgl.util.Point;
 
-
+/**
+ * Static class used to access and set the current map.
+ * Updates, renders and gives input events to the current map.
+ */
 public class MapManager{
 
-	private Set<Map> maps = new HashSet<Map>();
-	private Map currentMap;
+	private static Set<Map> maps = new HashSet<Map>();
+	private static Map currentMap;
 	
-	public MapManager(Map... maps) {
-		this.maps.addAll(Arrays.asList(maps));
+	public static void init() {
+		//TODO read and create all maps and set current map based on the game config file
+		maps.add(new Map(0));
+		maps.add(new Map(1));
+		setMap(0, new Point(4, 6));
 	}
 
-	public void setMap(int id, Point playerPos){
-		
+	public static void setMap(int id, Point playerPos){
+		//TODO each map should have a spawn point
 		
 		Player player;
 		Point spawnPoint = playerPos;
 		
-		if(getCurrentMap() == null){
+		if(currentMap == null){ // if this is the starting map, create player
 			player = new Player(Integer.parseInt("2600",16), spawnPoint);
-		}else{
-			player = getCurrentMap().getPlayer();
-			getCurrentMap().removePlayer();
-			getCurrentMap().resetCamera();
+		}else{ // else retrieve player from previous map
+			player = currentMap.getPlayer();
+			player.stopAllActions();
+			currentMap.removePlayer();
+			currentMap.resetCamera();
 		}
 				
 		for(Map map: maps){
-			if(map.id() == id){
-				currentMap = map;
-			}
+			if(map.id() == id) currentMap = map;
 		}
 		
 		currentMap.add(player, spawnPoint);
 				
 	}
 	
-	public void input(){
+	public static void input(){
 		currentMap.input();
 	}
 	
-	public void update(){
+	public static void update(){
 		currentMap.update();
 	}
 	
-	public void render(){
+	public static void render(){
 		currentMap.render();
 	}
 	
-	public Map getCurrentMap(){
+	public static Map getMap(){
 		return currentMap;
 	}
 	

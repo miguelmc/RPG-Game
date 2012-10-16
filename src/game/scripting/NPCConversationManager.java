@@ -1,6 +1,5 @@
 package game.scripting;
 
-import game.Main;
 import game.features.Quest;
 import game.ui.MsgBoxManager;
 
@@ -35,35 +34,35 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 	
 	public boolean isQuestAvailable(int id){
-		if(Quest.getReqLevel(id) <= Main.getMapManager().getCurrentMap().getPlayer().getLevel()){
+		if(Quest.getReqLevel(id) <= getPlayer().getLevel()){
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean isQuestComplete(int id){
-		if(Main.getMapManager().getCurrentMap().getPlayer().hasQuest(id)){
-			return Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).isCompleted() && !Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).isTurnedIn();
+		if(getPlayer().hasQuest(id)){
+			return getPlayer().getQuest(id).isCompleted() && !getPlayer().getQuest(id).isTurnedIn();
 		}
 		return false;
 	}
 	
 	public boolean isQuestInProgress(int id){
-		if(Main.getMapManager().getCurrentMap().getPlayer().hasQuest(id)){
-			return !Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).isTurnedIn();
+		if(getPlayer().hasQuest(id)){
+			return !getPlayer().getQuest(id).isTurnedIn();
 		}
 		return false;
 	}
 	
 	public boolean isQuestTurnedIn(int id){
-		if(Main.getMapManager().getCurrentMap().getPlayer().hasQuest(id))
-			return Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).isTurnedIn();
+		if(getPlayer().hasQuest(id))
+			return getPlayer().getQuest(id).isTurnedIn();
 		return false;
 	}
 	
 	public void turnQuestIn(int id){
-		if(Main.getMapManager().getCurrentMap().getPlayer().hasQuest(id) && Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).isCompleted()){
-			Main.getMapManager().getCurrentMap().getPlayer().getQuest(id).turnIn();
+		if(getPlayer().hasQuest(id) && getPlayer().getQuest(id).isCompleted()){
+			getPlayer().getQuest(id).turnIn();
 		}
 	}
 	

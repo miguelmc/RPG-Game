@@ -9,7 +9,7 @@ import org.lwjgl.util.Point;
 
 public class Object extends Entity {
 	
-	List<Block> blocks = new ArrayList<Block>();
+	private List<Block> blocks = new ArrayList<Block>();
 	
 	public Object(int id) {
 		super(id);

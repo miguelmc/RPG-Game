@@ -1,6 +1,6 @@
 package game.entities.superentities;
 
-import game.Main;
+import game.structure.MapManager;
 
 import org.lwjgl.util.Point;
 
@@ -32,7 +32,7 @@ public class Spawner{
 	}
 	
 	private void spawn(){
-		if(Main.getMapManager().getCurrentMap().getStrongEntitiesAt(position).isEmpty()){
+		if(MapManager.getMap().getStrongEntitiesAt(position).isEmpty()){
 			Monster monster = new Monster(id);
 			monster.setPosition(position);
 			currentMonster = monster;
