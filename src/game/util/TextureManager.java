@@ -8,7 +8,7 @@ import org.newdawn.slick.opengl.Texture;
 
 public class TextureManager {
 
-	private java.util.Map<Integer, Texture> mapTextures = new HashMap<Integer, Texture>();
+	private java.util.Map<Integer, Texture> textures = new HashMap<Integer, Texture>();
 	
 	public void add(int id){
 				
@@ -19,7 +19,7 @@ public class TextureManager {
 	}
 
 	public Texture get(int id){
-		return mapTextures.get(id);
+		return textures.get(id);
 	}
 	
 	public void add(int id, String path){
@@ -27,12 +27,16 @@ public class TextureManager {
 		if(get(id) != null)
 			return;
 		
-		mapTextures.put(id, Util.getTexture(path));
+		textures.put(id, Util.getTexture(path));
 		
 	}
 	
 	public void recycle(int id, Texture texture){
-		mapTextures.put(id, texture);
+		textures.put(id, texture);
+	}
+	
+	public String toString(){
+		return textures.toString();
 	}
 	
 }

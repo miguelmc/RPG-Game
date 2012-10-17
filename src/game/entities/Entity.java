@@ -25,7 +25,7 @@ public abstract class Entity extends GameObject{
 	}
 	
 	public static Entity createEntity(int id){
-		
+		//static constructor
 		EntityType type = EntityType.getType(id);
 		
 		switch(type){
@@ -61,7 +61,7 @@ public abstract class Entity extends GameObject{
 	public void update(){}
 	
 	public void render(int x, int y){
-		Util.render(texture, new Point(0, 0), new Point(x, y), renderSize);
+		Util.render(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
 	}
 	
 	public Point position(){

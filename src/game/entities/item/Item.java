@@ -2,7 +2,6 @@ package game.entities.item;
 
 import game.entities.Entity;
 import game.entities.EntityType;
-import game.structure.Slot;
 import game.util.XMLParser;
 
 import java.util.List;
@@ -60,8 +59,7 @@ public abstract class Item extends Entity{
 	public void setPosition(Point pos){
 		if(position() != null){
 			
-			Bundle bundle = (Bundle) getMap().get(position()).get(Slot.ITEMS);
-			List<Item> items = bundle.getItems();
+			List<Item> items = getMap().get(position()).getItems();
 			
 			for(ListIterator<Item> l = items.listIterator(); l.hasNext();){
 				if(l.next().equals(this))
@@ -69,7 +67,7 @@ public abstract class Item extends Entity{
 			}
 		}
 		
-		((Bundle) getMap().get(pos).get(Slot.ITEMS)).add(this);
+		getMap().get(pos).addItem(this);
 		modifyPos(new Point(pos));
 	}
 	

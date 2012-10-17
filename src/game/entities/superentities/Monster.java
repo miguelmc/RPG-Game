@@ -30,7 +30,7 @@ public class Monster extends SuperEntity {
 
 	// override setPosition so that it checks if spawnPoint is null and initializes it
 	
-	private int exp, movePeriod, moveTimer = 0;
+	private int exp, movePeriod, moveTimer = 0, hp, maxHP;
 	private String name;
 	private boolean angry = false, dead = false, respawn;
 	//TODO chance item and chance to a map
@@ -286,5 +286,24 @@ public class Monster extends SuperEntity {
 	public List<Integer> getDropsID() {
 		return new ArrayList<Integer>(dropList.keySet());
 	}
+	
+	public int getHP() {
+		return hp;
+	}
+
+	public void setHP(int hp) {
+		this.hp = hp;
+		if(this.hp > maxHP)
+			this.hp = maxHP;
+	}
+
+	public int getMaxHP() {
+		return maxHP;
+	}
+
+	public void setMaxHP(int maxHP) {
+		this.maxHP = maxHP;
+	}
+	
 	
 }

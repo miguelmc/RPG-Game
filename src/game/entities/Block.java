@@ -10,10 +10,13 @@ import org.lwjgl.util.Point;
 
 public class Block extends Object {
 
-	public Block() {
+	Object parent;
+	
+	public Block(Object parent) {
 		super(Integer.parseInt("6700", 16));
 		setStrong();
 		setInvisible(true);
+		this.parent = parent;
 	}
 	
 	public void setPosition(Point p){
@@ -28,6 +31,10 @@ public class Block extends Object {
 		for(Block block: getBlocks()){
 			block.setPosition(Util.pointArithmetic(1, block.position(), difference));
 		}
+	}
+	
+	public Object getParent(){
+		return parent;
 	}
 	
 }

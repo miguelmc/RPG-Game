@@ -13,7 +13,7 @@ import org.newdawn.slick.opengl.Texture;
 
 public abstract class SuperEntity extends Entity {
 
-	private int damage, facing = DOWN, hp, maxHP;
+	private int damage, facing = DOWN;
 	private ArrayList<Skill> skills = new ArrayList<Skill>();
 	private ArrayList<Integer> damages = new ArrayList<Integer>();
 	private ArrayList<Long> damageTime = new ArrayList<Long>();
@@ -135,8 +135,8 @@ public abstract class SuperEntity extends Entity {
 		for(Skill s: skills)
 			s.stopAll();
 		
-		if(!(this instanceof Player)){
-			getMap().get(position()).remove(this);
+		if(!(this instanceof Player)){ //TODO  handle player dead
+			getMap().get(position()).removeStrongEntity();
 		}
 	}	
 	
@@ -175,25 +175,12 @@ public abstract class SuperEntity extends Entity {
 		facing = dir;
 	}
 	
-	public int getHP() {
-		return hp;
-	}
-
-	public void setHP(int hp) {
-		this.hp = hp;
-	}
-
-	public int getMaxHP() {
-		return maxHP;
-	}
-
-	public void setMaxHP(int maxHP) {
-		this.maxHP = maxHP;
-	}
-	
 	public void stopAllActions() {
 		for(Skill skill: skills){
 			skill.stopAll();
 		}
 	}
+	
+	public abstract int getHP();
+	public abstract void setHP(int hp);
 }

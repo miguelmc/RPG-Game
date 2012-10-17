@@ -16,10 +16,10 @@ import game.structure.Map;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
+import game.util.Timer;
 import game.util.Util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -31,22 +31,21 @@ public class Player extends SuperEntity{
 	
 	public static final int INV_LIMIT = 30, MAX_LEVEL = 8, BASE = 0x10, EXTRA = 0x20,
 			TOTAL = 0x30, HELMET = 0, TOPWEAR = 1, BOTTOMWEAR = 2, SHOES = 3, WEAPON = 4;
+	private static final int HP_REGEN = 5;
 	private int level = 1, exp = 0, gold = 0, mp;
-	private java.util.Map<Integer, Integer> stats = new HashMap<Integer, Integer>();
+	private volatile int hp;
+	private volatile java.util.Map<Integer, Integer> stats = new HashMap<Integer, Integer>();
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
 	private static int invincibleRenderCounter = 0;
-	private long nextAtk = 0L, invincibleTimer = 0L, nextMove = 0L;
+	private long nextAtk = 0, invincibleTimer = 0, nextMove = 0;
 	private boolean invincible = false, invincibleRender = false;
 	
 	public Player(int id, Point pos) {
 		super(id);
 		setStrong();
 		addSkill(1792);
-		
-		setHP(100);
-		setMP(100);
 				
 		//TODO player file with base stats, stats per level, damage formula parameters, etc.
 		
@@ -60,6 +59,23 @@ public class Player extends SuperEntity{
 		stats.put(EXTRA+ATK.ID, 0);
 		stats.put(EXTRA+STR.ID, 0);
 				
+		setHP(getStat(TOTAL+MAXHP.ID));
+		setMP(getStat(TOTAL+MAXMP.ID));
+		
+		try {
+			System.out.println();
+			Timer timer = new Timer(this, this.getClass().getMethod("regen", new Class<?>[0]), 5000);
+			timer.start();
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			e1.printStackTrace();
+		}
+				
+	}
+	
+	public void regen(){
+		setHP(getHP() + HP_REGEN);
 	}
 	
 	public void input(){
@@ -68,8 +84,9 @@ public class Player extends SuperEntity{
 			switch (Keyboard.getEventKey()) {
 			case Keyboard.KEY_M:
 				for(Slot s: getMap().getAllSlots()){
-					if(s.get(Slot.MONSTER) != null){
-						((Monster) s.get(Slot.MONSTER)).die();
+					Monster monster = s.getMonster();
+					if(monster != null){
+						monster.die();
 						break;
 					}
 				}
@@ -81,7 +98,7 @@ public class Player extends SuperEntity{
 				attack(1792);
 				break;
 			case Keyboard.KEY_X:
-				Portal portal = getMap().getPortalAt(position());
+				Portal portal = getMap().get(position()).getPortal();
 				if(portal != null){
 					portal.run();
 				}
@@ -144,8 +161,7 @@ public class Player extends SuperEntity{
 		if(moveCamera)
 			getMap().moveView(getX() - oldPos.getX(), getY() - oldPos.getY());
 		
-		List<Item> items = getMap().getItemsAt(position()).getItems();
-		items.removeAll(Collections.singleton(null));
+		List<Item> items = getMap().get(position()).getItems();
 		
 		if(!items.isEmpty()){
 			for(ListIterator<Item> l = items.listIterator(); l.hasNext();){
@@ -159,9 +175,8 @@ public class Player extends SuperEntity{
 	private void action(Point target){
 		if(!getMap().hasTileAt(target))
 			return;
-		NPC npc = getMap().getNpcAt(target);
-		List<Item> items = getMap().getItemsAt(target).getItems();
-		items.removeAll(Collections.singleton(null));
+		NPC npc = getMap().get(target).getNPC();
+		List<Item> items = getMap().get(target).getItems();
 		if (npc != null) {
 			npc.run();
 		}else if (!items.isEmpty()) {
@@ -331,6 +346,10 @@ public class Player extends SuperEntity{
 		raiseStat(BASE+ATK.ID, 2);
 		level++;
 		UserInterface.sendNotification("LEVEL UP! You are now level " + getLevel());
+		stats.put(BASE + MAXHP.ID, getStat(BASE + MAXHP.ID) + 5);
+		stats.put(BASE + MAXMP.ID, getStat(BASE + MAXMP.ID) + 5);
+		setHP(getStat(TOTAL + MAXHP.ID));
+		setMP(getStat(TOTAL + MAXHP.ID));
 	}
 
 	public void useMP(int amount){
@@ -453,8 +472,14 @@ public class Player extends SuperEntity{
 		return equips.get(type);
 	}
 
-	public void stopActions() {
-		
+	public void setHP(int hp){
+		this.hp = hp;
+		if(getHP() > getStat(TOTAL+MAXHP.ID))
+			setHP(getStat(TOTAL+MAXHP.ID));
+	}
+	
+	public int getHP(){
+		return hp;
 	}
 	
 }

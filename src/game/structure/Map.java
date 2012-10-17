@@ -3,11 +3,9 @@ package game.structure;
 import game.Main;
 import game.entities.Block;
 import game.entities.Entity;
-import game.entities.NPC;
 import game.entities.Object;
 import game.entities.Portal;
 import game.entities.Tile;
-import game.entities.item.Bundle;
 import game.entities.superentities.Monster;
 import game.entities.superentities.Player;
 import game.entities.superentities.Spawner;
@@ -52,22 +50,22 @@ public class Map extends GameObject{
 		
 		List<Slot> slots = getAllSlots();
 		
-		for(Slot slot: slots){
-			List<Entity> entities = slot.getAll();
-			for(Entity entity: entities){
+		for(Slot slot: slots){						
+			for(Entity entity: slot.getAll()){
 				if(prevTexManager != null){
 					Texture tex = prevTexManager.get(entity.id());
 					if(tex != null){
 						textureManager.recycle(entity.id(), tex);
 					}
 				}else{
-					if(!entity.isInvisible())
+					if(!entity.isInvisible()){
 						textureManager.add(entity.id());
+					}
 				}
 				entity.setTexture(textureManager.get(entity.id()));
 			}
 			
-			Monster monster = (Monster) slot.get(Slot.MONSTER);
+			Monster monster = slot.getMonster();
 			List<Integer> monsterDrops = new ArrayList<Integer>();
 			if(monster != null){
 				monsterDrops.addAll(monster.getDropsID());
@@ -85,7 +83,7 @@ public class Map extends GameObject{
 			}
 			
 		}
-		
+						
 	}
 		
 	private void parseMap() {
@@ -97,7 +95,8 @@ public class Map extends GameObject{
 		size.setWidth(Integer.parseInt(parser.getAttribute("Map", "width")));
 		size.setHeight(Integer.parseInt(parser.getAttribute("Map", "height")));
 		
-		// init matrix
+		
+		// initialize matrix
 		matrix = new Slot[size.getWidth()][size.getHeight()];
 		for(int i=0; i<matrix.length; i++){
 			for(int j=0; j<matrix[0].length; j++){
@@ -120,8 +119,7 @@ public class Map extends GameObject{
 		for(int i=0; i<size.getHeight(); i++){
 			for(int j=0; j<size.getWidth(); j++){
 				Tile tile = new Tile(tileQueue.poll());
-				matrix[j][i].set(tile);
-				tile.modifyPos(new Point(j, i));
+				add(tile, new Point(j, i));
 			}
 		}
 		
@@ -134,17 +132,19 @@ public class Map extends GameObject{
 				Point position = new Point(Integer.parseInt(data.get("x")), Integer.parseInt(data.get("y")));
 				add(Entity.createEntity(Integer.parseInt(data.get("id"), 16)), position);
 				if(xmlElement.equals("Monsters")){
-					spawners.add(new Spawner((Monster) get(position).get(Slot.MONSTER), 2000));
+					spawners.add(new Spawner(get(position).getMonster(), 2000));
 				}
 			}
 		}	
 	}
 	
-	public void input() {
+	public void input()
+	{
 		getPlayer().input();
 	}
 	
-	public void update(){
+	public void update()
+	{
 		for(Slot s: getAllSlots()){
 			s.update();
 		}
@@ -155,33 +155,17 @@ public class Map extends GameObject{
 		
 	}
 	
-	public void render(){
-		
+	public void render()
+	{
 		//Do not render slot by slot, but by entity type (i.e. first all tiles, then all items, etc)
-		for(int i=0; i<7; i++){
-			for(Slot s: getAllSlots()){
-				Entity entity = s.get(i);
-				if(entity != null)
-					entity.render();
+		for(int j=0; j<3; j++)
+		{
+			for(int i=0; i<5; i++)
+			{
+				for(Slot s: getAllSlots())
+					s.render(i, j);
 			}
 		}
-
-		for(int i=0; i<7; i++){
-			for(Slot s: getAllSlots()){
-				Entity entity = s.get(i);
-				if(entity != null)
-					entity.midRender();
-			}
-		}
-		
-		for(int i=0; i<7; i++){
-			for(Slot s: getAllSlots()){
-				Entity entity = s.get(i);
-				if(entity != null)
-					entity.UIRender();
-			}
-		}
-		
 	}
 	
 	/**
@@ -202,10 +186,10 @@ public class Map extends GameObject{
 	 */
 	public void add(Entity entity, Point pos){
 				
-		entity.modifyPos(new Point(pos)); // new Point to prevent it from being modified				
+		entity.modifyPos(new Point(pos));			
 		get(pos).set(entity);
 		
-		if(entity instanceof Object){
+		if(entity instanceof Object && !entity.isStrong()){
 			for(Block block: ((Object)entity).getBlocks()){
 				add(block, block.position());
 			}
@@ -248,36 +232,92 @@ public class Map extends GameObject{
 	
 	public void removePlayer(){
 		if(hasPlayer()){
-			get(getPlayer().position()).remove(Slot.PLAYER);
+			get(getPlayer().position()).remove(getPlayer());
 			player = null;
 		}
 	}
 	
-	public boolean isPointInMap(Point p) {
-		return p.getX() < size.getWidth() && p.getY() < size.getHeight() && p.getX() >= 0 && p.getY() >= 0; 
+	/**
+	 * 
+	 * <br>
+	 * <b>isPointInMap</b>
+	 * <br>
+	 * <p>
+	 * <tt>public boolean isPointInMap(Point p)</tt>
+	 * </p>
+	 * Returns true if the point is inside <tt> this </tt> map.
+	 * <br>
+	 */
+	public boolean isPointInMap(Point pos) {
+		return pos.getX() < size.getWidth() && pos.getY() < size.getHeight() && pos.getX() >= 0 && pos.getY() >= 0; 
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>isPointInGrid</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static boolean isPointInGrid(Point p)</tt>
+	 * </p>
+	 * Return true if the point is inside the grid (the size of the window).
+	 * <br><br>
+	 */
 	public static boolean isPointInGrid(Point p){
 		return p.getX()>=0 && p.getY()>=0 && p.getX()<Main.GRIDSIZE.getWidth() && p.getY()<Main.GRIDSIZE.getHeight();
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>resetCamera</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void resetCamera()</tt>
+	 * </p>
+	 * Moves the camera to the upper left position of the map.
+	 * <br><br>
+	 */
 	public void resetCamera() {
 		moveView(-offset.getX(), -offset.getY());
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>centerView</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void centerView()</tt>
+	 * </p>
+	 * Moves the camera so the player is within its range.
+	 * <br><br>
+	 */
 	public void centerView() {
 		while(getPlayer().getX() >= Main.GRIDSIZE.getWidth() - Map.VIEW_LIMIT + offset.getX() &&
-				getTileAt(new Point(Main.GRIDSIZE.getWidth() + getOffSet().getX(), 0)) != null){
+				get(new Point(Main.GRIDSIZE.getWidth() + getOffSet().getX(), 0)).getTile() != null){
 				offset.setX(offset.getX()+1);
 		}
 		
 		while(getPlayer().getY() >= Main.GRIDSIZE.getHeight() - Map.VIEW_LIMIT + offset.getY() &&
-				getTileAt(new Point(0, Main.GRIDSIZE.getHeight() + getOffSet().getY())) != null){
+				get(new Point(0, Main.GRIDSIZE.getHeight() + getOffSet().getY())).getTile() != null){
 				offset.setY(offset.getY()+1);
 		}
 		
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getStrongEntities</b>
+	 * <br>
+	 * <p>
+	 * <tt>	public List<Entity> getStrongEntities()</tt>
+	 * </p>
+	 * Returns a list of all the strong entities in the map.
+	 * A slot cannot have more than one "strong" entity at a time. A superentity cannot move to a slot with a "strong" entity.
+	 * <br><br>
+	 */
 	public List<Entity> getStrongEntities(){
 		
 		List<Entity> strongEntities = new ArrayList<Entity>();
@@ -292,6 +332,7 @@ public class Map extends GameObject{
 		return strongEntities;
 	}
 
+	//TODO change to getStrongEntityAt since there can only be one strong entity per slot
 	public List<Entity> getStrongEntitiesAt(Point p){
 		List<Entity> strongEntities = new ArrayList<Entity>();
 
@@ -304,75 +345,43 @@ public class Map extends GameObject{
 		return strongEntities;
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getAllSlots</b>
+	 * <br>
+	 * <p>
+	 * <tt>public List<Slot> getAllSlots()</tt>
+	 * </p>
+	 * Returns a list of all slots in the map.
+	 * <br><br>
+	 */
 	public List<Slot> getAllSlots(){
 		List<Slot> slots = new ArrayList<Slot>();
 		
-		for(int i=0; i<size.getHeight(); i++){
-			for(int j=0; j<size.getWidth(); j++){
-				slots.add(matrix[j][i]);
+		for(int i=0; i<size.getWidth(); i++){
+			for(int j=0; j<size.getHeight(); j++){
+				slots.add(matrix[i][j]);
 			}
 		}
 		
 		return slots;
 	}
 	
-	public Slot get(Point p){ 
-		if(p.getX() >= 0 && p.getX() < matrix.length && p.getY() >= 0 && p.getY() < matrix[0].length)
-			return matrix[p.getX()][p.getY()];
-		return null;
-	}
-	
-	public NPC getNpcAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.NPC);
-		if(entity != null)
-			return (NPC) entity;
-		return null;
-	}
-	
-	public Monster getMonsterAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.MONSTER);
-		if(entity != null)
-			return (Monster) entity; 
-		return null;
-	}
-	
-	public Portal getPortalAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.PORTAL);
-		if(entity != null)
-			return (Portal) entity;
-		return null;
-	}
-	
-	public Bundle getItemsAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.ITEMS);
-		if(entity != null)
-			return (Bundle) entity;
-		return null;
-	}
-	
-	public Tile getTileAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.TILE);
-		if(entity != null)
-			return (Tile) entity;
-		return null;
-	}
-	
-	public Object getObjectAt(Point p){
-		if(!isPointInMap(p))
-			return null;
-		Entity entity = get(p).get(Slot.OBJECT);
-		if(entity != null)
-			return (Object) entity;
+	/**
+	 * 
+	 * <br>
+	 * <b>get</b>
+	 * <br>
+	 * <p>
+	 * <tt>public Slot get(Point pos)</tt>
+	 * </p>
+	 * Returns the slot at point <i>pos</i>.
+	 * <br><br>
+	 */
+	public Slot get(Point pos){
+		if(isPointInMap(pos))
+			return matrix[pos.getX()][pos.getY()];
 		return null;
 	}
 	
@@ -392,12 +401,11 @@ public class Map extends GameObject{
 
 	public Portal getPortalByID(int id) {
 		for(Slot s: getAllSlots()){
-			Entity portal = s.get(Slot.PORTAL);
+			Portal portal = s.getPortal();
 			if(portal != null){
 				if(portal.id() == id)
-					return (Portal)portal;
-			}
-			
+					return portal;
+			}	
 		}
 		return null;
 	}

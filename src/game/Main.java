@@ -27,11 +27,15 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Dimension;
 
-public class Main {
+public class Main{
 	
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
 		
+	public void methodname(){
+		System.out.println("SUCCESS");
+	}
+	
 	public Main(){
 		
 		loadConfigurations(); //reads game configurations from config xml file

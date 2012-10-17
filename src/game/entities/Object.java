@@ -16,7 +16,7 @@ public class Object extends Entity {
 		
 		if(isBlock())
 			return;
-				
+						
 		XMLParser parser = new XMLParser("object/" + hexID() + "/data.xml");
 		
 		renderSize().setHeight(Integer.parseInt(parser.getAttribute("Object", "width")));
@@ -26,7 +26,7 @@ public class Object extends Entity {
 
 		List<java.util.Map<String, String>> blockList = parser.getChildrenAttributes("Object");
 		for(java.util.Map<String, String> data: blockList){
-			Block block = new Block();
+			Block block = new Block(this);
 			block.modifyPos(new Point(Integer.parseInt(data.get("x")), Integer.parseInt(data.get("y"))));
 			blocks.add(block);
 		}		
@@ -55,7 +55,8 @@ public class Object extends Entity {
 		}
 	}
 	
-	public void render() {
+	public void render(){
 		super.render();
 	}
+
 }

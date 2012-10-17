@@ -27,7 +27,7 @@ public class SkillActionManager extends AbstractScriptManager{
 			Point pos = Util.addRelPoints(origin, p, facingDir);
 			if(activeAttack.getSkill().getAttacker() instanceof Player){
 				Map map = MapManager.getMap();
-				Monster monster = map.getMonsterAt(pos);
+				Monster monster = map.get(pos).getMonster();
 				if(monster != null){
 					monster.hit((int)(getPlayer().getDamage()*dmg + .5f));
 				}
@@ -51,8 +51,9 @@ public class SkillActionManager extends AbstractScriptManager{
 		if(activeAttack.getSkill().getAttacker() instanceof Player){
 			Point pos = Util.addRelPoints(origin, p, facingDir);
 			for(Slot s: MapManager.getMap().getAllSlots()){
-				if(s.get(Slot.MONSTER) != null)
-					if(s.get(Slot.MONSTER).position().equals(pos))
+				Monster monster = s.getMonster();
+				if(monster != null)
+					if(monster.position().equals(pos))
 						return true;
 			}
 		}
