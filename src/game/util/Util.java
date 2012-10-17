@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-import game.Main;
 import game.entities.superentities.SuperEntity;
+import game.structure.Map;
 import game.structure.Slot;
 
 import java.awt.Color;
@@ -251,6 +251,28 @@ public class Util {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>addRelPoints</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static Point addRelPoints(Point p, Point p2, int facingDir)</tt>
+	 * </p>
+	 * Returns the position relative to a point facing certain direction.
+	 * Example: to get the position of the slot in front of the player -> addRelPoints(player.position(), new Point(0, 1), player.getFacingDir())
+	 * <br><br>
+	 * @param p
+	 * 			- The point which the position is relative to.
+	 * @param p2
+	 * 			- The position relative to the point <i>p</i>.
+	 * @param facingDir
+	 * 			- The relative direction of the position.
+	 * @see com.game.etities.superentities#UP
+	 * @see com.game.etities.superentities#RIGHT
+	 * @see com.game.etities.superentities#DOWN
+	 * @see com.game.etities.superentities#LEFT
+	 */
 	public static Point addRelPoints(Point p, Point p2, int facingDir){
 		switch(facingDir) {
 		case SuperEntity.UP:
@@ -264,16 +286,21 @@ public class Util {
 		}
 		return null;
 	}
-
-	public static Point parsePoint(String input){
-		String coordinates[] = input.split(",");
-		return new Point(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
-	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>render</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static void render(Texture texture, Point pos)</tt>
+	 * </p>
+	 * Renders the texture at position <i>pos</i>.
+	 * <br><br>
+	 */
 	public static void render(Texture texture, Point pos){
 		render(texture, pos, new Point(0, 0), new Dimension(0, 0), 0, 0, 0);
 	}
-	
 	
 	/**
 	 * <br>
@@ -281,7 +308,9 @@ public class Util {
 	 * <br>
 	 * <p>
 	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX, int flipY)</tt>
-	 * </p><br>
+	 * </p>
+	 * Renders the texture.
+	 * <br><br>
 	 * @param texture
 	 * 			- The texture to be rendered to display.
 	 * @param pos
@@ -302,7 +331,7 @@ public class Util {
 		
 		Point renderPos = new Point(pos.getX()*Slot.SIZE + offset.getX(), pos.getY()*Slot.SIZE + offset.getY());
 
-		if(texture == null || !pointInGrid(new Point(renderPos.getX()/Slot.SIZE, renderPos.getY()/Slot.SIZE)))
+		if(texture == null || !Map.isPointInGrid(new Point(renderPos.getX()/Slot.SIZE, renderPos.getY()/Slot.SIZE)))
 			return;
 		
 		Point rotates[] = new Point[4];	
@@ -331,27 +360,63 @@ public class Util {
 		glDisable(GL_TEXTURE_2D);
 	}
 	
+	/**
+	 * <br>
+	 * <b>render</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size</tt>
+	 * </p>
+	 * Renders the texture.
+	 * <br><br>
+	 * @param texture
+	 * 			- The texture to be rendered to display.
+	 * @param pos
+	 * 			- The position in tiles (Slot.SIZE) where the upper left point of the texture will be rendered.
+	 * @param offset
+	 * 			- A position offset in pixel.
+	 * @param size
+	 * 			- The desired dimensions of the image in the display in tiles (Slot.SIZE).
+	 * @see org.newdawn.slick.opengl.Texture
+	 */
 	public static void render(Texture texture, Point pos, Point offset, Dimension size){
 		render(texture, pos, offset, size, 0, 0, 0);
 	}
 	
-	public static boolean pointInGrid(Point p){
-		return p.getX() < Main.GRIDSIZE.getWidth() && p.getY() < Main.GRIDSIZE.getHeight() &&
-				p.getX() >= 0 && p.getY() >= 0;
-	}
-	
-	public static Point dimToPoint(Dimension dim){
-		return new Point(dim.getWidth(), dim.getHeight());
-	}
-	
-	public static Dimension pointToDim(Point p){
-		return new Dimension(p.getX(), p.getY());
-	}
-	
+	/**
+	 * 
+	 * <br>
+	 * <b>pointArithmetic</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static Point pointArithmetic(int op, Point p1, Point p2)</tt>
+	 * </p>
+	 * Adds, subtracts, divides or multiplies the points.
+	 * The resulting point is equal to: p1 + op*p2
+	 * <br><br>
+	 */
 	public static Point pointArithmetic(int op, Point p1, Point p2){
 		return new Point(p1.getX() + op*p2.getX(), p1.getY() + op*p2.getY());
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>pointComparison</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static boolean pointComparison(int op, Point p1, Point p2)</tt>
+	 * </p>
+	 * Compares two points by the operator <i>op</i>.
+	 * Operators
+	 * 		0: less than
+	 * 		1: equals
+	 * 		2: greater than
+	 * 		3: less or equal to
+	 * 		4: greater or equal to
+	 * Both x and y must satisfy the condition.
+	 * <br><br>
+	 */
 	public static boolean pointComparison(int op, Point p1, Point p2){
 		switch(op){
 		case 0:
@@ -368,6 +433,17 @@ public class Util {
 		return false;
 	}
 
+	/**
+	 * 
+	 * <br>
+	 * <b>hexID</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static String hexID(int id)</tt>
+	 * </p>
+	 * Converts the integer id to its hex id.
+	 * <br><br>
+	 */
 	public static String hexID(int id) {
 		String hexID = Integer.toHexString(id);
 		while(hexID.length() != 4){

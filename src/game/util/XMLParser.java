@@ -20,8 +20,7 @@ public class XMLParser {
 
 	private Document doc;
 	
-	public XMLParser(String fileName){
-		
+	public XMLParser(String fileName){	
 		try {
 			File xmlFile = new File("data/" + fileName);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -45,6 +44,18 @@ public class XMLParser {
 		  }
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getAttribute</b>
+	 * <br>
+	 * <p>
+	 * <tt>public String getAttribute(String uri, String attr)</tt>
+	 * </p>
+	 * Returns the value of the attribute <i>attr</i> of the element in the xml specified by the uri.
+	 * Example: getAttribute("html/head/style", "type")
+	 * <br><br>
+	 */
 	public String getAttribute(String uri, String attr){ 
 		
 		String nodePath[] = uri.contains("/") ? uri.substring(uri.indexOf("/")+1).split("/") : new String[0];
@@ -60,6 +71,17 @@ public class XMLParser {
 		
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getAttributes</b>
+	 * <br>
+	 * <p>
+	 * <tt>public Map<String, String> getAttributes(String uri)</tt>
+	 * </p>
+	 * Returns a map of all attributes and their values for an element specified by the uri.
+	 * <br><br>
+	 */
 	public Map<String, String> getAttributes(String uri){
 		String nodePath[] = uri.contains("/") ? uri.substring(uri.indexOf("/")+1).split("/") : new String[0];
 		Element root = doc.getDocumentElement();
@@ -79,6 +101,17 @@ public class XMLParser {
 		return attributes;
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getAttributes</b>
+	 * <br>
+	 * <p>
+	 * <tt>public Map<String, String> getAttributes(String uri)</tt>
+	 * </p>
+	 * Returns a list of maps of all attributes and their values for all children of an element specified by the uri.
+	 * <br><br>
+	 */
 	public List<Map<String, String>> getChildrenAttributes(String uri){
 		String nodePath[] = uri.contains("/") ? uri.substring(uri.indexOf("/")+1).split("/") : new String[0];
 		Element root = doc.getDocumentElement();
@@ -108,7 +141,6 @@ public class XMLParser {
 		attributes.removeAll(Collections.singleton(new HashMap<String, String>()));
 		
 		return attributes;
-		
 	}
 	
 }

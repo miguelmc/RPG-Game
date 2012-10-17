@@ -27,14 +27,14 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Dimension;
 
+/**
+ * Game launcher class.
+ * Contains the main loop and initializes the game.
+ */
 public class Main{
 	
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
-		
-	public void methodname(){
-		System.out.println("SUCCESS");
-	}
 	
 	public Main(){
 		
