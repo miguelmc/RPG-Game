@@ -1,9 +1,9 @@
 package game.structure;
 
-import game.entities.Block;
 import game.entities.Entity;
 import game.entities.NPC;
 import game.entities.Object;
+import game.entities.Object.Block;
 import game.entities.Portal;
 import game.entities.Tile;
 import game.entities.item.Item;
@@ -26,6 +26,17 @@ public class Slot {
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private Object object; //not strong, only its blocks are strong
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>getAll</b>
+	 * <br>
+	 * <p>
+	 * <tt>public List<Entity> getAll()</tt>
+	 * </p>
+	 * Returns a list with all the entities in the slot.
+	 * <br><br>
+	 */
 	public List<Entity> getAll() {
 		List<Entity> all = new ArrayList<Entity>();
 		all.addAll(Arrays.asList(strongEntity, tile, portal, object));
@@ -39,6 +50,26 @@ public class Slot {
 			e.update();
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>render</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void render(int type, int render)</tt>
+	 * </p>
+	 * Renders an entity in the slot depending on the type.
+	 * 0 - Tile
+	 * 1 - Portal
+	 * 2 - Items
+	 * 3 - Strong Entity
+	 * 4 - Object
+	 * The render type depends on the <i>render</i>
+	 * 0 - render
+	 * 1 - midRender
+	 * 2 - UIRender
+	 * <br><br>
+	 */
 	public void render(int type, int render){
 		
 		assert type >= 0 && type <= 4 && render >=0 && render <= 2;
@@ -144,7 +175,19 @@ public class Slot {
 		
 	}
 	
-	public void set(Entity entity){
+	/**
+	 * 
+	 * <br>
+	 * <b>set</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void set(Entity entity)</tt>
+	 * </p>
+	 * Adds the entity to the slot.
+	 * Replaces the other entity if its of the same type.
+	 * <br><br>
+	 */
+	public void add(Entity entity){
 		if(entity instanceof Tile)
 			setTile((Tile)entity);
 		else if(entity instanceof Portal)

@@ -32,7 +32,7 @@ public class Spawner{
 	}
 	
 	private void spawn(){
-		if(MapManager.getMap().getStrongEntitiesAt(position).isEmpty()){
+		if(MapManager.getMap().get(position).getStrongEntity()==null){
 			Monster monster = new Monster(id);
 			monster.setPosition(position);
 			currentMonster = monster;

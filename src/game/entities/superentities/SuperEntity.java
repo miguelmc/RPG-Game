@@ -75,7 +75,7 @@ public abstract class SuperEntity extends Entity {
 		
 		Point targetPos = new Point(getX() + xMove, getY() + yMove);
 		
-		if(getMap().isPointInMap(targetPos) && getMap().getStrongEntitiesAt(targetPos).isEmpty())
+		if(getMap().isPointInMap(targetPos) && getMap().get(targetPos).getStrongEntity() == null)
 			return true;
 		
 		return false;
@@ -88,7 +88,8 @@ public abstract class SuperEntity extends Entity {
 	}
 	
 	public void render(){
-		Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffSet(), renderSize(), 0, getFacingDir()!=LEFT ? 0:1, 0);
+		//TODO check for super.render()?
+		Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(), getRenderSize(), 0, getFacingDir()!=LEFT ? 0:1, 0);
 	}
 	
 	public void midRender(){

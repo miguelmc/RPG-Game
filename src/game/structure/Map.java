@@ -1,9 +1,9 @@
 package game.structure;
 
 import game.Main;
-import game.entities.Block;
 import game.entities.Entity;
 import game.entities.Object;
+import game.entities.Object.Block;
 import game.entities.Portal;
 import game.entities.Tile;
 import game.entities.superentities.Monster;
@@ -187,7 +187,7 @@ public class Map extends GameObject{
 	public void add(Entity entity, Point pos){
 				
 		entity.modifyPos(new Point(pos));			
-		get(pos).set(entity);
+		get(pos).add(entity);
 		
 		if(entity instanceof Object && !entity.isStrong()){
 			for(Block block: ((Object)entity).getBlocks()){
@@ -331,19 +331,6 @@ public class Map extends GameObject{
 		
 		return strongEntities;
 	}
-
-	//TODO change to getStrongEntityAt since there can only be one strong entity per slot
-	public List<Entity> getStrongEntitiesAt(Point p){
-		List<Entity> strongEntities = new ArrayList<Entity>();
-
-		for (Entity e : get(p).getAll()) {
-			if (e.isStrong()) {
-				strongEntities.add(e);
-			}
-		}
-			
-		return strongEntities;
-	}
 	
 	/**
 	 * 
@@ -386,7 +373,6 @@ public class Map extends GameObject{
 	}
 	
 	public boolean hasPlayer(){ return player != null; }
-	public boolean hasTileAt(Point p) { return isPointInMap(p); }
 	public Player getPlayer(){ return player; }
 	
 	public Dimension getSize() { return size; }
@@ -394,11 +380,31 @@ public class Map extends GameObject{
 	public String getName(){ return NAME; }
 	public TextureManager getTextureManager(){ return textureManager; }
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>remove</b>
+	 * <br>
+	 * <p>
+	 * <tt>public void remove(Entity entity)</tt>
+	 * </p>
+	 * Removes the entity from the map.
+	 * <br><br>
+	 */
 	public void remove(Entity entity){ get(entity.position()).remove(entity); }
 	
-	public List<Entity> getEntitiesAt(Point pos) { return get(pos).getAll(); }
-	public boolean hasStrongEntitiesAt(Point p){ return !getStrongEntitiesAt(p).isEmpty(); }
-
+	/**
+	 * 
+	 * <br>
+	 * <b>getPortalByID</b>
+	 * <br>
+	 * <p>
+	 * <tt>public Portal getPortalByID(int id)</tt>
+	 * </p>
+	 * Return the portal with the given id in the map.
+	 * Returns null if the portal does not exist.
+	 * <br><br>
+	 */
 	public Portal getPortalByID(int id) {
 		for(Slot s: getAllSlots()){
 			Portal portal = s.getPortal();

@@ -31,7 +31,7 @@ public class Player extends SuperEntity{
 	
 	public static final int INV_LIMIT = 30, MAX_LEVEL = 8, BASE = 0x10, EXTRA = 0x20,
 			TOTAL = 0x30, HELMET = 0, TOPWEAR = 1, BOTTOMWEAR = 2, SHOES = 3, WEAPON = 4;
-	private static final int HP_REGEN = 5;
+	private static final int REGEN = 3;
 	private int level = 1, exp = 0, gold = 0, mp;
 	private volatile int hp;
 	private volatile java.util.Map<Integer, Integer> stats = new HashMap<Integer, Integer>();
@@ -64,7 +64,7 @@ public class Player extends SuperEntity{
 		
 		try {
 			System.out.println();
-			Timer timer = new Timer(this, this.getClass().getMethod("regen", new Class<?>[0]), 5000);
+			Timer timer = new Timer(this, this.getClass().getMethod("regen", new Class<?>[0]), 10000);
 			timer.start();
 		} catch (SecurityException e1) {
 			e1.printStackTrace();
@@ -75,7 +75,8 @@ public class Player extends SuperEntity{
 	}
 	
 	public void regen(){
-		setHP(getHP() + HP_REGEN);
+		setHP(getHP() + REGEN);
+		setMP(getMP() + REGEN);
 	}
 	
 	public void input(){
@@ -173,7 +174,7 @@ public class Player extends SuperEntity{
 	}
 	
 	private void action(Point target){
-		if(!getMap().hasTileAt(target))
+		if(!getMap().isPointInMap(target))
 			return;
 		NPC npc = getMap().get(target).getNPC();
 		List<Item> items = getMap().get(target).getItems();
@@ -432,14 +433,6 @@ public class Player extends SuperEntity{
 		return;
 	}
 
-	public int getMP() {
-		return mp;
-	}
-
-	public void setMP(int mp) {
-		this.mp = mp;
-	}
-
 	public void addEquip(EquipItem equip) {
 		if(equips.get(equip.getType()) != null)
 			return;
@@ -480,6 +473,16 @@ public class Player extends SuperEntity{
 	
 	public int getHP(){
 		return hp;
+	}
+
+	public void setMP(int mp) {
+		this.mp = mp;
+		if(getMP() > getStat(TOTAL+MAXMP.ID))
+			setMP(getStat(TOTAL+MAXMP.ID));
+	}
+	
+	public int getMP() {
+		return mp;
 	}
 	
 }

@@ -75,6 +75,6 @@ public class SkillActionManager extends AbstractScriptManager{
 	}
 	
 	public boolean hasObjectAt(Point p){
-		return !MapManager.getMap().getStrongEntitiesAt(p).isEmpty();
+		return MapManager.getMap().get(p).getStrongEntity() != null;
 	}
 }

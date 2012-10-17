@@ -2,6 +2,6 @@
     <drops>
         <item id="6300" chance="40"/>
         <item id="6301" chance="40"/>
-        <item id="A303" chance="40"/>
+        <item id="A303" chance="5"/>        
     </drops>
 </Monster>
