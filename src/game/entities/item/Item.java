@@ -4,11 +4,15 @@ import game.entities.Entity;
 import game.entities.EntityType;
 import game.util.XMLParser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.lwjgl.util.Point;
 
+/**
+ * Abstract type for items.
+ */
 public abstract class Item extends Entity
 {
 
@@ -39,11 +43,6 @@ public abstract class Item extends Entity
 	public Item(int id)
 	{
 		this(id, 1);
-	}
-
-	public void render()
-	{ // TODO render based on #of items in a slot
-		super.render();
 	}
 
 	public String getName()
@@ -93,15 +92,19 @@ public abstract class Item extends Entity
 	{
 		return getName();
 	}
-
-	public boolean equals(Object obj)
+	
+	public static List<Item> stack(List<Item> items)
 	{
-		return super.equals(obj) ? ((Item) obj).getQuantity() == getQuantity() : false;
-	}
-
-	public int hashCode()
-	{
-		return super.hashCode() + 99999 + getQuantity();
+		List<Item> stackedItems = new ArrayList<Item>();
+		for(Item i: items){
+			if(stackedItems.contains(i) && EntityType.getType(i.id()) != EntityType.EquipItem)
+				stackedItems.get(stackedItems.indexOf(i)).add(i.getQuantity());
+			else
+				stackedItems.add(i);
+		}
+		
+		return stackedItems;
+		
 	}
 
 }

@@ -168,7 +168,6 @@ public class Quest extends GameObject
 
 	public void turnIn()
 	{
-
 		if (!isCompleted())
 			return;
 

@@ -251,17 +251,10 @@ public abstract class Entity extends GameObject
 	 * <br>
 	 * <b>setRenderOffSet</b> <br>
 	 * <p>
-	 * <tt>TODO /header/</tt>
+	 * <tt>public void setRenderOffset(int x, int y)</tt>
 	 * </p>
-	 * TODO /description/ <br>
+	 * Sets an offset in its render position in pixels.
 	 * <br>
-	 * 
-	 * @param x
-	 * @param y
-	 * @throws TODO
-	 *             /Exception/ if TODO /Cause/
-	 * @see #TODO/methodName/
-	 * @author Alfredo Altamirano
 	 */
 	public void setRenderOffset(int x, int y)
 	{

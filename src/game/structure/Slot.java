@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 public class Slot
 {
@@ -24,7 +25,7 @@ public class Slot
 	private Entity strongEntity;
 	private Tile tile;
 	private Portal portal;
-	private ArrayList<Item> items = new ArrayList<Item>();
+	private List<Item> items = new ArrayList<Item>();
 	private Object object; // not strong, only its blocks are strong
 
 	/**
@@ -81,8 +82,6 @@ public class Slot
 		case 2:
 			for (Item item : items)
 			{
-				// TODO pass to arguments to render, #of elements in the list
-				// and its index so not all are rendered in the same spot
 				if (render == 0)
 					item.render();
 				else if (render == 1)
@@ -170,24 +169,34 @@ public class Slot
 	public void addItem(Item item)
 	{
 		items.add(item);
+		items = Item.stack(items);
+		if (items.size() < 4)
+		{
+			updateItemsRender();
+		} else
+		{
+			Random random = new Random();
+			items.get(items.size() - 1).setRenderOffset((int) (Slot.SIZE / 5 * (random.nextDouble() * 3 - 1.5)),
+					(int) (Slot.SIZE / 5 * (random.nextDouble() * 3 - 1.5)));
+		}
 	}
 
 	public void removeItem(int id)
 	{
-		ListIterator<Item> it = items.listIterator(); // ListIterator must be
-														// used instead of
-														// iterator when
-														// removing items
+		ListIterator<Item> it = items.listIterator(); // ListIterator must be used instead of iterator when removing items
 		while (it.hasNext())
 		{
 			if (it.next().id() == id)
+			{
 				it.remove();
+				if (items.size() < 4)
+					updateItemsRender();
+			}
 		}
 	}
 
 	public void remove(Entity entity)
 	{
-
 		if (entity == tile)
 			tile = null;
 		else if (entity == portal)
@@ -195,8 +204,41 @@ public class Slot
 		else if (entity == strongEntity)
 			strongEntity = null;
 		else if (entity instanceof Item)
+		{
 			removeItem(entity.id());
+			if (items.size() < 4)
+				updateItemsRender();
+		}
 
+	}
+
+	private void updateItemsRender()
+	{
+		final int OFFSET = Slot.SIZE / 5;
+		switch (items.size())
+		{
+		case 0:
+		case 1:
+			return;
+		case 2:
+			items.get(0).setRenderOffset(-OFFSET, -OFFSET);
+			items.get(1).setRenderOffset(OFFSET, OFFSET);
+			return;
+		case 3:
+			items.get(0).setRenderOffset(-OFFSET, OFFSET);
+			items.get(1).setRenderOffset(OFFSET, OFFSET);
+			items.get(2).setRenderOffset(0, -OFFSET);
+			return;
+		default:
+			Random random = new Random(System.nanoTime());
+			for (Item item : items)
+			{
+				double offX = OFFSET * (random.nextDouble() * 3 - 1.5);
+				double offY = OFFSET * (random.nextDouble() * 3 - 1.5);
+				item.setRenderOffset((int) offX, (int) offY);
+			}
+			return;
+		}
 	}
 
 	/**
