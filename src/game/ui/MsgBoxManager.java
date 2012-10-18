@@ -13,22 +13,23 @@ import org.lwjgl.opengl.GL11;
 
 import game.util.Util;
 
+/**
+ * Serves as an interface for sending messages to the player in a textbox.
+ * The player stops its actions while the message box is active.
+ * Can send an "Ok" messagebox or a "Yes/No"
+ */
 public class MsgBoxManager {
 	
 	private static String message = "";
-	private static boolean selection = true;
+	private static boolean selection = true; //only for "Yes/No" messagebox
 	private static boolean yesNo = false;
 	private static boolean active = false;
 	private static int stateYes;
 	private static int stateNo;
-	private static int state;
-		
-	public static boolean getSelection(){
-		return selection;
-	}
+	private static int state; //the state send to the npc script.
 	
 	public static void render(){
-		if(active){
+		if(isActive()){
 			int boxHeight = 140;
 			int x1 = 20;
 			int x2 = Main.DIM.getWidth() - 20;
@@ -105,6 +106,18 @@ public class MsgBoxManager {
 		}
 	}
 	
+	/**
+	 * 
+	 * <br>
+	 * <b>sendText</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static void sendText(String str, boolean YesNo)</tt>
+	 * </p>
+	 * Creates a message box.
+	 * An "Ok" messagebox is sent if YesNo is false and a "Yes/No" messagebox if true.
+	 * <br><br>
+	 */
 	public static void sendText(String str, boolean YesNo){
 		message = str;
 		yesNo = YesNo;
@@ -115,18 +128,19 @@ public class MsgBoxManager {
 		return active;
 	}
 
-	public static void input() {
+	public static void input() { //the keyboard events are only received if it is active
 		if(Keyboard.getEventKeyState()){
 			switch(Keyboard.getEventKey()){
 				case Keyboard.KEY_ESCAPE:
 					state = -1;
 					stateYes = -1;
 					stateNo = -1;
-				case Keyboard.KEY_SPACE: 
+				case Keyboard.KEY_SPACE: //space and enter do the same
 				case Keyboard.KEY_RETURN:
 					message = "";
 					active = false;
-					NPC.getNpc().run(yesNo ? (selection ? stateYes : stateNo) : state);
+					//runs a npc script passing a state. If the state is -1, the messagebox is closed.
+					NPC.getNpc().run(yesNo ? (selection ? stateYes : stateNo) : state); 
 					selection = true;
 					break;
 				case Keyboard.KEY_RIGHT:
@@ -140,17 +154,22 @@ public class MsgBoxManager {
 		
 	}
 
+	
 	public static void setYesNo(int yes, int no) {
 		stateYes = yes;
 		stateNo = no;
 	}
 	
-	public static void setState(int state2){
-		state = state2;
+	public static void setState(int state){
+		MsgBoxManager.state = state;
+	}
+	
+	public static boolean getSelection(){
+		return selection;
 	}
 
-	public static void setActive(boolean Active) {
-		active = Active;
+	public static void setActive(boolean active) {
+		MsgBoxManager.active = active;
 	}
 	
 }

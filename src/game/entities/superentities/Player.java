@@ -44,7 +44,6 @@ public class Player extends SuperEntity{
 	
 	public Player(int id, Point pos) {
 		super(id);
-		setStrong();
 		addSkill(1792);
 				
 		//TODO player file with base stats, stats per level, damage formula parameters, etc.

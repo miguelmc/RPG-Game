@@ -5,19 +5,18 @@ import game.structure.GameObject;
 import game.ui.UserInterface;
 import game.util.XMLParser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Quest extends GameObject {
 
-	//TODO quest required level
+	//life cycle -> quest available > quest accepted (in progress) > quest completed > quest turned in
+	//TODO change to have an state and fit the cycle (i.e.) state = AVAILABLE
 	
+	//TODO quest required level - create an static initialization to read all quests required levels
 	private String NAME, DESCRIPTION;
 	private Map<Integer, List<Integer>> monsterKills = new HashMap<Integer, List<Integer>>(); // id, total kill, kills left
 	private boolean turnedIn = false;
@@ -163,22 +162,9 @@ public class Quest extends GameObject {
 	}
 
 	public static int getReqLevel(int id) {
-		
-		if(System.currentTimeMillis() > 0)
-			return 0;
-		
-		try {
-			File file = new File("data/quest/" + Integer.toString(id) + ".dat");
-			Scanner scanner = new Scanner(file);
-			scanner.nextLine();
-			int level = Integer.parseInt(scanner.nextLine());
-			scanner.close();
-			return level;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		return 200;
+
+		//TODO
+		return 0;
 		
 	}
 

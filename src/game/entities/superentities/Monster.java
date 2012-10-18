@@ -27,13 +27,12 @@ import java.util.Random;
 import org.lwjgl.util.Point;
 
 public class Monster extends SuperEntity {
-
-	// override setPosition so that it checks if spawnPoint is null and initializes it
+	
+	//TODO? auto update on its own thread?
 	
 	private int exp, movePeriod, moveTimer = 0, hp, maxHP;
 	private String name;
 	private boolean angry = false, dead = false, respawn;
-	//TODO chance item and chance to a map
 	private Map<Integer, Integer> dropList = new HashMap<Integer, Integer>();
 	private long nextAtk = 0L;
 
@@ -44,8 +43,7 @@ public class Monster extends SuperEntity {
 	public Monster(int id, boolean respawn){
 		super(id);
 		
-		setStrong();
-		addSkill(1792);
+		addSkill(1792);//TODO have the skills of a monster in the xml
 		this.respawn = respawn;
 		
 		parseMonster();
@@ -53,7 +51,6 @@ public class Monster extends SuperEntity {
 		setHP(getMaxHP());
 		
 		movePeriod = new Random(System.nanoTime()).nextInt(140) + 160;
-
 	}
 	
 	private void parseMonster() {
@@ -68,20 +65,19 @@ public class Monster extends SuperEntity {
 		for(java.util.Map<String, String> data: drops){
 			dropList.put(Integer.parseInt(data.get("id"), 16), Integer.parseInt(data.get("chance")));
 		}
-		
 	}
 
 	public void UIRender(){
 		if(dead)
 			return;
 		
-		float cHP = (float)getHP()/(float)getMaxHP();
+		float cHP = (float)getHP()/(float)getMaxHP(); //current hp
 		
 		int width = Slot.SIZE;
 		int height = Slot.SIZE;
 		
 		//HP BAR
-		glColor3f(1f, 0f, 0f);
+		glColor3f(1f, 0f, 0f); // Red
 		glLoadIdentity();
 		glTranslatef((getX() - getMap().getOffSet().getX())*Slot.SIZE, (getY() - getMap().getOffSet().getY())*Slot.SIZE, 0);
 		glBegin(GL_QUADS);
@@ -119,19 +115,6 @@ public class Monster extends SuperEntity {
 		super.UIRender();
 		
 	}
-
-	public void render() {
-		if (dead)
-			return;
-
-		if (angry) {
-			super.render();
-			glColor3f(1f, 1f, 1f);
-		} else {
-			super.render();
-		}
-
-	}
 	
 	public void update(){
 		
@@ -140,8 +123,10 @@ public class Monster extends SuperEntity {
 			Random r = new Random(System.nanoTime());
 			moveTimer = 0;
 			if(angry){
-				movePeriod = r.nextInt(40)+40;
+				movePeriod = r.nextInt(40)+40; //move faster when angry
 				int num1 = 0, num2 = 2;
+				//moves based on the player position relative to its position
+				//TODO rewrite using Util.addRelPoints
 				if(!(getMap().getPlayer().getX() == getX() || getMap().getPlayer().getY() == getY())){
 					if(getMap().getPlayer().getX() > getX() && getMap().getPlayer().getY() < getY()){
 						num1 = UP;
@@ -176,8 +161,8 @@ public class Monster extends SuperEntity {
 				}
 			}else{
 				movePeriod = r.nextInt(140)+160;
-				ArrayList<Integer> nums = new ArrayList<Integer>(4);
-				nums.add(0); nums.add(1); nums.add(2); nums.add(3);
+				List<Integer> nums = new ArrayList<Integer>();
+				nums.add(UP); nums.add(RIGHT); nums.add(DOWN); nums.add(LEFT); 
 				moveRandom(nums);
 			}
 		}
@@ -214,10 +199,9 @@ public class Monster extends SuperEntity {
 		}
 		
 		super.update();
-		
 	}
 
-	private void moveRandom(ArrayList<Integer> nums) {
+	private void moveRandom(List<Integer> nums) {
 		
 		if(nums.size() == 0)
 			return;
@@ -245,19 +229,20 @@ public class Monster extends SuperEntity {
 		
 		dead = true;
 		
+		//drop items
+		Random random = new Random(System.nanoTime());
 		for(Integer id: dropList.keySet()){
-			int num = new Random(System.nanoTime()).nextInt(100)+1;
-			if(num<=dropList.get(id)){
+			int num = random.nextInt(101); //generate rand num between 0 and 100 inclusive
+			if(num<=dropList.get(id)){ //if the random number is less than the chance of drop, drop
 				Item item = (Item) Entity.createEntity(id);
-				item.setPosition(position());
+				getMap().add(item, position());
 			}
 		}
 		
 		getMap().getPlayer().gainExp(getExp());
 		
-		for(Quest q: getMap().getPlayer().getActiveQuests()){
+		for(Quest q: getMap().getPlayer().getActiveQuests())
 			q.monsterKill(id());
-		}
 		
 		super.die();
 
@@ -304,6 +289,5 @@ public class Monster extends SuperEntity {
 	public void setMaxHP(int maxHP) {
 		this.maxHP = maxHP;
 	}
-	
 	
 }

@@ -12,6 +12,9 @@ import javax.script.ScriptException;
 
 import org.lwjgl.util.Point;
 
+/**
+ * An instance based on a skill. It is the actual attack.
+ */
 public class SkillAttack {
 	
 	private double counter = 0;
@@ -50,9 +53,10 @@ public class SkillAttack {
 	}
 	
 	public void update(){
+		//the skill script is called every 6 frames (.1 seconds) and passed the variable "step" to determine how long it has been running
 		if (counter % 6 == 0) {
 			try {
-				int step = (int) (counter / 6);
+				int step = (int) (counter / 6); //TODO make it time based and not frame base for fps independence
 				engine.put("step", step);
 				engine.eval(new FileReader("data/skill/"+ skill.hexID() + "/script.js"));
 			} catch (FileNotFoundException e) {

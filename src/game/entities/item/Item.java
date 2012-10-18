@@ -36,6 +36,10 @@ public abstract class Item extends Entity{
 		this(id, 1);
 	}
 	
+	public void render(){ //TODO render based on #of items in a slot
+		super.render();
+	}
+	
 	public String getName() {
 		return NAME;
 	}

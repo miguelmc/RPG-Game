@@ -10,6 +10,10 @@ import game.util.Util;
 
 import org.lwjgl.util.Point;
 
+/**
+ * The object passed to the skill scripts.
+ * This object's public methods can be used in the script.
+ */
 public class SkillActionManager extends AbstractScriptManager{
 	
 	private SkillAttack activeAttack;

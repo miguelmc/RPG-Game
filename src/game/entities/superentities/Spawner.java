@@ -4,7 +4,12 @@ import game.structure.MapManager;
 
 import org.lwjgl.util.Point;
 
+/**
+ * An object that spawns a monster in a position certain time after its monster died.
+ */
 public class Spawner{
+	
+	//TODO? change to its own thread?
 	
 	private final Point position;
 	private int id;

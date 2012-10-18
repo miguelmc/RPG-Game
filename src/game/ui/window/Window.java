@@ -12,6 +12,10 @@ import org.newdawn.slick.opengl.Texture;
 
 import game.util.Util;
 
+//TODO give priorities to window by last opened and draw them on top, give "focus" to windows and only close the most recent opened with esc
+/**
+ * Abstract type for windows and statically manages all other windows
+ */
 public abstract class Window {
 
 	protected Point position = new Point(100, 100);
@@ -23,6 +27,7 @@ public abstract class Window {
 	protected int key;
 	
 	private static Window[] windows = {new Inventory(Keyboard.KEY_I)};
+	//TODO? create a stack for active windows, add on open and remove on close. Pop on esc pressed.
 	
 	public Window(Point pos, Dimension s){
 		position = pos;
@@ -35,14 +40,6 @@ public abstract class Window {
 		}
 	}
 	
-	public void setPosition(int x, int y){
-		position.setLocation(x, y);
-	}
-	
-	public Point getPosition(){
-		return position;
-	}
-	
 	public static void renderAll(){
 		for(Window w: windows){
 		if(w.isActive())
@@ -50,6 +47,7 @@ public abstract class Window {
 		}
 	}
 	
+	//TODO adjust with Util.render
 	public void render(){
 		glEnable(GL_TEXTURE_2D);
 		texture.bind();
@@ -71,27 +69,49 @@ public abstract class Window {
 		glDisable(GL_TEXTURE_2D);
 	}
 	
-	public void setTexture(String str){
-		texture = Util.getTexture("UI/window/"+str+".png");
-	}
-	
-	public boolean isActive(){
-		return active;
-	}
-	
-	public static void input(){
-		if(Keyboard.getEventKeyState()){
+	public static void keyboardInput(){
+		if(Keyboard.getEventKeyState()){ // key released
 			for(Window w: windows){
-				if(Keyboard.getEventKey() == w.getKey()){
-					w.toggleActive();
+				if(Keyboard.getEventKey() == w.getKey()){ // each window has a key assigned to open it
+					w.toggleActive(); // open/close window
 					if(w.getX()>Main.DIM.getWidth() || w.getX()+w.getWidth() < 0 ||
-							w.getY() > Main.DIM.getHeight() || w.getY() + w.getHeight() < 0)
+							w.getY() > Main.DIM.getHeight() || w.getY() + w.getHeight() < 0) // if for some reason the window goes out of the screen. (this might happen because mouse events and the game run on different threads)
 						w.setPosition(100, 100);
-				}else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE){
+				}else if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE){ // close all
 					w.close();
 				}
 			}	
 		}
+	}
+	
+	public static void mouseInput() {
+		for(Window w: windows){
+			if(Mouse.getX() >= w.getX() && Mouse.getX() <= w.getX() + w.getWidth() &&
+					Main.DIM.getHeight() - Mouse.getY() + 1 >= w.getY() && Main.DIM.getHeight() - Mouse.getY() + 1 <=
+					w.getY() + w.getHeight()){
+				if(w.isActive()){
+					w.mouse();	//pass the event to the window
+					break; //dont allow 2 windows to respond to the same event
+				}
+			}
+		}
+	}
+
+	//TODO make a textureManager to have all textures
+	public void setTexture(String str){
+		texture = Util.getTexture("UI/window/"+str+".png");
+	}
+	
+	public void setPosition(int x, int y){
+		position.setLocation(x, y);
+	}
+	
+	public Point getPosition(){
+		return position;
+	}
+	
+	public boolean isActive(){
+		return active; // active means open
 	}
 	
 	protected void close(){
@@ -101,21 +121,8 @@ public abstract class Window {
 	public void toggleActive(){
 		active = !active;
 	}
-
-	public static void mouseInput() {
-		for(Window w: windows){
-			if(Mouse.getX() >= w.getX() && Mouse.getX() <= w.getX() + w.getWidth() &&
-					Main.DIM.getHeight() - Mouse.getY() + 1 >= w.getY() && Main.DIM.getHeight() - Mouse.getY() + 1 <=
-					w.getY() + w.getHeight()){
-				if(w.isActive())
-					w.mouse();				
-			}
-		}
-	}
 	
-	protected void mouse(){
-		
-	}
+	abstract protected void mouse();
 
 	public boolean isPressed() {
 		return pressed;
@@ -129,7 +136,7 @@ public abstract class Window {
 		return position.getX();
 	}
 
-	public  void setX(int x) {
+	public void setX(int x) {
 		position.setX(x);
 	}
 

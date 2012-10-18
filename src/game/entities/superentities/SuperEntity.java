@@ -11,17 +11,22 @@ import java.util.Random;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * Abstract type for entities that can move, face a direction and attack
+ */
 public abstract class SuperEntity extends Entity {
 
 	private int damage, facing = DOWN;
 	private ArrayList<Skill> skills = new ArrayList<Skill>();
-	private ArrayList<Integer> damages = new ArrayList<Integer>();
+	private ArrayList<Integer> damages = new ArrayList<Integer>(); //TODO change to queue
 	private ArrayList<Long> damageTime = new ArrayList<Long>();
 	private Texture textures[] = new Texture[4];
 	public static final int UP = 0,  RIGHT = 1, DOWN = 2, LEFT = 3;
 	
 	public SuperEntity(int id) {
 		super(id);
+		setStrong();
+
 		//TODO set superEntity to have 3 textures always
 		if(this instanceof Player){
 			textures[0] = Util.getTexture("player/" + hexID() + "/back.png");
@@ -36,10 +41,25 @@ public abstract class SuperEntity extends Entity {
 			textures[3] = Util.getTexture("monster/" + hexID() + "/texture.png");
 		}
 		
-		face(2);
+		face(DOWN);
 		
 	}
 
+	/**
+	 * 
+	 * <br>
+	 * <b>face</b>
+	 * <br>
+	 * <p>
+	 * <tt>protected void face(int dir)</tt>
+	 * </p>
+	 * Sets the facing direction of <i>this</i> superentity.
+	 * <br><br>
+	 * @see #UP
+	 * @see #RIGHT
+	 * @see #DOWN
+	 * @see #LEFT
+	 */
 	protected void face(int dir){
 		setFacing(dir);
 		setTexture(textures[dir]);
@@ -55,7 +75,7 @@ public abstract class SuperEntity extends Entity {
 	}
 	
 	protected boolean canMove(int dir) {
-		
+		//check the slot were its gonna move so that it has no other strong entity
 		int xMove = 0;
 		int yMove = 0;
 		
@@ -93,12 +113,11 @@ public abstract class SuperEntity extends Entity {
 	}
 	
 	public void midRender(){
-		for(Skill s: skills){
+		for(Skill s: skills)
 			s.render();
-		}
 	}
 	
-	public void UIRender(){
+	public void UIRender(){ //superentities can be attacked, so their damage is displayed above them at an UI level
 		for(int i=0;i<damages.size();i++){
 			if(damageTime.get(i) > System.currentTimeMillis()){
 			float xpos = (Util.getTextWidth(damages.get(i).toString())-Slot.SIZE)/2;
@@ -115,15 +134,27 @@ public abstract class SuperEntity extends Entity {
 		getSkill(skill).attack();
 	}
 	
-	public boolean hit(int damage) {
+	/**
+	 * 
+	 * <br>
+	 * <b>hit</b>
+	 * <br>
+	 * <p>
+	 * <tt>public boolean hit(int damage)</tt>
+	 * </p>
+	 * Does <i>damage</i> to <i>this</i> superentity.
+	 * Returns true if the superentity died.
+	 * <br><br>
+	 */
+	public boolean hit(int damage) { //get hit
 		setHP(getHP()-damage);
 		if(getHP()<=0){
 			setHP(0);
 			die();
 			return true;
 		}
-		damages.add(damage);
-		damageTime.add(System.currentTimeMillis()+1700);
+		damages.add(damage); //to render the damage
+		damageTime.add(System.currentTimeMillis()+1700); //TODO? use thread?
 		return false;
 	}
 	
@@ -136,7 +167,7 @@ public abstract class SuperEntity extends Entity {
 		for(Skill s: skills)
 			s.stopAll();
 		
-		if(!(this instanceof Player)){ //TODO  handle player dead
+		if(!(this instanceof Player)){ //TODO handle player dead
 			getMap().get(position()).removeStrongEntity();
 		}
 	}	
@@ -153,15 +184,15 @@ public abstract class SuperEntity extends Entity {
 		return null;
 	}
 
-	public int getDamage() {
+	public int getDamage() { //returns a damage based on its average damage with a normal distribution with a 15% deviation
 		double avgDmg = getAverageDamage();
 		double deviation = avgDmg*.15;
 		double damage = new Random(System.nanoTime()).nextGaussian()*deviation+avgDmg;
-		return (int)(damage+.5);
+		return (int)(damage+.5); // +.5 to round and not truncate
 	}
 	
 	protected double getAverageDamage(){
-		return damage;
+		return damage; //overrode by the player to depend on its stats
 	}
 
 	public void setDamage(int damage){

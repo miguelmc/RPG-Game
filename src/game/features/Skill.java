@@ -15,22 +15,24 @@ import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * Contains the properties of a skill. It generates an instance of SkillAttack based on its properties to attack.
+ */
 public class Skill extends GameObject{
 
-	private SubImage sprites[];
-	private int level = 1;
+	private SubImage sprites[]; //each frame of the animation
+	private int level = 1; //level of the skill
 	private int maxLevel;
 	private int delay;
 	private String description;
-	private String subDescription;
+	private String subDescription; // More specific description with variables depending on the level
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
-	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>();
+	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); //TODO change to a stack?
 	private SuperEntity attacker;
 	
 	public Skill(int id, SuperEntity attacker){
 		super(id);
 		this.attacker = attacker;
-		
 		
 		XMLParser parser = new XMLParser("skill/" + hexID() + "/data.xml");
 		delay = Integer.parseInt(parser.getAttribute("Skill", "delay"));
@@ -60,7 +62,6 @@ public class Skill extends GameObject{
 		}
 		
 	}
-	
 	
 	public String getDescription(){
 		return description;
@@ -95,11 +96,12 @@ public class Skill extends GameObject{
 	public void update(){
 		for(ListIterator<SkillAttack> i = attacks.listIterator(); i.hasNext();){
 			if(i.next().isActive()){
-				i.previous().update();
+				i.previous().update(); //updates while the skillattack is active
 				i.next();
-			}//TODO not tested
-			else
-				i.remove();
+			}
+			else{
+				i.remove(); //remove from the list if the skillattack finished
+			}
 		}
 	}
 	

@@ -84,7 +84,8 @@ public class Slot {
 			break;
 		case 2:
 			for(Item item: items){
-				if(render == 0) item.render();
+				//TODO pass to arguments to render, #of elements in the list and its index so not all are rendered in the same spot
+				if(render == 0) item.render(); 
 				else if(render == 1) item.midRender();
 				else if(render == 2) item.UIRender();
 			}

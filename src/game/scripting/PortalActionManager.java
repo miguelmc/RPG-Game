@@ -5,6 +5,10 @@ import game.structure.MapManager;
 
 import org.lwjgl.util.Point;
 
+/**
+ * The object passed to the portal scripts.
+ * This object's public methods can be used in the script.
+ */
 public class PortalActionManager extends AbstractScriptManager{
 	public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
 	private Portal portal;

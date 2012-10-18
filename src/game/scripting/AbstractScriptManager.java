@@ -6,6 +6,10 @@ import game.structure.MapManager;
 
 import org.lwjgl.util.Point;
 
+/**
+ * The abstract type of the object passed to the scripts.
+ * Contains basic functions that are usually used in the script.
+ */
 public abstract class AbstractScriptManager {
 	
 	public void setHP(int hp){

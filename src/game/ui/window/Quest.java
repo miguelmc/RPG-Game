@@ -1,5 +1,19 @@
 package game.ui.window;
 
-public class Quest {
+import org.lwjgl.util.Dimension;
+import org.lwjgl.util.Point;
+
+public class Quest extends Window {
+
+	public Quest(Point pos, Dimension s) {
+		super(pos, s);
+		
+	}
+
+	@Override
+	protected void mouse() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

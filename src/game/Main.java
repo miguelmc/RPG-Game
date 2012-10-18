@@ -97,7 +97,7 @@ public class Main{
 				MsgBoxManager.input();
 			}else{
 				MapManager.input();
-				Window.input();
+				Window.keyboardInput();
 			}
 		}
 		

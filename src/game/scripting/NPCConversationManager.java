@@ -3,6 +3,10 @@ package game.scripting;
 import game.features.Quest;
 import game.ui.MsgBoxManager;
 
+/**
+ * The object passed to the NPC scripts.
+ * This object's public methods can be used in the script.
+ */
 public class NPCConversationManager extends AbstractScriptManager {
 	
 	private int state = 0;

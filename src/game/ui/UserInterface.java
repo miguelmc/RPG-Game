@@ -16,14 +16,21 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 
+//TODO change the list to a queue
+//TODO? use notifications timing in a separate thread?
+/**
+ * Manages everything related to the user interface.
+ * Renders the windows and serves as an interface to send simple notifications.
+ * Also loads the fonts.
+ */
 public class UserInterface {
 
 	private static ArrayList<String> notifications = new ArrayList<String>();
-	private static ArrayList<Long> times = new ArrayList<Long>();
+	private static ArrayList<Long> times = new ArrayList<Long>(); //TODO change to a queue
 	private static boolean loaded = false;
 	
 	public static void render(){
-		
+		//renders all notifications
 		Util.useFont("Arial", Font.BOLD, 14, Color.black);
 		for(int i=notifications.size()-1; i>=0; i--){
 			if(times.get(i) > System.currentTimeMillis()){
