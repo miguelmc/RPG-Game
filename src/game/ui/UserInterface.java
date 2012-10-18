@@ -27,8 +27,24 @@ public class UserInterface
 
 	private static ArrayList<String> notifications = new ArrayList<String>();
 	private static ArrayList<Long> times = new ArrayList<Long>(); // TODO change to a queue
-	private static boolean loaded = false;
 
+	static
+	{
+		// load fonts
+		System.out.println("Loading 0%");
+		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
+		System.out.println("Loading 20%");
+		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
+		System.out.println("Loading 40%");
+		Util.useFont("Arial", Font.BOLD, 10, Color.white);
+		System.out.println("Loading 60%");
+		Util.useFont("Arial", Font.BOLD, 14, Color.black);
+		System.out.println("Loading 80%");
+		Util.useFont("Courier New", Font.BOLD, 28, Color.white);
+		System.out.println("Loading 100%");
+
+	}
+	
 	public static void render()
 	{
 		// renders all notifications
@@ -112,44 +128,25 @@ public class UserInterface
 		if (MsgBoxManager.isActive())
 			MsgBoxManager.render();
 
-		if (!isLoaded())
-			setLoaded(true);
-
 	}
 
+	/**
+	 * 
+	 * <br>
+	 * <b>sendNotification</b>
+	 * <br>
+	 * <p>
+	 * <tt>public static void sendNotification(String s)</tt>
+	 * </p>
+	 * Send a notification to the screen which dissappears after several seconds.
+	 * <br><br>
+	 */
 	public static void sendNotification(String s)
 	{
 		notifications.add(s);
 		times.add(System.currentTimeMillis() + 2000L);
 	}
 
-	public static boolean isLoaded()
-	{
-		return loaded;
-	}
-
-	public static void setLoaded(boolean b)
-	{
-		loaded = b;
-	}
-
-	public static void init()
-	{
-		Window.init();
-
-		// load fonts
-		System.out.println("Loading 0%");
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
-		System.out.println("Loading 20%");
-		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
-		System.out.println("Loading 40%");
-		Util.useFont("Arial", Font.BOLD, 10, Color.white);
-		System.out.println("Loading 60%");
-		Util.useFont("Arial", Font.BOLD, 14, Color.black);
-		System.out.println("Loading 80%");
-		Util.useFont("Courier New", Font.BOLD, 28, Color.white);
-		System.out.println("Loading 100%");
-
-	}
+	
 
 }

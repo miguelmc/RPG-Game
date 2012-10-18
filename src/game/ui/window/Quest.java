@@ -9,14 +9,12 @@ public class Quest extends Window
 	public Quest(Point pos, Dimension s)
 	{
 		super(pos, s);
-
 	}
 
 	@Override
 	protected void mouse()
 	{
-		// TODO Auto-generated method stub
-
+		//TODO 
 	}
 
 }

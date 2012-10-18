@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-import game.entities.Entity;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
@@ -53,13 +52,11 @@ public class Main
 			System.exit(1);
 		}
 
-		// initializes opengl setting and static initialization for game objects
-		init();
+		initGL();
 
 		// Game Loop
-		while (!Display.isCloseRequested())
-		{ // as long as close button is not pressed
-
+		while (!Display.isCloseRequested())// as long as close button is not pressed
+		{ 
 			input();
 			MapManager.update(); // updates the current map
 
@@ -69,41 +66,29 @@ public class Main
 
 			Display.update(); // update the screen
 			Display.sync(60); // set fps to 60
-
 		}
 
 		Display.destroy();
 		System.exit(0);
 	}
 
-	private void init()
+	private void initGL()
 	{
-
 		// init GL
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to
-																// upper-left
-																// corner
+		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to upper-left corner
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND); // enable transparency
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable
-															// transparency
-
-		Entity.initialize(); // reads npc names (there's no xml for each npc so
-								// all the names are in a single file)
-
-		MapManager.init(); // creates the maps
-		UserInterface.init(); // loads fonts and textures for windows
-
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable transparency
 	}
 
 	private void input()
 	{
 		// give input to the map and windows unless the messagebox is active
 
-		while (Keyboard.next())
-		{ // checks for a keyboard event
+		while (Keyboard.next()) // checks for a keyboard event
+		{
 			if (MsgBoxManager.isActive())
 			{
 				MsgBoxManager.input();
@@ -114,10 +99,8 @@ public class Main
 			}
 		}
 
-		while (Mouse.next())
-		{ // checks for a mouse event
+		while (Mouse.next()) // checks for a mouse event
 			Window.mouseInput();
-		}
 
 	}
 

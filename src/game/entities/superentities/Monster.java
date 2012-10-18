@@ -26,6 +26,10 @@ import java.util.Random;
 
 import org.lwjgl.util.Point;
 
+/**
+ * A SuperEntity which attacks the player and moves freely in the map.
+ * It drops items and gives exp to the player upon dead.
+ */
 public class Monster extends SuperEntity
 {
 

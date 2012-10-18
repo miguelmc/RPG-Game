@@ -7,6 +7,10 @@ import java.util.List;
 
 import org.lwjgl.util.Point;
 
+/**
+ * Entity for objects such as trees or houses.
+ * The object itself is not "strong" but it contains several Blocks which are strong. This is because an object can be bigger than a single tile by no Entity can.
+ */
 public class Object extends Entity
 {
 

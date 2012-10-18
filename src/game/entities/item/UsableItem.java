@@ -10,6 +10,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+/**
+ * An item that can be used by the player.
+ * The behavior of the item is defined by a script.
+ */
 public class UsableItem extends Item
 {
 

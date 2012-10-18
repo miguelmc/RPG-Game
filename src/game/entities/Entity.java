@@ -17,6 +17,8 @@ import org.newdawn.slick.opengl.Texture;
  */
 public abstract class Entity extends GameObject
 {
+	
+	//TODO abstract method parse implemented by concrete entities and called from this class' constructor
 
 	private Dimension renderSize = new Dimension(1, 1);
 	private Point renderOffset = new Point();
@@ -88,7 +90,7 @@ public abstract class Entity extends GameObject
 	 * Renders the texture of the entity at position <i>x, y</i> <br>
 	 * <br>
 	 */
-	public void render(int x, int y)
+	public void render(int x, int y) //TODO make it a static method with an id parameter to render its texture (to be called by the inventory)
 	{
 		Util.render(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
 	}
@@ -157,11 +159,6 @@ public abstract class Entity extends GameObject
 	public Point getPositionInGrid()
 	{
 		return new Point(getX() - getMap().getOffSet().getX(), getY() - getMap().getOffSet().getY());
-	}
-
-	public static void initialize()
-	{
-		NPC.initialize();
 	}
 
 	/**

@@ -11,15 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A task that can be assigned by a NPC.
+ * Can give rewards upon completion.
+ */
 public class Quest extends GameObject
 {
-
-	// life cycle -> quest available > quest accepted (in progress) > quest
-	// completed > quest turned in
+	// life cycle -> quest available > quest accepted (in progress) > quest completed > quest turned in
+	
 	// TODO change to have an state and fit the cycle (i.e.) state = AVAILABLE
-
 	// TODO quest required level - create an static initialization to read all
-	// quests required levels
 	private String NAME, DESCRIPTION;
 	private Map<Integer, List<Integer>> monsterKills = new HashMap<Integer, List<Integer>>(); 
 	private boolean turnedIn = false;
@@ -54,11 +55,9 @@ public class Quest extends GameObject
 		}
 
 		requiredGold = Integer.parseInt(parser.getAttribute("Quest/requirements/gold", "amount"));
-
-		// quest rewards
-
+		
+		//quest rewards
 		expReward = Integer.parseInt(parser.getAttribute("Quest/rewards/exp", "amount"));
-
 		goldReward = Integer.parseInt(parser.getAttribute("Quest/rewards/gold", "amount"));
 
 		List<Map<String, String>> itemRewards = parser.getChildrenAttributes("Quest/rewards/items");
@@ -66,7 +65,6 @@ public class Quest extends GameObject
 		{
 			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
 		}
-
 	}
 
 	public void monsterKill(int id)
@@ -193,10 +191,8 @@ public class Quest extends GameObject
 
 	public static int getReqLevel(int id)
 	{
-
 		// TODO
 		return 0;
-
 	}
 
 	public static void activate(int id)

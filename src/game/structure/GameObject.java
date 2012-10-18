@@ -1,5 +1,8 @@
 package game.structure;
 
+/**
+ * Every game element is a game object. Each contain an id.
+ */
 public abstract class GameObject
 {
 

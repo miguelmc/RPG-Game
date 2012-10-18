@@ -27,6 +27,9 @@ import java.util.ListIterator;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Point;
 
+/**
+ * The main Entity of the game, which is controlled by the user and perform most of the actions of the game.
+ */
 public class Player extends SuperEntity
 {
 
@@ -513,10 +516,10 @@ public class Player extends SuperEntity
 		if (equips.get(equip.getType()) != null)
 			return;
 		equips.put(equip.getType(), equip);
-		raiseStat(EXTRA + MAXHP.ID, equip.getStat(MAXHP.ID));
-		raiseStat(EXTRA + MAXMP.ID, equip.getStat(MAXMP.ID));
-		raiseStat(EXTRA + ATK.ID, equip.getStat(ATK.ID));
-		raiseStat(EXTRA + STR.ID, equip.getStat(STR.ID));
+		raiseStat(EXTRA + MAXHP.ID, equip.getStat(MAXHP));
+		raiseStat(EXTRA + MAXMP.ID, equip.getStat(MAXMP));
+		raiseStat(EXTRA + ATK.ID, equip.getStat(ATK));
+		raiseStat(EXTRA + STR.ID, equip.getStat(STR));
 	}
 
 	public void removeEquip(EquipType type)
@@ -530,10 +533,10 @@ public class Player extends SuperEntity
 		if (!addItem(equip))
 			return;
 
-		raiseStat(EXTRA + MAXHP.ID, -equip.getStat(MAXHP.ID));
-		raiseStat(EXTRA + MAXMP.ID, -equip.getStat(MAXMP.ID));
-		raiseStat(EXTRA + ATK.ID, -equip.getStat(ATK.ID));
-		raiseStat(EXTRA + STR.ID, -equip.getStat(STR.ID));
+		raiseStat(EXTRA + MAXHP.ID, -equip.getStat(MAXHP));
+		raiseStat(EXTRA + MAXMP.ID, -equip.getStat(MAXMP));
+		raiseStat(EXTRA + ATK.ID, -equip.getStat(ATK));
+		raiseStat(EXTRA + STR.ID, -equip.getStat(STR));
 
 		equips.put(type, null);
 	}

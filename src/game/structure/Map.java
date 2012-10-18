@@ -21,6 +21,11 @@ import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * The main visual structure of the game.
+ * The place where all the entities are.
+ * Constituted by matrix of slots.
+ */
 public class Map extends GameObject
 {
 
@@ -29,14 +34,10 @@ public class Map extends GameObject
 	private Dimension size = new Dimension();
 	private Player player;
 	private Slot[][] matrix;
-	private TextureManager textureManager = new TextureManager(); // holds all
-																	// textures
-																	// used by
-																	// the map
+	private TextureManager textureManager = new TextureManager(); // holds all textures used by the map
 	private List<Spawner> spawners = new ArrayList<Spawner>();
 
-	public final static int VIEW_LIMIT = 4; // Tiles away from the side to move
-											// the camera
+	public final static int VIEW_LIMIT = 4; // Tiles away from the side to move the camera
 
 	public Map(int id)
 	{
@@ -53,7 +54,6 @@ public class Map extends GameObject
 	private void loadTextures(TextureManager prevTexManager)
 	{
 		// loads all texture of the map, recycle some from the previous map
-
 		// TODO recycle equipped items, and inventory
 
 		List<Slot> slots = getAllSlots();
@@ -107,7 +107,6 @@ public class Map extends GameObject
 
 	private void parseMap()
 	{
-
 		XMLParser parser = new XMLParser("map/" + hexID() + ".xml");
 
 		// Parse map info

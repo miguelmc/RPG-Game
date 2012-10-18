@@ -33,18 +33,16 @@ public abstract class Window
 	// TODO? create a stack for active windows, add on open and remove on close.
 	// Pop on esc pressed.
 
+	static
+	{
+		for (Window w : windows)
+			w.setTexture(w.getClass().getSimpleName().toLowerCase());
+	}
+	
 	public Window(Point pos, Dimension s)
 	{
 		position = pos;
 		size = s;
-	}
-
-	public static void init()
-	{
-		for (Window w : windows)
-		{
-			w.setTexture(w.getClass().getSimpleName().toLowerCase());
-		}
 	}
 
 	public static void renderAll()
@@ -88,34 +86,12 @@ public abstract class Window
 				if (Keyboard.getEventKey() == w.getKey())
 				{ // each window has a key assigned to open it
 					w.toggleActive(); // open/close window
+					// if for some reason the window goes out of the screen. (this might happen because mouse events and the game run on different threads)
 					if (w.getX() > Main.DIM.getWidth() || w.getX() + w.getWidth() < 0
-							|| w.getY() > Main.DIM.getHeight() || w.getY() + w.getHeight() < 0) // if
-																								// for
-																								// some
-																								// reason
-																								// the
-																								// window
-																								// goes
-																								// out
-																								// of
-																								// the
-																								// screen.
-																								// (this
-																								// might
-																								// happen
-																								// because
-																								// mouse
-																								// events
-																								// and
-																								// the
-																								// game
-																								// run
-																								// on
-																								// different
-																								// threads)
+							|| w.getY() > Main.DIM.getHeight() || w.getY() + w.getHeight() < 0) 
 						w.setPosition(100, 100);
-				} else if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE)
-				{ // close all
+				} else if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) // close all
+				{ 
 					w.close();
 				}
 			}

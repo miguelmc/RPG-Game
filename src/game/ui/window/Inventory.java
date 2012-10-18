@@ -168,9 +168,9 @@ public class Inventory extends Window
 				ArrayList<String> linesList = new ArrayList<String>();
 				for (int i = 0; i < Stat.values().length; i++)
 				{
-					if (equip.getStat(Stat.values()[i].ID) != 0)
+					if (equip.getStat(Stat.values()[i]) != 0)
 						linesList.add(Stat.values()[i].NAME + ": "
-								+ Integer.toString(equip.getStat(Stat.values()[i].ID)));
+								+ Integer.toString(equip.getStat(Stat.values()[i])));
 				}
 				lines = new String[linesList.size()];
 				for (int i = 0; i < linesList.size(); i++)
