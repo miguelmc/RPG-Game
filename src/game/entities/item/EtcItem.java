@@ -1,13 +1,16 @@
 package game.entities.item;
 
-public class EtcItem extends Item{
+public class EtcItem extends Item
+{
 
-	public EtcItem(int id) {
+	public EtcItem(int id)
+	{
 		super(id);
 	}
-	
-	public EtcItem(int id, int amount){
-	 super(id, amount);
+
+	public EtcItem(int id, int amount)
+	{
+		super(id, amount);
 	}
 
 }

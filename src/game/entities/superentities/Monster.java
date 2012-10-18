@@ -26,268 +26,318 @@ import java.util.Random;
 
 import org.lwjgl.util.Point;
 
-public class Monster extends SuperEntity {
-	
-	//TODO? auto update on its own thread?
-	
+public class Monster extends SuperEntity
+{
+
+	// TODO? auto update on its own thread?
+
 	private int exp, movePeriod, moveTimer = 0, hp, maxHP;
 	private String name;
 	private boolean angry = false, dead = false, respawn;
 	private Map<Integer, Integer> dropList = new HashMap<Integer, Integer>();
 	private long nextAtk = 0L;
 
-	public Monster(int id){
+	public Monster(int id)
+	{
 		this(id, true);
 	}
-	
-	public Monster(int id, boolean respawn){
+
+	public Monster(int id, boolean respawn)
+	{
 		super(id);
-		
-		addSkill(1792);//TODO have the skills of a monster in the xml
+
+		addSkill(1792);// TODO have the skills of a monster in the xml
 		this.respawn = respawn;
-		
+
 		parseMonster();
-		
+
 		setHP(getMaxHP());
-		
+
 		movePeriod = new Random(System.nanoTime()).nextInt(140) + 160;
 	}
-	
-	private void parseMonster() {
-		XMLParser parser = new XMLParser("monster/" + hexID() +"/data.xml");
-		
+
+	private void parseMonster()
+	{
+		XMLParser parser = new XMLParser("monster/" + hexID() + "/data.xml");
+
 		name = parser.getAttribute("Monster", "name");
 		setDamage(Integer.parseInt(parser.getAttribute("Monster", "damage")));
 		setMaxHP(Integer.parseInt(parser.getAttribute("Monster", "maxHP")));
 		exp = Integer.parseInt(parser.getAttribute("Monster", "exp"));
-		
+
 		List<java.util.Map<String, String>> drops = parser.getChildrenAttributes("Map/drops");
-		for(java.util.Map<String, String> data: drops){
+		for (java.util.Map<String, String> data : drops)
+		{
 			dropList.put(Integer.parseInt(data.get("id"), 16), Integer.parseInt(data.get("chance")));
 		}
 	}
 
-	public void UIRender(){
-		if(dead)
+	public void UIRender()
+	{
+		if (dead)
 			return;
-		
-		float cHP = (float)getHP()/(float)getMaxHP(); //current hp
-		
+
+		float cHP = (float) getHP() / (float) getMaxHP(); // current hp
+
 		int width = Slot.SIZE;
 		int height = Slot.SIZE;
-		
-		//HP BAR
+
+		// HP BAR
 		glColor3f(1f, 0f, 0f); // Red
 		glLoadIdentity();
-		glTranslatef((getX() - getMap().getOffSet().getX())*Slot.SIZE, (getY() - getMap().getOffSet().getY())*Slot.SIZE, 0);
+		glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
+				* Slot.SIZE, 0);
 		glBegin(GL_QUADS);
-			glVertex2f((float)(width*.13), (float)(height*.07));
-			glVertex2f((float)(width*.13) + (float)(width*.74)*cHP, (float)(height*.07));
-			glVertex2f((float)(width*.13) + (float)(width*.74)*cHP, (float)(height*.2));
-			glVertex2f((float)(width*.13), (float)(height*.2));
+		glVertex2f((float) (width * .13), (float) (height * .07));
+		glVertex2f((float) (width * .13) + (float) (width * .74) * cHP, (float) (height * .07));
+		glVertex2f((float) (width * .13) + (float) (width * .74) * cHP, (float) (height * .2));
+		glVertex2f((float) (width * .13), (float) (height * .2));
 		glEnd();
 		glLoadIdentity();
-		
-		//HP BAR BORDER
+
+		// HP BAR BORDER
 		glColor3f(0f, 0f, 0f);
 		glLoadIdentity();
-		glTranslatef((getX() - getMap().getOffSet().getX())*Slot.SIZE, (getY() - getMap().getOffSet().getY())*Slot.SIZE, 0);
+		glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
+				* Slot.SIZE, 0);
 		glLineWidth(1);
 		glBegin(GL_LINES);
-			glVertex2f((float)(width*.13), (float)(height*.07));
-			glVertex2f((float)(width*.87), (float)(height*.07));
-			glVertex2f((float)(width*.87), (float)(height*.07));
-			glVertex2f((float)(width*.87), (float)(height*.2));
-			glVertex2f((float)(width*.87), (float)(height*.2));
-			glVertex2f((float)(width*.13), (float)(height*.2));
-			glVertex2f((float)(width*.13), (float)(height*.2));
-			glVertex2f((float)(width*.13), (float)(height*.07));
+		glVertex2f((float) (width * .13), (float) (height * .07));
+		glVertex2f((float) (width * .87), (float) (height * .07));
+		glVertex2f((float) (width * .87), (float) (height * .07));
+		glVertex2f((float) (width * .87), (float) (height * .2));
+		glVertex2f((float) (width * .87), (float) (height * .2));
+		glVertex2f((float) (width * .13), (float) (height * .2));
+		glVertex2f((float) (width * .13), (float) (height * .2));
+		glVertex2f((float) (width * .13), (float) (height * .07));
 		glEnd();
 		glLoadIdentity();
-		
+
 		glColor3f(1f, 1f, 1f);
-		
+
 		Util.useFont("Arial", Font.BOLD, 10, Color.white);
-		float xTraslation = width/2-(Util.getTextWidth(getName()))/2;
-		
-		Util.write(getName(), ((getX() - getMap().getOffSet().getX())*Slot.SIZE + xTraslation), (getY() - getMap().getOffSet().getY())*Slot.SIZE - (float)(Slot.SIZE*.3));
-		
+		float xTraslation = width / 2 - (Util.getTextWidth(getName())) / 2;
+
+		Util.write(getName(), ((getX() - getMap().getOffSet().getX()) * Slot.SIZE + xTraslation), (getY() - getMap()
+				.getOffSet().getY()) * Slot.SIZE - (float) (Slot.SIZE * .3));
+
 		super.UIRender();
-		
+
 	}
-	
-	public void update(){
-		
-		//AutoMove
-		if (moveTimer == movePeriod){
+
+	public void update()
+	{
+
+		// AutoMove
+		if (moveTimer == movePeriod)
+		{
 			Random r = new Random(System.nanoTime());
 			moveTimer = 0;
-			if(angry){
-				movePeriod = r.nextInt(40)+40; //move faster when angry
+			if (angry)
+			{
+				movePeriod = r.nextInt(40) + 40; // move faster when angry
 				int num1 = 0, num2 = 2;
-				//moves based on the player position relative to its position
-				//TODO rewrite using Util.addRelPoints
-				if(!(getMap().getPlayer().getX() == getX() || getMap().getPlayer().getY() == getY())){
-					if(getMap().getPlayer().getX() > getX() && getMap().getPlayer().getY() < getY()){
+				// moves based on the player position relative to its position
+				// TODO rewrite using Util.addRelPoints
+				if (!(getMap().getPlayer().getX() == getX() || getMap().getPlayer().getY() == getY()))
+				{
+					if (getMap().getPlayer().getX() > getX() && getMap().getPlayer().getY() < getY())
+					{
 						num1 = UP;
 						num2 = RIGHT;
-					}else if(getMap().getPlayer().getX() > getX() && getMap().getPlayer().getY() > getY()){
+					} else if (getMap().getPlayer().getX() > getX() && getMap().getPlayer().getY() > getY())
+					{
 						num1 = RIGHT;
 						num2 = DOWN;
-					}else if(getMap().getPlayer().getX() < getX() && getMap().getPlayer().getY() > getY()){
+					} else if (getMap().getPlayer().getX() < getX() && getMap().getPlayer().getY() > getY())
+					{
 						num1 = DOWN;
 						num2 = LEFT;
-					}else if(getMap().getPlayer().getX() < getX() && getMap().getPlayer().getY() < getY()){
+					} else if (getMap().getPlayer().getX() < getX() && getMap().getPlayer().getY() < getY())
+					{
 						num1 = LEFT;
 						num2 = UP;
 					}
 					ArrayList<Integer> nums = new ArrayList<Integer>(2);
-					nums.add(num1); nums.add(num2);
+					nums.add(num1);
+					nums.add(num2);
 					moveRandom(nums);
-				}else{
-					if(getMap().getPlayer().getX() == getX()){
-						if(getMap().getPlayer().getY() > getY()){	
+				} else
+				{
+					if (getMap().getPlayer().getX() == getX())
+					{
+						if (getMap().getPlayer().getY() > getY())
+						{
 							move(DOWN);
-						}else{
+						} else
+						{
 							move(UP);
 						}
-					}else{
-						if(getMap().getPlayer().getX() > getX()){	
+					} else
+					{
+						if (getMap().getPlayer().getX() > getX())
+						{
 							move(RIGHT);
-						}else{
+						} else
+						{
 							move(LEFT);
 						}
 					}
 				}
-			}else{
-				movePeriod = r.nextInt(140)+160;
+			} else
+			{
+				movePeriod = r.nextInt(140) + 160;
 				List<Integer> nums = new ArrayList<Integer>();
-				nums.add(UP); nums.add(RIGHT); nums.add(DOWN); nums.add(LEFT); 
+				nums.add(UP);
+				nums.add(RIGHT);
+				nums.add(DOWN);
+				nums.add(LEFT);
 				moveRandom(nums);
 			}
 		}
 		moveTimer++;
-		
-		//AutoAttack
-		if(angry){
-			if(nextAtk < System.currentTimeMillis()){
+
+		// AutoAttack
+		if (angry)
+		{
+			if (nextAtk < System.currentTimeMillis())
+			{
 				Player p = getMap().getPlayer();
 				boolean attack = false;
-				switch(getFacingDir()){
+				switch (getFacingDir())
+				{
 				case UP:
-					if(p.getX() == getX() && p.getY() < getY())
+					if (p.getX() == getX() && p.getY() < getY())
 						attack = true;
 					break;
 				case RIGHT:
-					if(p.getX() > getX() && p.getY() == getY())
+					if (p.getX() > getX() && p.getY() == getY())
 						attack = true;
 					break;
 				case DOWN:
-					if(p.getX() == getX() && p.getY() > getY())
+					if (p.getX() == getX() && p.getY() > getY())
 						attack = true;
 					break;
 				case LEFT:
-					if(p.getX() < getX() && p.getY() == getY())
+					if (p.getX() < getX() && p.getY() == getY())
 						attack = true;
 					break;
 				}
-				if(attack){
+				if (attack)
+				{
 					getSkill(1792).attack();
 					nextAtk = System.currentTimeMillis() + 2000;
 				}
 			}
 		}
-		
+
 		super.update();
 	}
 
-	private void moveRandom(List<Integer> nums) {
-		
-		if(nums.size() == 0)
+	private void moveRandom(List<Integer> nums)
+	{
+
+		if (nums.size() == 0)
 			return;
-		
+
 		Point oldPos = position();
-				
+
 		int randNum = new Random(System.nanoTime()).nextInt(nums.size());
 		int dir = nums.get(randNum);
 		move(dir);
-		
-		if(oldPos.equals(position())){
+
+		if (oldPos.equals(position()))
+		{
 			nums.remove(randNum);
 			moveRandom(nums);
 		}
 	}
-	
-	public boolean hit(int damage){
+
+	public boolean hit(int damage)
+	{
 		angry = true;
 		moveTimer = movePeriod;
-		
+
 		return super.hit(damage);
 	}
-	
-	public void die(){
-		
+
+	public void die()
+	{
+
 		dead = true;
-		
-		//drop items
+
+		// drop items
 		Random random = new Random(System.nanoTime());
-		for(Integer id: dropList.keySet()){
-			int num = random.nextInt(101); //generate rand num between 0 and 100 inclusive
-			if(num<=dropList.get(id)){ //if the random number is less than the chance of drop, drop
+		for (Integer id : dropList.keySet())
+		{
+			int num = random.nextInt(101); // generate rand num between 0 and
+											// 100 inclusive
+			if (num <= dropList.get(id))
+			{ // if the random number is less than the chance of drop, drop
 				Item item = (Item) Entity.createEntity(id);
 				getMap().add(item, position());
 			}
 		}
-		
+
 		getMap().getPlayer().gainExp(getExp());
-		
-		for(Quest q: getMap().getPlayer().getActiveQuests())
+
+		for (Quest q : getMap().getPlayer().getActiveQuests())
 			q.monsterKill(id());
-		
+
 		super.die();
 
 	}
-	
-	public boolean isDead(){
+
+	public boolean isDead()
+	{
 		return dead;
 	}
 
-	public int getDamage() {
+	public int getDamage()
+	{
 		return super.getDamage();
 	}
-	
-	public int getExp() {
+
+	public int getExp()
+	{
 		return exp;
 	}
-	
-	public boolean respawns(){
+
+	public boolean respawns()
+	{
 		return respawn;
 	}
-	
-	public String getName(){
+
+	public String getName()
+	{
 		return name;
 	}
 
-	public List<Integer> getDropsID() {
+	public List<Integer> getDropsID()
+	{
 		return new ArrayList<Integer>(dropList.keySet());
 	}
-	
-	public int getHP() {
+
+	public int getHP()
+	{
 		return hp;
 	}
 
-	public void setHP(int hp) {
+	public void setHP(int hp)
+	{
 		this.hp = hp;
-		if(this.hp > maxHP)
+		if (this.hp > maxHP)
 			this.hp = maxHP;
 	}
 
-	public int getMaxHP() {
+	public int getMaxHP()
+	{
 		return maxHP;
 	}
 
-	public void setMaxHP(int maxHP) {
+	public void setMaxHP(int maxHP)
+	{
 		this.maxHP = maxHP;
 	}
-	
+
 }

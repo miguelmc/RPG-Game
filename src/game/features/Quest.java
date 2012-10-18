@@ -11,171 +11,205 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Quest extends GameObject {
+public class Quest extends GameObject
+{
 
-	//life cycle -> quest available > quest accepted (in progress) > quest completed > quest turned in
-	//TODO change to have an state and fit the cycle (i.e.) state = AVAILABLE
-	
-	//TODO quest required level - create an static initialization to read all quests required levels
+	// life cycle -> quest available > quest accepted (in progress) > quest
+	// completed > quest turned in
+	// TODO change to have an state and fit the cycle (i.e.) state = AVAILABLE
+
+	// TODO quest required level - create an static initialization to read all
+	// quests required levels
 	private String NAME, DESCRIPTION;
-	private Map<Integer, List<Integer>> monsterKills = new HashMap<Integer, List<Integer>>(); // id, total kill, kills left
+	private Map<Integer, List<Integer>> monsterKills = new HashMap<Integer, List<Integer>>(); 
 	private boolean turnedIn = false;
 	private Map<Integer, Integer> requiredItems = new HashMap<Integer, Integer>();
 	private ArrayList<Item> itemsNeeded = new ArrayList<Item>(), itemReward = new ArrayList<Item>();
 	private int requiredGold = 0, goldReward = 0, expReward = 0;
 
-	public Quest(int id){
+	public Quest(int id)
+	{
 		super(id);
-		
+
 		XMLParser parser = new XMLParser("quest/" + hexID() + ".xml");
-		
-		//quest info
+
+		// quest info
 		NAME = parser.getAttribute("Quest", "name");
 		DESCRIPTION = parser.getAttribute("Quest", "description");
-		
-		//quest requirements
+
+		// quest requirements
 		List<Map<String, String>> reqMonsterKills = parser.getChildrenAttributes("Quest/requirements/monster_kills");
-		for(Map<String, String> attributes: reqMonsterKills){
-			monsterKills.put(Integer.parseInt(attributes.get("id"), 16),
-					Arrays.asList(Integer.parseInt(attributes.get("amount")), Integer.parseInt(attributes.get("amount"))));
+		for (Map<String, String> attributes : reqMonsterKills)
+		{
+			monsterKills.put(
+					Integer.parseInt(attributes.get("id"), 16),
+					Arrays.asList(Integer.parseInt(attributes.get("amount")),
+							Integer.parseInt(attributes.get("amount"))));
 		}
-		
+
 		List<Map<String, String>> reqItems = parser.getChildrenAttributes("Quest/requirements/items");
-		for(Map<String, String> attributes: reqItems){
+		for (Map<String, String> attributes : reqItems)
+		{
 			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
 		}
-		
+
 		requiredGold = Integer.parseInt(parser.getAttribute("Quest/requirements/gold", "amount"));
-		
-		//quest rewards
-		
+
+		// quest rewards
+
 		expReward = Integer.parseInt(parser.getAttribute("Quest/rewards/exp", "amount"));
-		
+
 		goldReward = Integer.parseInt(parser.getAttribute("Quest/rewards/gold", "amount"));
-		
+
 		List<Map<String, String>> itemRewards = parser.getChildrenAttributes("Quest/rewards/items");
-		for(Map<String, String> attributes: itemRewards){
+		for (Map<String, String> attributes : itemRewards)
+		{
 			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
 		}
-		
+
 	}
-	
-	public void monsterKill(int id){
-		if(!isTurnedIn()){
+
+	public void monsterKill(int id)
+	{
+		if (!isTurnedIn())
+		{
 			int killsLeft = monsterKills.get(id).get(0);
-			if(killsLeft > 0){
+			if (killsLeft > 0)
+			{
 				monsterKills.get(id).set(0, killsLeft - 1);
 				int totalKills = monsterKills.get(id).get(1);
-				UserInterface.sendNotification( "Quest " + getName() + ": " + (totalKills - killsLeft) + "/" + totalKills);
+				UserInterface.sendNotification("Quest " + getName() + ": " + (totalKills - killsLeft) + "/"
+						+ totalKills);
 			}
 		}
 	}
-	
-	public List<Integer> getMonstersToKill(){
+
+	public List<Integer> getMonstersToKill()
+	{
 		return new ArrayList<Integer>(monsterKills.keySet());
 	}
-	
-	public int getKillsLeft(int id){
-		
+
+	public int getKillsLeft(int id)
+	{
+
 		List<Integer> monster = monsterKills.get(id);
-		
-		if(monster != null)
+
+		if (monster != null)
 			return monster.get(0);
-		
+
 		return -1;
 	}
-	
-	public int getTotalKills(int id){
-		
+
+	public int getTotalKills(int id)
+	{
+
 		List<Integer> monster = monsterKills.get(id);
-		
-		if(monster != null)
+
+		if (monster != null)
 			return monster.get(1);
-		
+
 		return -1;
-		
+
 	}
-	
-	public boolean isCompleted() {
-		
+
+	public boolean isCompleted()
+	{
+
 		boolean complete = true;
-		
-		for(Item i: itemsNeeded){
-			if(!getMap().getPlayer().hasItem(i.id(), i.getQuantity())){
+
+		for (Item i : itemsNeeded)
+		{
+			if (!getMap().getPlayer().hasItem(i.id(), i.getQuantity()))
+			{
 				complete = false;
 			}
 		}
-		
-		if(!(getMap().getPlayer().getGold() >= requiredGold) || !killsComplete()){
+
+		if (!(getMap().getPlayer().getGold() >= requiredGold) || !killsComplete())
+		{
 			complete = false;
 		}
-		
+
 		return complete;
 	}
 
-	private boolean killsComplete() {
-		
-		for(List<Integer> kills: monsterKills.values()){
-			if(kills.get(0) != 0){
+	private boolean killsComplete()
+	{
+
+		for (List<Integer> kills : monsterKills.values())
+		{
+			if (kills.get(0) != 0)
+			{
 				return false;
 			}
 		}
-		
+
 		return true;
-		
+
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return NAME;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return DESCRIPTION;
 	}
 
-	public ArrayList<Item> getItemsNeeded() {
+	public ArrayList<Item> getItemsNeeded()
+	{
 		return itemsNeeded;
 	}
-	
-	public boolean isTurnedIn(){
+
+	public boolean isTurnedIn()
+	{
 		return turnedIn;
 	}
-	
-	public void turnIn(){
-		
-		if(!isCompleted())
+
+	public void turnIn()
+	{
+
+		if (!isCompleted())
 			return;
-		
-		for(Item i: itemsNeeded){
+
+		for (Item i : itemsNeeded)
+		{
 			getMap().getPlayer().loseItem(i.id(), i.getQuantity());
 		}
-		
+
 		getMap().getPlayer().gainGold(-requiredGold);
 		getMap().getPlayer().gainGold(goldReward);
 		getMap().getPlayer().gainExp(expReward);
-		
-		for(Item i: itemReward){
+
+		for (Item i : itemReward)
+		{
 			getMap().getPlayer().addItem(i);
 		}
-		
+
 		turnedIn = true;
 	}
 
-	public static int getReqLevel(int id) {
+	public static int getReqLevel(int id)
+	{
 
-		//TODO
+		// TODO
 		return 0;
-		
+
 	}
 
-	public static void activate(int id) {
-		if(getMap().getPlayer().getLevel() >= getReqLevel(id)){
+	public static void activate(int id)
+	{
+		if (getMap().getPlayer().getLevel() >= getReqLevel(id))
+		{
 			getMap().getPlayer().addQuest(new Quest(id));
 		}
 	}
-	
-	public String toString(){
+
+	public String toString()
+	{
 		return getName();
 	}
-	
+
 }

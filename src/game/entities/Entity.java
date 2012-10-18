@@ -12,26 +12,31 @@ import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
 /**
- * An entity is any game object that can be in a map such as the player, NPCs, monsters, objects, etc.
+ * An entity is any game object that can be in a map such as the player, NPCs,
+ * monsters, objects, etc.
  */
-public abstract class Entity extends GameObject{
-	
+public abstract class Entity extends GameObject
+{
+
 	private Dimension renderSize = new Dimension(1, 1);
 	private Point renderOffset = new Point();
 	private boolean strong = false;
 	private Point position;
 	private Texture texture;
 	private boolean invisible = false;
-	
-	public Entity(int id){
+
+	public Entity(int id)
+	{
 		super(id);
 	}
-	
-	public static Entity createEntity(int id){
-		//static constructor
+
+	public static Entity createEntity(int id)
+	{
+		// static constructor
 		EntityType type = EntityType.getType(id);
-		
-		switch(type){
+
+		switch (type)
+		{
 		case Tile:
 			return new Tile(id);
 		case Portal:
@@ -49,222 +54,251 @@ public abstract class Entity extends GameObject{
 		case Object:
 			return new Object(id);
 		}
-		
+
 		throw new IllegalArgumentException("The ID does not match an entity type.");
-		
+
 	}
 
-	public void render(){
-		if(!isInvisible())
-			Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(), getRenderSize());
+	public void render()
+	{
+		if (!isInvisible())
+			Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(),
+					getRenderSize());
 	}
-	
-	public void midRender(){}
-	public void UIRender(){}
-	public void update(){}
-	
+
+	public void midRender()
+	{
+	}
+
+	public void UIRender()
+	{
+	}
+
+	public void update()
+	{
+	}
+
 	/**
 	 * 
 	 * <br>
-	 * <b>render</b>
-	 * <br>
+	 * <b>render</b> <br>
 	 * <p>
 	 * <tt>public void render(int x, int y)</tt>
 	 * </p>
-	 * Renders the texture of the entity at position <i>x, y</i>
-	 * <br><br>
+	 * Renders the texture of the entity at position <i>x, y</i> <br>
+	 * <br>
 	 */
-	public void render(int x, int y){
+	public void render(int x, int y)
+	{
 		Util.render(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
 	}
-	
-	public Point position(){
+
+	public Point position()
+	{
 		return position;
 	}
-	
-	public int getX(){
+
+	public int getX()
+	{
 		return position().getX();
 	}
-	
-	public int getY(){
+
+	public int getY()
+	{
 		return position().getY();
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>setPosition</b>
-	 * <br>
+	 * <b>setPosition</b> <br>
 	 * <p>
 	 * <tt>public void setPosition(Point pos)</tt>
 	 * </p>
-	 * Removes <i>this</i> entity from the map and adds it to the map in position <i>pos</i>.
-	 * <br><br>
+	 * Removes <i>this</i> entity from the map and adds it to the map in
+	 * position <i>pos</i>. <br>
+	 * <br>
 	 */
-	public void setPosition(Point pos){
-		if(position() != null){
+	public void setPosition(Point pos)
+	{
+		if (position() != null)
+		{
 			getMap().get(position()).remove(this);
 		}
 		getMap().get(pos).add(this);
 		position = new Point(pos); // save a reference to the position
 	}
-	
-	public void setPosition(int x, int y){
+
+	public void setPosition(int x, int y)
+	{
 		setPosition(new Point(x, y));
 	}
-	
-	public void setX(int x){
+
+	public void setX(int x)
+	{
 		setPosition(x, getY());
 	}
-	
-	public void setY(int y){
+
+	public void setY(int y)
+	{
 		setPosition(getX(), y);
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>getPositionInGrid</b>
-	 * <br>
+	 * <b>getPositionInGrid</b> <br>
 	 * <p>
 	 * <tt>public Point getPositionInGrid()</tt>
 	 * </p>
-	 * Returns the position of the entity relative to the camera.
-	 * <br><br>
+	 * Returns the position of the entity relative to the camera. <br>
+	 * <br>
 	 */
-	public Point getPositionInGrid(){
+	public Point getPositionInGrid()
+	{
 		return new Point(getX() - getMap().getOffSet().getX(), getY() - getMap().getOffSet().getY());
 	}
 
-	public static void initialize() {
+	public static void initialize()
+	{
 		NPC.initialize();
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>setStrong</b>
-	 * <br>
+	 * <b>setStrong</b> <br>
 	 * <p>
 	 * <tt>protected void setStrong()</tt>
 	 * </p>
-	 * Sets the entity to be strong.
-	 * Entities are not strong by default.
-	 * A slot cannot have more than one strong entity.
-	 * <br><br>
+	 * Sets the entity to be strong. Entities are not strong by default. A slot
+	 * cannot have more than one strong entity. <br>
+	 * <br>
+	 * 
 	 * @see #setStrong()
 	 */
-	protected void setStrong(){
+	protected void setStrong()
+	{
 		strong = true;
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>setStrong</b>
-	 * <br>
+	 * <b>setStrong</b> <br>
 	 * <p>
 	 * <tt>public boolean isStrong()</tt>
 	 * </p>
-	 * Returns whether the entity is strong or not.
-	 * Entities are not strong by default.
-	 * A slot cannot have more than one strong entity.
+	 * Returns whether the entity is strong or not. Entities are not strong by
+	 * default. A slot cannot have more than one strong entity.
 	 * <p>
+	 * 
 	 * @see #setStrong()
 	 */
-	public boolean isStrong(){
+	public boolean isStrong()
+	{
 		return strong;
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>renderSize</b>
-	 * <br>
+	 * <b>renderSize</b> <br>
 	 * <p>
 	 * <tt>public Dimension renderSize()</tt>
 	 * </p>
-	 * Returns the size in tiles that the texture will be rendered.
-	 * <br><br>
+	 * Returns the size in tiles that the texture will be rendered. <br>
+	 * <br>
+	 * 
 	 * @see com.game.structure.Slot#SIZE
 	 */
-	public Dimension getRenderSize(){
+	public Dimension getRenderSize()
+	{
 		return new Dimension(renderSize);
 	}
-	
-	public void setRenderSize(int width, int height){
+
+	public void setRenderSize(int width, int height)
+	{
 		renderSize.setSize(width, height);
 	}
-	
-	public Texture getTexture(){
+
+	public Texture getTexture()
+	{
 		return texture;
 	}
-	
-	public void setTexture(Texture t){
-		texture = t; //reference to the texture held by TextureManager
+
+	public void setTexture(Texture t)
+	{
+		texture = t; // reference to the texture held by TextureManager
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>getRenderOffSet</b>
-	 * <br>
+	 * <b>getRenderOffSet</b> <br>
 	 * <p>
 	 * <tt>public Point getRenderOffSet()</tt>
 	 * </p>
-	 * Returns the offset in pixels of the texture rendered.
-	 * <br><br>
+	 * Returns the offset in pixels of the texture rendered. <br>
+	 * <br>
+	 * 
 	 * @see #setRenderOffset(int x, int y)
 	 */
-	public Point getRenderOffset(){
+	public Point getRenderOffset()
+	{
 		return new Point(renderOffset); // new point for immutability
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>setRenderOffSet</b>
-	 * <br>
+	 * <b>setRenderOffSet</b> <br>
 	 * <p>
 	 * <tt>TODO /header/</tt>
 	 * </p>
-	 * TODO /description/
-	 * <br><br>
+	 * TODO /description/ <br>
+	 * <br>
+	 * 
 	 * @param x
 	 * @param y
-	 * @throws TODO /Exception/
-	 *             if TODO /Cause/
+	 * @throws TODO
+	 *             /Exception/ if TODO /Cause/
 	 * @see #TODO/methodName/
 	 * @author Alfredo Altamirano
 	 */
-	public void setRenderOffset(int x, int y){
+	public void setRenderOffset(int x, int y)
+	{
 		renderOffset.setLocation(x, y);
 	}
-	
-	public void move(Point move){
+
+	public void move(Point move)
+	{
 		setPosition(getX() + move.getX(), getY() + move.getY());
 	}
-	
+
 	/**
 	 * 
 	 * <br>
-	 * <b>modifyPos</b>
-	 * <br>
+	 * <b>modifyPos</b> <br>
 	 * <p>
 	 * <tt>public void modifyPos(Point pos)</tt>
 	 * </p>
-	 * Changes the position reference of the entity without changing its position in the map.
-	 * <br><br>
+	 * Changes the position reference of the entity without changing its
+	 * position in the map. <br>
+	 * <br>
 	 */
-	public void modifyPos(Point pos) {
+	public void modifyPos(Point pos)
+	{
 		position = pos;
 	}
 
-	public boolean isInvisible() {
-		return invisible ;
+	public boolean isInvisible()
+	{
+		return invisible;
 	}
-	
-	public void setInvisible(boolean inv) {
+
+	public void setInvisible(boolean inv)
+	{
 		invisible = inv;
 	}
 }

@@ -17,26 +17,30 @@ import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
-//TODO adjust this class to use Util.render and make more animation friendly
-public class SubImage{
-	
+// TODO adjust this class to use Util.render and make more animation friendly
+public class SubImage
+{
+
 	Texture spriteSheet;
 	Point pos;
 	Dimension size;
-	
-	public SubImage(Texture texture, Point pos, Dimension size){
+
+	public SubImage(Texture texture, Point pos, Dimension size)
+	{
 		spriteSheet = texture;
 		this.pos = pos;
 		this.size = size;
 	}
-	
-	public void render(int x, int y, int flipClockWise){
+
+	public void render(int x, int y, int flipClockWise)
+	{
 		float w = spriteSheet.getImageWidth();
 		float h = spriteSheet.getImageHeight();
-		
+
 		Point flips[][] = new Point[4][4];
-		
-		switch(flipClockWise){
+
+		switch (flipClockWise)
+		{
 		case 0:
 			flips[0][0] = new Point(0, 0);
 			flips[0][1] = new Point(size.getWidth(), 0);
@@ -62,27 +66,28 @@ public class SubImage{
 			flips[3][0] = new Point(0, size.getHeight());
 			break;
 		}
-				
+
 		glEnable(GL_TEXTURE_2D);
 		spriteSheet.bind();
 		glLoadIdentity();
-		glTranslatef(x - MapManager.getMap().getOffSet().getX()*Slot.SIZE, y - MapManager.getMap().getOffSet().getY()*Slot.SIZE, 0);
+		glTranslatef(x - MapManager.getMap().getOffSet().getX() * Slot.SIZE, y - MapManager.getMap().getOffSet().getY()
+				* Slot.SIZE, 0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(pos.getX()/w, pos.getY()/h);
-			glVertex2f(flips[flipClockWise][0].getX(), flips[flipClockWise][0].getY());
-			
-			glTexCoord2f((pos.getX() + size.getWidth())/w, pos.getY()/h);
-			glVertex2f(flips[flipClockWise][1].getX(), flips[flipClockWise][1].getY());
-			
-			glTexCoord2f((pos.getX() + size.getWidth())/w, (pos.getY() + size.getHeight())/h);
-			glVertex2f(flips[flipClockWise][2].getX(), flips[flipClockWise][2].getY());
-			
-			glTexCoord2f(pos.getX()/w, (pos.getY() + size.getHeight())/h);
-			glVertex2f(flips[flipClockWise][3].getX(), flips[flipClockWise][3].getY());
-		
+		glTexCoord2f(pos.getX() / w, pos.getY() / h);
+		glVertex2f(flips[flipClockWise][0].getX(), flips[flipClockWise][0].getY());
+
+		glTexCoord2f((pos.getX() + size.getWidth()) / w, pos.getY() / h);
+		glVertex2f(flips[flipClockWise][1].getX(), flips[flipClockWise][1].getY());
+
+		glTexCoord2f((pos.getX() + size.getWidth()) / w, (pos.getY() + size.getHeight()) / h);
+		glVertex2f(flips[flipClockWise][2].getX(), flips[flipClockWise][2].getY());
+
+		glTexCoord2f(pos.getX() / w, (pos.getY() + size.getHeight()) / h);
+		glVertex2f(flips[flipClockWise][3].getX(), flips[flipClockWise][3].getY());
+
 		glEnd();
 		glLoadIdentity();
 		glDisable(GL_TEXTURE_2D);
 	}
-	
+
 }
