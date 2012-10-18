@@ -27,7 +27,6 @@ public abstract class Window {
 	public Window(Point pos, Dimension s){
 		position = pos;
 		size = s;
-		
 	}
 	
 	public static void init(){	

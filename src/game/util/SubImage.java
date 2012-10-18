@@ -17,6 +17,7 @@ import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
+//TODO adjust this class to use Util.render and make more animation friendly
 public class SubImage{
 	
 	Texture spriteSheet;
@@ -30,7 +31,6 @@ public class SubImage{
 	}
 	
 	public void render(int x, int y, int flipClockWise){
-		//TODO adjust with Util.render
 		float w = spriteSheet.getImageWidth();
 		float h = spriteSheet.getImageHeight();
 		

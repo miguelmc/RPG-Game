@@ -82,7 +82,6 @@ public class Main{
 		glEnable(GL_BLEND); // enable transparency
     	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable transparency
     	
-    	//init Game
 		Entity.initialize(); // reads npc names (there's no xml for each npc so all the names are in a single file)
 		
 		MapManager.init(); //creates the maps
