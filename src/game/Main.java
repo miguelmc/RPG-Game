@@ -37,8 +37,6 @@ public class Main
 
 	static //static "constructor"
 	{
-		//hola
-		System.out.println("Hola");
 		XMLParser parser = new XMLParser("game_config.xml");
 
 		NAME = parser.getAttribute("GAME", "name");

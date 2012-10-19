@@ -76,7 +76,7 @@ public class Quest extends GameObject
 			{
 				monsterKills.get(id).set(0, killsLeft - 1);
 				int totalKills = monsterKills.get(id).get(1);
-				UserInterface.sendNotification("Quest " + getName() + ": " + (totalKills - killsLeft) + "/"
+				UserInterface.sendNotification("Quest " + getName() + ": " + (totalKills - killsLeft + 1) + "/"
 						+ totalKills);
 			}
 		}

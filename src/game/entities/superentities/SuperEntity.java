@@ -31,26 +31,23 @@ public abstract class SuperEntity extends Entity
 		super(id);
 		setStrong();
 
-		// TODO set superEntity to have 3 textures always
-		if (this instanceof Player)
-		{
-			textures[0] = Util.getTexture("player/" + hexID() + "/back.png");
-			textures[1] = Util.getTexture("player/" + hexID() + "/side.png");
-			textures[2] = Util.getTexture("player/" + hexID() + "/front.png");
-			textures[3] = textures[1];
-			setTexture(textures[DOWN]);
-		} else if (this instanceof Monster)
-		{
-			textures[0] = Util.getTexture("monster/" + hexID() + "/texture.png");
-			textures[1] = Util.getTexture("monster/" + hexID() + "/texture.png");
-			textures[2] = Util.getTexture("monster/" + hexID() + "/texture.png");
-			textures[3] = Util.getTexture("monster/" + hexID() + "/texture.png");
-		}
+		textures[UP] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/back.png");
+		textures[RIGHT] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/side.png");
+		textures[DOWN] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/front.png");
+		textures[LEFT] = textures[RIGHT];
 
 		face(DOWN);
-
 	}
 
+	/**
+	 * OVERRIDE getTexture() del Entity
+	 */
+	
+	public Texture getTexture()
+	{
+		return textures[getFacingDir()];
+	}
+	
 	/**
 	 * 
 	 * <br>
@@ -69,7 +66,6 @@ public abstract class SuperEntity extends Entity
 	protected void face(int dir)
 	{
 		setFacing(dir);
-		setTexture(textures[dir]);
 	}
 
 	public void move(int dir)
