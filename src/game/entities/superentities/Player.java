@@ -16,7 +16,7 @@ import game.structure.Map;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
-import game.util.Timer;
+//import game.util.Timer;
 import game.util.Util;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class Player extends SuperEntity
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXMP.ID));
 
-		try
+		/*try
 		{
 			System.out.println();
 			Timer timer = new Timer(this, this.getClass().getMethod("regen", new Class<?>[0]), 10000);
@@ -78,7 +78,7 @@ public class Player extends SuperEntity
 		} catch (NoSuchMethodException e1)
 		{
 			e1.printStackTrace();
-		}
+		}*/
 
 	}
 
