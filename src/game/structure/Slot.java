@@ -209,7 +209,6 @@ public class Slot
 			if (items.size() < 4)
 				updateItemsRender();
 		}
-
 	}
 
 	private void updateItemsRender()
@@ -258,7 +257,7 @@ public class Slot
 			setTile((Tile) entity);
 		else if (entity instanceof Portal)
 			setPortal((Portal) entity);
-		else if (entity instanceof Object && !entity.isStrong())
+		else if (entity instanceof Object && !entity.isStrong()) //object but not block
 			setObject((Object) entity);
 		else if (entity.isStrong())
 			setStrongEntity(entity);

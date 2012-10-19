@@ -64,7 +64,7 @@ public abstract class Entity extends GameObject
 	public void render()
 	{
 		if (!isInvisible())
-			Util.render(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(),
+			Util.renderEntity(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(),
 					getRenderSize());
 	}
 
@@ -92,7 +92,7 @@ public abstract class Entity extends GameObject
 	 */
 	public void render(int x, int y) //TODO make it a static method with an id parameter to render its texture (to be called by the inventory)
 	{
-		Util.render(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
+		Util.renderEntity(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
 	}
 
 	public Point position()

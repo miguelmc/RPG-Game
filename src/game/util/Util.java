@@ -327,9 +327,9 @@ public class Util
 	 * Renders the texture at position <i>pos</i>. <br>
 	 * <br>
 	 */
-	public static void render(Texture texture, Point pos)
+	public static void renderEntity(Texture texture, Point pos)
 	{
-		render(texture, pos, new Point(0, 0), new Dimension(0, 0), 0, 0, 0);
+		renderEntity(texture, pos, new Point(0, 0), new Dimension(0, 0), 0, 0, 0);
 	}
 
 	/**
@@ -360,10 +360,9 @@ public class Util
 	 *            - TODO
 	 * @see org.newdawn.slick.opengl.Texture
 	 */
-	public static void render(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX,
+	public static void renderEntity(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX,
 			int flipY)
-	{
-
+	{		
 		Point renderPos = new Point(pos.getX() * Slot.SIZE + offset.getX(), pos.getY() * Slot.SIZE + offset.getY());
 
 		if (texture == null
@@ -401,7 +400,7 @@ public class Util
 	 * <br>
 	 * <b>render</b> <br>
 	 * <p>
-	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size</tt>
+	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size)</tt>
 	 * </p>
 	 * Renders the texture. <br>
 	 * <br>
@@ -418,9 +417,9 @@ public class Util
 	 *            (Slot.SIZE).
 	 * @see org.newdawn.slick.opengl.Texture
 	 */
-	public static void render(Texture texture, Point pos, Point offset, Dimension size)
+	public static void renderEntity(Texture texture, Point pos, Point offset, Dimension size)
 	{
-		render(texture, pos, offset, size, 0, 0, 0);
+		renderEntity(texture, pos, offset, size, 0, 0, 0);
 	}
 
 	/**
@@ -487,6 +486,26 @@ public class Util
 			hexID = "0" + hexID;
 		}
 		return hexID;
+	}
+	
+	public static void render(Texture texture, int x, int y, int sizeX, int sizeY, int imageWidth, int imageHeight)
+	{		
+		glEnable(GL_TEXTURE_2D);
+		texture.bind();
+		glLoadIdentity();
+		glTranslatef(x, y, 0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex2f(0, 0);
+			glTexCoord2f(imageWidth/texture.getTextureWidth(), 0);
+			glVertex2f(sizeX, 0);
+			glTexCoord2f(imageWidth/texture.getTextureWidth(), imageHeight/texture.getTextureHeight());
+			glVertex2f(sizeX, sizeY);
+			glTexCoord2f(0, imageHeight/texture.getTextureHeight());
+			glVertex2f(0, sizeY);
+		glEnd();
+		glLoadIdentity();
+		glDisable(GL_TEXTURE_2D);
 	}
 
 }

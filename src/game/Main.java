@@ -35,10 +35,20 @@ public class Main
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
 
+	static //static "constructor"
+	{
+		XMLParser parser = new XMLParser("game_config.xml");
+
+		NAME = parser.getAttribute("GAME", "name");
+		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game", "width")), 
+								 Integer.parseInt(parser.getAttribute("Game", "height")));
+		Slot.SIZE = Integer.parseInt(parser.getAttribute("Game", "tile_size").replace("px", ""));
+
+		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(), Slot.SIZE * GRIDSIZE.getHeight());
+	}
+	
 	public Main()
 	{
-
-		loadConfigurations(); // reads game configurations from config xml file
 
 		// create window
 		try
@@ -102,21 +112,6 @@ public class Main
 		while (Mouse.next()) // checks for a mouse event
 			Window.mouseInput();
 
-	}
-
-	private void loadConfigurations()
-	{
-
-		XMLParser parser = new XMLParser("game_config.xml");
-
-		NAME = parser.getAttribute("GAME", "name");
-
-		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game", "width")), Integer.parseInt(parser
-				.getAttribute("Game", "height")));
-
-		Slot.SIZE = Integer.parseInt(parser.getAttribute("Game", "tile_size").replace("px", ""));
-
-		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(), Slot.SIZE * GRIDSIZE.getHeight());
 	}
 
 	public static void main(String[] args)

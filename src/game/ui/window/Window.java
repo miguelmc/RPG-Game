@@ -1,16 +1,24 @@
 package game.ui.window;
 
-import static org.lwjgl.opengl.GL11.*;
-
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
+import game.util.Util;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
-
-import game.util.Util;
 
 // TODO give priorities to window by last opened and draw them on top, give
 // "focus" to windows and only close the most recent opened with esc
@@ -20,29 +28,21 @@ import game.util.Util;
 public abstract class Window
 {
 
-	protected Point position = new Point(100, 100);
-	protected Dimension size = new Dimension(174, 256);
-	protected String file;
-	protected Texture texture;
-	protected boolean active = false;
-	protected boolean pressed = false;
-	protected int key;
+	private Point position = new Point(100, 100);
+	private Dimension size = new Dimension(174, 256);
+	private Texture texture;
+	private boolean active = false, pressed = false;
 
-	private static Window[] windows = { new Inventory(Keyboard.KEY_I) };
-
+	private static Window[] windows = { new Inventory() };
+	
 	// TODO? create a stack for active windows, add on open and remove on close.
 	// Pop on esc pressed.
-
-	static
-	{
-		for (Window w : windows)
-			w.setTexture(w.getClass().getSimpleName().toLowerCase());
-	}
 	
 	public Window(Point pos, Dimension s)
 	{
 		position = pos;
 		size = s;
+		texture = Util.getTexture("UI/window/" + getClass().getSimpleName().toLowerCase() + ".png");
 	}
 
 	public static void renderAll()
@@ -54,7 +54,6 @@ public abstract class Window
 		}
 	}
 
-	// TODO adjust with Util.render
 	public void render()
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -63,14 +62,14 @@ public abstract class Window
 		glLoadIdentity();
 		glTranslatef(getPosition().getX(), getPosition().getY(), 0);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0);
-		glVertex2f(0, 0);
-		glTexCoord2f(174f / 256f, 0);
-		glVertex2f(size.getWidth(), 0);
-		glTexCoord2f(174f / 256f, 1);
-		glVertex2f(size.getWidth(), size.getHeight());
-		glTexCoord2f(0, 1);
-		glVertex2f(0, size.getHeight());
+			glTexCoord2f(0, 0);
+			glVertex2f(0, 0);
+			glTexCoord2f(174f / 256f, 0);
+			glVertex2f(size.getWidth(), 0);
+			glTexCoord2f(174f / 256f, 1);
+			glVertex2f(size.getWidth(), size.getHeight());
+			glTexCoord2f(0, 1);
+			glVertex2f(0, size.getHeight());
 		glEnd();
 		glLoadIdentity();
 		glColor4f(1, 1, 1, 1);
@@ -115,11 +114,9 @@ public abstract class Window
 		}
 	}
 
+	abstract int getKey();
+	
 	// TODO make a textureManager to have all textures
-	public void setTexture(String str)
-	{
-		texture = Util.getTexture("UI/window/" + str + ".png");
-	}
 
 	public void setPosition(int x, int y)
 	{
@@ -197,10 +194,14 @@ public abstract class Window
 	{
 		size.setHeight(height);
 	}
-
-	public int getKey()
+	
+	public Texture getTexture()
 	{
-		return key;
+		return texture;
 	}
-
+	
+	public Dimension getSize()
+	{
+		return new Dimension(size);
+	}
 }

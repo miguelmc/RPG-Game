@@ -54,7 +54,7 @@ public class Map extends GameObject
 	private void loadTextures(TextureManager prevTexManager)
 	{
 		// loads all texture of the map, recycle some from the previous map
-		// TODO recycle equipped items, and inventory
+		// TODO recycle equipped items, and inventory items
 
 		List<Slot> slots = getAllSlots();
 

@@ -30,11 +30,7 @@ public class Skill extends GameObject
 	private String subDescription; // More specific description with variables
 									// depending on the level
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
-	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO
-																			// change
-																			// to
-																			// a
-																			// stack?
+	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
 	private SuperEntity attacker;
 
 	public Skill(int id, SuperEntity attacker)

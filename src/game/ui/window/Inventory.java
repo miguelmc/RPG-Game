@@ -1,14 +1,10 @@
 package game.ui.window;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
@@ -25,6 +21,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
@@ -38,10 +35,9 @@ public class Inventory extends Window
 	private long timeOfClick = 0L;
 	private boolean itemGrabbed = false;
 
-	public Inventory(int key)
+	public Inventory()
 	{
 		super(new Point(100, 100), new Dimension(174, 256));
-		this.key = key;
 	}
 
 	public void mouse()
@@ -152,13 +148,12 @@ public class Inventory extends Window
 		}
 
 		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), getPosition().getX() + 37,
-				getPosition().getY() + size.getHeight() - 25);
+				getPosition().getY() + getSize().getHeight() - 25);
 
 		int mouseHover = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
 
 		if (mouseHover != -1)
 		{
-
 			Item item = items.get(mouseHover);
 
 			String lines[];
@@ -183,25 +178,12 @@ public class Inventory extends Window
 			}
 
 			Texture tex = Util.getTexture("UI/window/itemDesc.png");
-
-			glEnable(GL_TEXTURE_2D);
-			tex.bind();
+			
 			glColor4f(1, 1, 1, .5f);
-			glLoadIdentity();
-			glTranslatef(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1, 0);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(0, 0);
-			glTexCoord2f(1, 0);
-			glVertex2f(200, 0);
-			glTexCoord2f(1, 1);
-			glVertex2f(200, Util.getFontHeight() * lines.length + 55);
-			glTexCoord2f(0, 1);
-			glVertex2f(0, Util.getFontHeight() * lines.length + 55);
-			glEnd();
-			glLoadIdentity();
-			glDisable(GL_TEXTURE_2D);
 
+			Util.render(tex, Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1, 200, Util.getFontHeight() * lines.length + 55, tex.getTextureWidth(), tex.getTextureHeight());
+			
+			//render a white square with half transparency
 			glLoadIdentity();
 			glTranslatef(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1, 0);
 			glBegin(GL_QUADS);
@@ -212,9 +194,10 @@ public class Inventory extends Window
 			glEnd();
 			glLoadIdentity();
 
-			glColor4f(1, 1, 1, 1);
+			glColor4f(1, 1, 1, 1); //return to full opacity
 
 			item.render(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
+			
 			Util.write(item.getName(), Mouse.getX() + 42 + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
 
 			for (int i = 0; i < lines.length; i++)
@@ -223,6 +206,12 @@ public class Inventory extends Window
 						Main.DIM.getHeight() - Mouse.getY() + 1 + 50 + i * Util.getFontHeight());
 			}
 		}
+	}
+
+	@Override
+	int getKey()
+	{
+		return Keyboard.KEY_I;
 	}
 
 }

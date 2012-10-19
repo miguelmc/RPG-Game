@@ -1,5 +1,6 @@
 package game.ui.window;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
@@ -15,6 +16,12 @@ public class Quest extends Window
 	protected void mouse()
 	{
 		//TODO 
+	}
+
+	@Override
+	int getKey()
+	{
+		return Keyboard.KEY_Q;
 	}
 
 }

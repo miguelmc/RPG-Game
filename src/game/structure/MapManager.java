@@ -18,8 +18,7 @@ public class MapManager
 	private static Map currentMap;
 
 	static {
-		// TODO read and create all maps and set current map based on the game
-				// config file
+		// TODO read and create all maps and set current map based on the game config file
 				maps.add(new Map(0));
 				maps.add(new Map(1));
 				setMap(0, new Point(4, 6));
@@ -33,11 +32,11 @@ public class MapManager
 		Player player;
 		Point spawnPoint = playerPos;
 
-		if (currentMap == null)
-		{ // if this is the starting map, create player
+		if (currentMap == null) // if this is the starting map, create player
+		{
 			player = new Player(Integer.parseInt("2600", 16), spawnPoint);
-		} else
-		{ // else retrieve player from previous map
+		} else // else retrieve player from previous map
+		{
 			player = currentMap.getPlayer();
 			player.stopAllActions();
 			currentMap.removePlayer();
