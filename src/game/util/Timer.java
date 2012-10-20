@@ -28,7 +28,7 @@ public class Timer extends Thread
 	 * @param alertTime
 	 *            - The time interval (in miliseconds) between each method call.
 	 */
-	public Timer(Object obj, Method method, int alertTime)
+	public Timer(Object obj, String method, int alertTime)
 	{
 		this(obj, method, alertTime, 0);
 	}
@@ -45,11 +45,17 @@ public class Timer extends Thread
 	 * @param alertTime
 	 *            - The time interval between each method call.
 	 */
-	public Timer(Object obj, Method method, int alertTime, int repetitions)
+	public Timer(Object obj, String method, int alertTime, int repetitions)
 	{
 		object = obj;
 		time = alertTime;
-		this.method = method;
+		try {
+			this.method = obj.getClass().getMethod(method, new Class<?>[0]);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 		this.repetitions = repetitions;
 	}
 
@@ -58,7 +64,7 @@ public class Timer extends Thread
 	{
 		try
 		{
-			for(int i=0; i<repetitions; i++)
+			for(int i=0; i<repetitions || repetitions == 0; i++)
 			{
 				Thread.sleep(time); // pauses the thread
 				method.invoke(object, new Object[0]); // invokes the method on the object
