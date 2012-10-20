@@ -146,6 +146,8 @@ public class Inventory extends Window
 			Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,
 					getPosition().getY() + 30 + 32 * (i / 5));
 		}
+		
+		
 
 		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), getPosition().getX() + 37,
 				getPosition().getY() + getSize().getHeight() - 25);
