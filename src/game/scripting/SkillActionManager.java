@@ -21,11 +21,11 @@ public class SkillActionManager extends AbstractScriptManager
 	private Point origin;
 	private int facingDir;
 
-	public SkillActionManager(SkillAttack sa, int facing)
+	public SkillActionManager(SkillAttack sa)
 	{
 		activeAttack = sa;
-		facingDir = facing;
-		setOrigin(activeAttack.getSkill().getAttacker().position());
+		facingDir = sa.getSkill().getAttacker().getFacingDir();
+		origin = sa.getSkill().getAttacker().position();
 	}
 
 	public void hit(Point location[], float dmg)
@@ -80,7 +80,7 @@ public class SkillActionManager extends AbstractScriptManager
 	
 	public boolean hasStrongEntityAt(Point position)
 	{
-		Slot slot = MapManager.getMap().get(Util.addRelPoints(getPlayer().position(), position, getPlayer().getFacingDir()));
+		Slot slot = MapManager.getMap().get(Util.addRelPoints(origin, position, facingDir));
 		return slot == null ? true : slot.getStrongEntity() != null;
 	}
 
@@ -96,11 +96,7 @@ public class SkillActionManager extends AbstractScriptManager
 
 	public void play(Point p)
 	{
+		System.out.println(Util.addRelPoints(origin, p, facingDir));
 		activeAttack.play(Util.addRelPoints(origin, p, facingDir));
-	}
-
-	public boolean hasObjectAt(Point p)
-	{
-		return MapManager.getMap().get(p).getStrongEntity() != null;
 	}
 }
