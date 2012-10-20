@@ -77,6 +77,12 @@ public class SkillActionManager extends AbstractScriptManager
 			return getPlayer().position().equals(Util.addRelPoints(origin, p, facingDir));
 		return false;
 	}
+	
+	public boolean hasStrongEntityAt(Point position)
+	{
+		Slot slot = MapManager.getMap().get(Util.addRelPoints(getPlayer().position(), position, getPlayer().getFacingDir()));
+		return slot == null ? true : slot.getStrongEntity() != null;
+	}
 
 	public String[] getVariables(int i)
 	{

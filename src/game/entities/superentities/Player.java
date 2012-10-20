@@ -67,18 +67,8 @@ public class Player extends SuperEntity
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXMP.ID));
 
-		try
-		{
-			System.out.println();
-			Timer timer = new Timer(this, this.getClass().getMethod("regen", new Class<?>[0]), 10000);
-			timer.start();
-		} catch (SecurityException e1)
-		{
-			e1.printStackTrace();
-		} catch (NoSuchMethodException e1)
-		{
-			e1.printStackTrace();
-		}
+		Timer timer = new Timer(this, "regen", 10000);
+		timer.start();
 
 	}
 
