@@ -43,9 +43,7 @@ public class SkillAttack
 	{
 		if (playAnimation)
 		{
-			skill.getSprites()[state].render(renderPos.getX() * Slot.SIZE, renderPos.getY() * Slot.SIZE,
-					(facingDir + 1) % 4);
-			state++;
+			skill.getSprites()[state++].render(renderPos.getX() * Slot.SIZE, renderPos.getY() * Slot.SIZE, (facingDir + 1) % 4);
 			if (state == skill.getSprites().length)
 			{
 				state = 0;

@@ -27,8 +27,7 @@ public class Skill extends GameObject
 	private int maxLevel;
 	private int delay;
 	private String description;
-	private String subDescription; // More specific description with variables
-									// depending on the level
+	private String subDescription; // More specific description with variables depending on the level
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
 	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
 	private SuperEntity attacker;
@@ -61,10 +60,8 @@ public class Skill extends GameObject
 		Texture spriteSheet = Util.getTexture("skill/" + hexID() + "/texture.png");
 
 		for (int i = 0; i < sprites.length; i++)
-		{
 			sprites[i] = new SubImage(spriteSheet, new Point(Integer.parseInt(coordinates.get(i).get("x")),
-					Integer.parseInt(coordinates.get(i).get("y"))), size);
-		}
+															 Integer.parseInt(coordinates.get(i).get("y"))), size);
 
 	}
 
@@ -110,8 +107,7 @@ public class Skill extends GameObject
 		{
 			if (i.next().isActive())
 			{
-				i.previous().update(); // updates while the skillattack is
-										// active
+				i.previous().update(); // updates while the skillattack is active
 				i.next();
 			} else
 			{
@@ -123,9 +119,7 @@ public class Skill extends GameObject
 	public void render()
 	{
 		for (SkillAttack sa : attacks)
-		{
 			sa.render();
-		}
 	}
 
 	public String[] getVariables(int i)
