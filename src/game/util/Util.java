@@ -331,7 +331,7 @@ public class Util
 	{
 		renderEntity(texture, pos, new Point(0, 0), new Dimension(0, 0), 0, 0, 0);
 	}
-
+	
 	/**
 	 * <br>
 	 * <b>render</b> <br>
@@ -488,8 +488,20 @@ public class Util
 		return hexID;
 	}
 	
-	public static void render(Texture texture, int x, int y, int sizeX, int sizeY, int imageWidth, int imageHeight)
+	public static void render(Texture texture, int x, int y, int sizeX, int sizeY, float imageWidth, float imageHeight)
 	{		
+		System.out.println("imageHeight");
+
+		System.out.println(texture.getImageHeight());
+		System.out.println("textureHeight");
+
+		System.out.println(texture.getTextureHeight());
+		System.out.println("getHeight");
+
+		System.out.println(texture.getHeight());
+
+		
+		
 		glEnable(GL_TEXTURE_2D);
 		texture.bind();
 		glLoadIdentity();
@@ -497,11 +509,11 @@ public class Util
 		glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
 			glVertex2f(0, 0);
-			glTexCoord2f(imageWidth/texture.getTextureWidth(), 0);
+			glTexCoord2f(imageWidth/texture.getImageWidth(), 0);
 			glVertex2f(sizeX, 0);
-			glTexCoord2f(imageWidth/texture.getTextureWidth(), imageHeight/texture.getTextureHeight());
+			glTexCoord2f(imageWidth/texture.getImageWidth(), imageHeight/texture.getImageHeight());
 			glVertex2f(sizeX, sizeY);
-			glTexCoord2f(0, imageHeight/texture.getTextureHeight());
+			glTexCoord2f(0, imageHeight/texture.getImageHeight());
 			glVertex2f(0, sizeY);
 		glEnd();
 		glLoadIdentity();
