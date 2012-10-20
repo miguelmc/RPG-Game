@@ -75,7 +75,7 @@ public class Main
 			UserInterface.render(); // renders the interface
 
 			Display.update(); // update the screen
-			Display.sync(60); // set fps to 60
+			Display.sync(120); // set fps to 60
 		}
 
 		Display.destroy();

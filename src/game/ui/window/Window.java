@@ -1,19 +1,7 @@
 package game.ui.window;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
-import game.structure.Map;
-import game.structure.Slot;
 import game.util.Util;
 
 import org.lwjgl.input.Keyboard;
@@ -35,7 +23,7 @@ public abstract class Window
 	private Texture texture;
 	private boolean active = false, pressed = false;
 
-	private static Window[] windows = { new Inventory() };
+	private static Window[] windows = { new Inventory(), new Skills(), new Equipment()};
 	
 	// TODO? create a stack for active windows, add on open and remove on close.
 	// Pop on esc pressed.

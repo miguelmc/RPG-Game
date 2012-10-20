@@ -531,10 +531,15 @@ public class Player extends SuperEntity
 		equips.put(type, null);
 	}
 
-	public EquipItem getEquip(int type)
+	public java.util.Map<EquipType, EquipItem> getEquips()
+	{
+		return equips;
+	}
+	
+	/*public EquipItem getEquip(int type)
 	{
 		return equips.get(type);
-	}
+	}*/
 
 	public void setHP(int hp)
 	{

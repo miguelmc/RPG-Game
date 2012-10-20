@@ -142,9 +142,13 @@ public class Inventory extends Window
 		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 		for (int i = 0; i < items.size(); i++)
 		{
+			
 			items.get(i).render(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY() + 30 + 32 * (i / 5));
-			Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,
-					getPosition().getY() + 30 + 32 * (i / 5));
+			if (!(items.get(i) instanceof EquipItem))
+			{
+				Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,
+						getPosition().getY() + 30 + 32 * (i / 5));
+			}
 		}
 		
 		

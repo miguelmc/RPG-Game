@@ -5,6 +5,8 @@ import game.features.Skill;
 import game.structure.Slot;
 import game.util.Util;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -137,6 +139,7 @@ public abstract class SuperEntity extends Entity
 			if (damageTime.get(i) > System.currentTimeMillis())
 			{
 				float xpos = (Util.getTextWidth(damages.get(i).toString()) - Slot.SIZE) / 2;
+				Util.useFont("Arial", Font.BOLD, 10, Color.white);
 				Util.write(
 						damages.get(i).toString(),
 						((getX() - getMap().getOffSet().getX()) * Slot.SIZE - xpos),

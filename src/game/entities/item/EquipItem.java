@@ -111,7 +111,7 @@ public class EquipItem extends Item
 	public enum EquipType
 	{
 		
-		TOPWEAR("topwear"), BOTTOMWEAR("bottomwear"), HELMET("helmet"), SHOES("shoes"), WEAPON("weapon");
+		TOPWEAR("topwear"), BOTTOMWEAR("bottomwear"), HELMET("helmet"), SHOES("shoes"), WEAPON("weapon"), SHIELD("shield");
 
 		private String name;
 

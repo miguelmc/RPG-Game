@@ -1,0 +1,3 @@
+<EquipItem name="Leather Boots" description="A pair of leather boots that fill their purpose" type="shoes">
+    <stats maxHP="5" maxMP="0" atk="0" str="1" />
+</EquipItem>

@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.entities.Entity;
 import game.entities.item.Item;
 import game.features.Quest;
+import game.features.Skill;
 import game.structure.Slot;
 import game.util.Util;
 import game.util.XMLParser;
@@ -50,7 +51,6 @@ public class Monster extends SuperEntity
 	{
 		super(id);
 
-		addSkill(1792);// TODO have the skills of a monster in the xml
 		this.respawn = respawn;
 
 		parseMonster();
@@ -68,11 +68,19 @@ public class Monster extends SuperEntity
 		setDamage(Integer.parseInt(parser.getAttribute("Monster", "damage")));
 		setMaxHP(Integer.parseInt(parser.getAttribute("Monster", "maxHP")));
 		exp = Integer.parseInt(parser.getAttribute("Monster", "exp"));
+		
+		
 
-		List<java.util.Map<String, String>> drops = parser.getChildrenAttributes("Map/drops");
+		List<java.util.Map<String, String>> drops = parser.getChildrenAttributes("Monster/drops");
 		for (java.util.Map<String, String> data : drops)
 		{
 			dropList.put(Integer.parseInt(data.get("id"), 16), Integer.parseInt(data.get("chance")));
+		}
+		
+		List<java.util.Map<String, String>> skills = parser.getChildrenAttributes("Monster/skills");
+		for (java.util.Map<String, String> skill : skills)
+		{
+			addSkill(Integer.parseInt(skill.get("id")));
 		}
 	}
 

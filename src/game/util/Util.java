@@ -489,19 +489,7 @@ public class Util
 	}
 	
 	public static void render(Texture texture, int x, int y, int sizeX, int sizeY, float imageWidth, float imageHeight)
-	{		
-		System.out.println("imageHeight");
-
-		System.out.println(texture.getImageHeight());
-		System.out.println("textureHeight");
-
-		System.out.println(texture.getTextureHeight());
-		System.out.println("getHeight");
-
-		System.out.println(texture.getHeight());
-
-		
-		
+	{	
 		glEnable(GL_TEXTURE_2D);
 		texture.bind();
 		glLoadIdentity();

@@ -1,7 +1,15 @@
 <Monster name="Test Monster" damage="5" maxHP="50" exp="5">
     <drops>
-        <item id="6300" chance="40"/>
-        <item id="6301" chance="40"/>
-        <item id="A303" chance="5"/>        
+        <item id="6300" chance="30"/>
+        <item id="6301" chance="30"/>
+        <item id="a303" chance="5"/>    
+        <item id="a304" chance="5"/>
+        <item id="a305" chance="5"/>
+        <item id="a306" chance="5"/>
+        <item id="a307" chance="5"/>
+        <item id="a308" chance="5"/>     
     </drops>
+    <skills>
+    	<skill id="1792" />
+    </skills>
 </Monster>
