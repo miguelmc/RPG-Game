@@ -18,7 +18,9 @@ import org.lwjgl.util.Point;
 public class SkillAttack
 {
 
-	private double counter = 0;
+	private long time = System.currentTimeMillis();
+	private double delay = 100;
+	private int step = 0;
 	private boolean active = true;
 	private int state = 0;
 	private ScriptEngine engine;
@@ -35,7 +37,7 @@ public class SkillAttack
 		if (engine == null)
 		{
 			engine = new ScriptEngineManager().getEngineByName("JavaScript");
-			engine.put("sm", new SkillActionManager(this, facingDir));
+			engine.put("sm", new SkillActionManager(this));
 		}
 	}
 
@@ -62,11 +64,11 @@ public class SkillAttack
 	{
 		// the skill script is called every 6 frames (.1 seconds) and passed the
 		// variable "step" to determine how long it has been running
-		if (counter % 6 == 0)
+		if (System.currentTimeMillis() > time + delay)
 		{
+			time = System.currentTimeMillis();
 			try
 			{
-				int step = (int) (counter / 6); // TODO make it time based and not frame base for fps independence
 				engine.put("step", step);
 				engine.eval(new FileReader("data/skill/" + skill.hexID() + "/script.js"));
 			} catch (FileNotFoundException e)
@@ -77,8 +79,8 @@ public class SkillAttack
 			{
 				e.printStackTrace();
 			}
+			step++;
 		}
-		counter++;
 	}
 
 	public void stop()

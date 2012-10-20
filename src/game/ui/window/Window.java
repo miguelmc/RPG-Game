@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
+import game.structure.Map;
+import game.structure.Slot;
 import game.util.Util;
 
 import org.lwjgl.input.Keyboard;
@@ -53,27 +55,12 @@ public abstract class Window
 				w.render();
 		}
 	}
-
+	
 	public void render()
 	{
-		glEnable(GL_TEXTURE_2D);
-		texture.bind();
 		glColor4f(1, 1, 1, .6f);
-		glLoadIdentity();
-		glTranslatef(getPosition().getX(), getPosition().getY(), 0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(0, 0);
-			glTexCoord2f(174f / 256f, 0);
-			glVertex2f(size.getWidth(), 0);
-			glTexCoord2f(174f / 256f, 1);
-			glVertex2f(size.getWidth(), size.getHeight());
-			glTexCoord2f(0, 1);
-			glVertex2f(0, size.getHeight());
-		glEnd();
-		glLoadIdentity();
+		Util.render(texture, getPosition().getX(), getPosition().getY(), size.getWidth(), size.getHeight(), 174, 256);
 		glColor4f(1, 1, 1, 1);
-		glDisable(GL_TEXTURE_2D);
 	}
 
 	public static void keyboardInput()
