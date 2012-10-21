@@ -26,7 +26,7 @@ public class TextureManager
 		String filePath = EntityType.getType(id).toString();
 		filePath += "/" + Util.hexID(id) + "/texture.png";
 
-		if (get(id) != null)
+		if (get(id) != null || EntityType.getType(id) == EntityType.Monster)
 			return;
 
 		textures.put(id, Util.getTexture(filePath));

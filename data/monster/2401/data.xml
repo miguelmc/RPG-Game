@@ -1,4 +1,4 @@
-<Monster name="Rat" damage="5" maxHP="50" exp="3" minGold="0" maxGold="5">
+<Monster name="Crab" damage="5" maxHP="80" exp="4" minGold="0" maxGold="3">
     <drops>
         <item id="6300" chance="5"/>
         <item id="6301" chance="5"/>
