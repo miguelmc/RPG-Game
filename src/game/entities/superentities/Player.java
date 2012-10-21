@@ -15,6 +15,7 @@ import game.features.Quest;
 import game.structure.Map;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
+import game.ui.Shop;
 import game.ui.UserInterface;
 import game.util.Timer;
 import game.util.Util;

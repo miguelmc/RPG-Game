@@ -19,7 +19,7 @@ public class SkillAttack
 {
 
 	private long time = System.currentTimeMillis();
-	private double delay = 100;
+	private double delay = 50;
 	private int step = 0;
 	private boolean active = true;
 	private int state = 0;
