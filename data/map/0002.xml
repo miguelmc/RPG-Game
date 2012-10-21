@@ -128,7 +128,7 @@
         
     </Tiles>
     <Portals>
-    	<Portal id="2200" x="15" y="13" />
+    	<Portal id="2202" x="15" y="13" />
     </Portals>
     <Monsters>
 	    <Monster id="2400" x="2" y="4" />
