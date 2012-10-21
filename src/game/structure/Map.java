@@ -159,7 +159,7 @@ public class Map extends GameObject
 				add(Entity.createEntity(Integer.parseInt(data.get("id"), 16)), position);
 				if (xmlElement.equals("Monsters"))
 				{
-					spawners.add(new Spawner(get(position).getMonster(), 2000));
+					spawners.add(new Spawner(get(position).getMonster(), 10000));
 				}
 			}
 		}
