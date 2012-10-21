@@ -51,7 +51,7 @@ public class NPC extends Entity
 		//Render NPC name
 		Util.useFont("Arial", Font.BOLD, 10, Color.white);
 		float xTraslation = (Util.getTextWidth(name) - Slot.SIZE) / 2;
-		Util.write(name, ((getY() - getMap().getOffSet().getX()) - getMap().getOffSet().getX()) * Slot.SIZE
+		Util.write(name, ((getX() - getMap().getOffSet().getX())) * Slot.SIZE
 				- xTraslation, getY() * Slot.SIZE - getMap().getOffSet().getY() * Slot.SIZE - (float) (Slot.SIZE * .3));
 	}
 
