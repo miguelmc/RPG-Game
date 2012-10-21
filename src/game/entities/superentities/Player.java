@@ -50,7 +50,7 @@ public class Player extends SuperEntity {
 
 	public Player(int id, Point pos) {
 		super(id);
-		addSkill(1792);
+		addSkill(0x0700);
 
 		// TODO player file with base stats, stats per level, damage formula
 		// parameters, etc.
@@ -97,7 +97,7 @@ public class Player extends SuperEntity {
 						getFacingDir()));
 				break;
 			case Keyboard.KEY_Z:
-				attack(1792);
+				attack(0x0700);
 				break;
 			case Keyboard.KEY_X:
 				Portal portal = getMap().get(position()).getPortal();

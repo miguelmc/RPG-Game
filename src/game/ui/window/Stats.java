@@ -6,6 +6,8 @@ import static game.features.Stat.DEF;
 import static game.features.Stat.MAXHP;
 import static game.features.Stat.MAXMP;
 import static game.features.Stat.STR;
+import game.Main;
+import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.MapManager;
 import game.util.Util;
@@ -14,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
@@ -52,8 +55,28 @@ public class Stats extends Window{
 	
 	@Override
 	protected void mouse() {
-		// TODO Auto-generated method stub
-		
+		if (Mouse.getEventButtonState())
+		{
+			setPressed(true);
+		} else if (!Mouse.getEventButtonState())
+		{
+			int dX = Mouse.getDX();
+			int dY = Mouse.getDY();
+
+			if (Mouse.isButtonDown(0) && isPressed()) {
+
+				if (!((dX > 0 && getX() > Main.DIM.getWidth() * .98)
+						|| (dX < 0 && getX() + getWidth() < Main.DIM.getWidth() * .02)
+						|| (dY > 0 && getY() < Main.DIM.getHeight() * .02) || (dY < 0 && getY() > Main.DIM
+						.getHeight() * .98))) {
+					setPosition(getX() + dX, getY() - dY);
+					}
+			} else if (dX == 0 && dY == 0) {
+				setPressed(false);
+			}
+
+		}
+
 	}
 	
 	int getKey()
