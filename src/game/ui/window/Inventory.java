@@ -37,7 +37,7 @@ public class Inventory extends Window
 
 	public Inventory()
 	{
-		super(new Point(100, 100), new Dimension(174, 256));
+		super(new Point(350, 100), new Dimension(174, 256));
 	}
 
 	public void mouse()
@@ -138,7 +138,8 @@ public class Inventory extends Window
 		for (int i = 0; i < items.size(); i++)
 		{
 			
-			items.get(i).render(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY() + 30 + 32 * (i / 5));
+			Util.render(items.get(i).getTexture(), getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY()+ 30 + 32 * (i / 5), 32, 32, 32, 32);
+			//items.get(i).render(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY() + 30 + 32 * (i / 5));
 			if (!(items.get(i) instanceof EquipItem))
 			{
 				Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,

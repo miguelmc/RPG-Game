@@ -37,7 +37,7 @@ public class Map extends GameObject
 	private TextureManager textureManager = new TextureManager(); // holds all textures used by the map
 	private List<Spawner> spawners = new ArrayList<Spawner>();
 
-	public final static int VIEW_LIMIT = 4; // Tiles away from the side to move the camera
+	public final static int VIEW_LIMIT = 7; // Tiles away from the side to move the camera
 
 	public Map(int id)
 	{

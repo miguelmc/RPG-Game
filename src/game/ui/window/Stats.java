@@ -31,7 +31,7 @@ public class Stats extends Window{
 	
 	public Stats ()
 	{
-		super(new Point(100, 100), new Dimension(174, 256));
+		super(new Point(100, 450), new Dimension(174, 256));
 	}
 	
 	public void render()

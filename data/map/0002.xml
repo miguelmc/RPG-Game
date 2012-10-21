@@ -128,28 +128,22 @@
         
     </Tiles>
     <Portals>
-    	<Portal id="2200" x="15" y="15" />
+    	<Portal id="2200" x="15" y="13" />
     </Portals>
     <Monsters>
-    	<Monster id="2400" x="3" y="5" />
-	    <Monster id="2400" x="8" y="7" />
-	    <Monster id="2400" x="6" y="2" />
-	    <Monster id="2400" x="10" y="14" />
-	    <Monster id="2400" x="14" y="2" />
+    	<Monster id="2400" x="3" y="4" />
 	    <Monster id="2400" x="2" y="4" />
-	    
-	    <Monster id="2400" x="4" y="5" />
+    	<Monster id="2400" x="2" y="5" />
+	    <Monster id="2400" x="4" y="6" />
 	    <Monster id="2400" x="9" y="7" />
-	    <Monster id="2400" x="7" y="2" />
-	    <Monster id="2400" x="11" y="14" />
-	    <Monster id="2400" x="15" y="2" />
-	    <Monster id="2400" x="3" y="4" />
-	    	
 	    <Monster id="2400" x="10" y="7" />
-	    <Monster id="2400" x="8" y="2" />
+	    <Monster id="2400" x="11" y="14" />
 	    <Monster id="2400" x="12" y="14" />
+	    <Monster id="2400" x="15" y="2" />
 	    <Monster id="2400" x="16" y="2" />
-	    <Monster id="2400" x="4" y="4" />
+	    	
+	    
+	    
     </Monsters>
     <NPCs>
     </NPCs>

@@ -13,7 +13,7 @@ public class Skills extends Window{
 	
 	public Skills ()
 	{
-		super(new Point(100, 100), new Dimension(174, 256));
+		super(new Point(350, 450), new Dimension(174, 256));
 	}
 	
 	public void render()
