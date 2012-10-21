@@ -50,6 +50,12 @@ public class PortalActionManager extends AbstractScriptManager
 		super.setMap(id, new Point(0, 0));
 		setPosition(MapManager.getMap().getPortalByID(getID()).position());
 	}
+	
+	public void setMap(int id, Point position)
+	{
+		super.setMap(id, new Point(0, 0));
+		setPosition(position);
+	}
 
 	public void setPortal(Portal portal)
 	{
