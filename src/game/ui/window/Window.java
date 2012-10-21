@@ -79,7 +79,7 @@ public abstract class Window
 		{ // key released
 			for (Window w : windows)
 			{
-				if (Keyboard.getEventKey() == w.getKey())
+				if (Keyboard.getEventKey() == w.getKey() && !isShopOpen())
 				{ // each window has a key assigned to open it
 					w.toggleActive(); // open/close window
 					// if for some reason the window goes out of the screen. (this might happen because mouse events and the game run on different threads)

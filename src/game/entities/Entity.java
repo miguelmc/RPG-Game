@@ -5,6 +5,7 @@ import game.entities.item.EtcItem;
 import game.entities.item.UsableItem;
 import game.entities.superentities.Monster;
 import game.structure.GameObject;
+import game.structure.MapManager;
 import game.util.Util;
 
 import org.lwjgl.util.Dimension;
@@ -217,7 +218,12 @@ public abstract class Entity extends GameObject
 
 	public Texture getTexture()
 	{
-		return texture;
+		if(texture == null && !(this instanceof Object.Block))
+		{
+			MapManager.getMap().getTextureManager().add(id());
+			texture = MapManager.getMap().getTextureManager().get(id());
+		}
+			return texture;
 	}
 
 	public void setTexture(Texture t)
