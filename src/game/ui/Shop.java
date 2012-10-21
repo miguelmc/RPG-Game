@@ -65,7 +65,7 @@ public class Shop extends GameObject{
 		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 		for(int i=0; i<playerItems.size(); i++)
 		{
-			playerItems.get(i).render(sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+			Util.render(playerItems.get(i).getTexture(), sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5), 32, 32, 32, 32);
 			if (!(playerItems.get(i) instanceof EquipItem))
 			{
 				Util.write(Integer.toString(playerItems.get(i).getQuantity()), sellX + 7 + 32 * (i % 5) + 3,
@@ -74,7 +74,7 @@ public class Shop extends GameObject{
 		}
 		for(int i=0; i<items.size(); i++)
 		{
-			items.get(i).render(buyX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+			Util.render(items.get(i).getTexture(), buyX + 7 + 32 * (i % 5),  Y + 30 + 32 * (i / 5), 32, 32, 32, 32);
 		}
 		
 		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
