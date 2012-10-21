@@ -27,12 +27,13 @@ public class Shop extends GameObject{
 	private List<Item> playerItems = MapManager.getMap().getPlayer().getItems();
 	private Item itemSelected;
 	private long lastItemSelection = 0;
-	private static Texture buyButton;
+	private static Texture buyButton, sellButton;
 	private boolean buy = true;
 	
 	static
 	{
 		buyButton = Util.getTexture("shop/buy.png");
+		sellButton = Util.getTexture("shop/sell.png");
 	}
 	
 	public Shop(int id)
@@ -99,7 +100,7 @@ public class Shop extends GameObject{
 				}else
 				{
 					Util.write("$"+(int)(itemSelected.getPrice()*.6), 520 - Util.getTextWidth("$"+(int)(itemSelected.getPrice()*.6)), 460);
-					Util.render(buyButton, 350, 450, 100, 46, 40, 18);
+					Util.render(sellButton, 350, 450, 100, 46, 40, 18);
 				}
 				
 			
@@ -116,7 +117,7 @@ public class Shop extends GameObject{
 		
 		int row = (position.getY() - 55)/32 - 2;
 		
-		if(position.getX() > Main.DIM.getWidth()/2)
+		if(position.getX() > 304)
 		{
 			
 			int column = (position.getX()-304)/32;
