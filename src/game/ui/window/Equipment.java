@@ -69,67 +69,6 @@ public class Equipment extends Window {
 			equip.getValue().render(position.getX() + getX(),
 					position.getY() + getY());
 		}
-		int mouseHover = getClickedItem(Mouse.getX(), Main.DIM.getHeight()
-				- Mouse.getY() + 1);
-
-		if (mouseHover != -1) {
-			Item item = items.get(mouseHover);
-
-			String lines[];
-			EquipItem equip = ((EquipItem) item);
-			ArrayList<String> linesList = new ArrayList<String>();
-			for (int i = 0; i < Stat.values().length; i++) {
-				if (equip.getStat(Stat.values()[i]) != 0)
-					linesList
-							.add(Stat.values()[i].NAME
-									+ ": "
-									+ Integer.toString(equip.getStat(Stat
-											.values()[i])));
-			}
-
-			String[] description = Util.tokenizeText(item.getDescription(),
-					190, 4);
-
-			lines = new String[linesList.size() + description.length];
-			int i;
-			for (i = 0; i < linesList.size(); i++)
-				lines[i] = linesList.get(i);
-			for (int j = 0; j < description.length; j++)
-				lines[i + j] = description[j];
-
-			Texture tex = Util.getTexture("UI/window/itemDesc.png");
-
-			glColor4f(1, 1, 1, .5f);
-
-			Util.render(tex, Mouse.getX(), Main.DIM.getHeight() - Mouse.getY()
-					+ 1, 200, Util.getFontHeight() * lines.length + 55,
-					tex.getTextureWidth(), tex.getTextureHeight());
-
-			// render a white square with half transparency
-			glLoadIdentity();
-			glTranslatef(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1,
-					0);
-			glBegin(GL_QUADS);
-			glVertex2f(10, 10);
-			glVertex2f(42, 10);
-			glVertex2f(42, 42);
-			glVertex2f(10, 42);
-			glEnd();
-			glLoadIdentity();
-
-			glColor4f(1, 1, 1, 1); // return to full opacity
-
-			item.render(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY()
-					+ 1 + 10);
-
-			Util.write(item.getName(), Mouse.getX() + 42 + 10,
-					Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
-
-			for (i = 0; i < lines.length; i++) {
-				Util.write(lines[i], Mouse.getX() + 10, Main.DIM.getHeight()
-						- Mouse.getY() + 1 + 50 + i * Util.getFontHeight());
-			}
-		}
 	}
 
 	@Override
