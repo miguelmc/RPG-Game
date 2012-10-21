@@ -1,6 +1,7 @@
 package game.ui;
 
 import game.entities.Entity;
+import game.entities.item.EquipItem;
 import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.GameObject;
@@ -50,9 +51,15 @@ public class Shop extends GameObject{
 	{
 		int sellX=297, buyX = 130, Y=85, goldX = 120, goldY = 513;
 		Util.render(texture, 40, 50, 512, 512, 512, 512);
+		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 		for(int i=0; i<playerItems.size(); i++)
 		{
 			playerItems.get(i).render(sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+			if (!(playerItems.get(i) instanceof EquipItem))
+			{
+				Util.write(Integer.toString(playerItems.get(i).getQuantity()), sellX + 7 + 32 * (i % 5) + 3,
+						Y + 30 + 32 * (i / 5));
+			}
 		}
 		for(int i=0; i<items.size(); i++)
 		{
