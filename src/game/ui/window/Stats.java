@@ -36,7 +36,7 @@ public class Stats extends Window{
 		Player player = MapManager.getMap().getPlayer();
 		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 		Util.write(Integer.toString(player.getLevel()), getX()+X, getY()+Y_INTERVAL[0]);
-		Util.write(Integer.toString(player.getExp()), getX()+X, getY()+Y_INTERVAL[1]);
+		Util.write(player.getExp() + "/" + player.getExpReq(), getX()+X, getY()+Y_INTERVAL[1]);
 		Util.write(Integer.toString(player.getStat(TOTAL+MAXHP.ID)), getX()+X, getY()+Y_INTERVAL[2]);
 		Util.write(Integer.toString(player.getStat(TOTAL+MAXMP.ID)), getX()+X, getY()+Y_INTERVAL[3]);
 		Util.write(Integer.toString(player.getStat(TOTAL+ATK.ID)), getX()+X, getY()+Y_INTERVAL[4]);

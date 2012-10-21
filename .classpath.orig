@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/jar/lwjgl.jar">
+		<attributes>
+<<<<<<< HEAD
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Miguel/workspace/itc/lib/natives/windows"/>
+=======
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="itc/lib/natives/macosx"/>
+>>>>>>> 224fb5c46cc54f8bfc6cb0547794f29c65d491a0
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jar/slick.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

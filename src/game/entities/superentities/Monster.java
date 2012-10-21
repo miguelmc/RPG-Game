@@ -117,6 +117,7 @@ public class Monster extends SuperEntity
 		glVertex2f((float) (width * .87), (float) (height * .07));
 		glVertex2f((float) (width * .87), (float) (height * .07));
 		glVertex2f((float) (width * .87), (float) (height * .2));
+		
 		glVertex2f((float) (width * .87), (float) (height * .2));
 		glVertex2f((float) (width * .13), (float) (height * .2));
 		glVertex2f((float) (width * .13), (float) (height * .2));
