@@ -67,8 +67,6 @@ public class Quest extends GameObject
 			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
 		}
 		
-		System.out.println(requiredItems);
-
 		requiredGold = Integer.parseInt(parser.getAttribute("Quest/requirements/gold", "amount"));
 		
 		//quest rewards

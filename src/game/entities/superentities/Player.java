@@ -14,6 +14,7 @@ import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.features.Quest;
 import game.structure.Map;
+import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
@@ -45,9 +46,7 @@ public class Player extends SuperEntity {
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
-	private static int invincibleRenderCounter = 0;
-	private long nextAtk = 0, invincibleTimer = 0, nextMove = 0;
-	private boolean invincible = false, invincibleRender = false;
+	private long nextAtk = 0, nextMove = 0;
 
 	public Player(int id, Point pos) {
 		super(id);
@@ -217,14 +216,15 @@ public class Player extends SuperEntity {
 	public void die() {
 		UserInterface.sendNotification("You died.");
 		super.die();
+		MapManager.setMap(0, new Point(4, 5));
+		setHP(getStat(TOTAL+MAXHP.ID));
+		setMP(getStat(TOTAL+MAXHP.ID));
+		gainExp(-this.getExp());
 	}
-
+	
 	public void update() {
 
 		super.update();
-
-		if (System.currentTimeMillis() > invincibleTimer)
-			setInvincible(false);
 
 		if (MsgBoxManager.isActive() || Window.isShopOpen())
 			return;
@@ -252,15 +252,6 @@ public class Player extends SuperEntity {
 	}
 
 	public void render() {
-		if (isInvincible()) {
-			if (invincibleRenderCounter == 7) {
-				invincibleRender = !invincibleRender;
-				invincibleRenderCounter = 0;
-			}
-			invincibleRenderCounter++;
-			if (invincibleRender)
-				return;
-		}
 
 		super.render();
 
@@ -270,12 +261,8 @@ public class Player extends SuperEntity {
 		damage -= getStat(TOTAL+DEF.ID)/10;
 		if(damage < 0)
 			damage = 0;
-		if (!isInvincible()) {
-			invincible = true;
-			invincibleTimer = System.currentTimeMillis() + 1000;
-			return super.hit(damage);
-		}
-		return false;
+		
+		return super.hit(damage);
 	}
 
 	public void useItem(Item item) {
@@ -427,15 +414,7 @@ public class Player extends SuperEntity {
 	public ArrayList<Quest> getActiveQuests() {
 		return quests;
 	}
-
-	public void setInvincible(boolean b) {
-		invincible = b;
-	}
-
-	public boolean isInvincible() {
-		return invincible;
-	}
-
+	
 	public int getStat(int stat) {
 		if (stat >= 0x30) {
 			return getStat(stat - EXTRA) + getStat(stat - BASE);
