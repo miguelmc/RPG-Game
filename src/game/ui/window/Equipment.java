@@ -15,6 +15,8 @@ import game.features.Stat;
 import game.structure.MapManager;
 import game.util.Util;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +62,7 @@ public class Equipment extends Window {
 
 		
 		if (item != null) {
+			Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 			String lines[];
 			EquipItem equip = ((EquipItem) item);
 			ArrayList<String> linesList = new ArrayList<String>();
