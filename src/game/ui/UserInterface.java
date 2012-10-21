@@ -189,7 +189,8 @@ public class UserInterface
 
 		Util.useFont("Courier New", Font.BOLD, 28, Color.white);
 		Util.write(MapManager.getMap().getName(), 10, 40);
-		Util.write(Integer.toString(MapManager.getMap().getPlayer().getLevel()), (float) (Main.DIM.getWidth() - 30), 5f);
+		Util.write(Integer.toString(MapManager.getMap().getPlayer().getLevel()), 
+				Main.DIM.getWidth()-10-Util.getTextWidth(Integer.toString(MapManager.getMap().getPlayer().getLevel())), 5f);
 
 		if (MsgBoxManager.isActive())
 			MsgBoxManager.render();
