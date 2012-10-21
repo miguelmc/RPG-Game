@@ -123,6 +123,19 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		if (System.getProperty("os.name").startsWith("Win")) {
+			Thread sleeper = new Thread(new Runnable() {
+				public void run() {
+					while (true)
+						try {
+							Thread.sleep(Long.MAX_VALUE);
+						} catch (InterruptedException e) {
+						}
+				}
+			});
+			sleeper.setDaemon(true);
+			sleeper.start();
+		}
 		new Main();
 	}
 
