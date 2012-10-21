@@ -2,6 +2,7 @@ package game.ui.window;
 
 import static org.lwjgl.opengl.GL11.glColor4f;
 import game.Main;
+import game.ui.Shop;
 import game.util.Util;
 
 import org.lwjgl.input.Keyboard;
@@ -22,11 +23,17 @@ public abstract class Window
 	private Dimension size = new Dimension(174, 256);
 	private Texture texture;
 	private boolean active = false, pressed = false;
+	private static Shop shop;
 
 	private static Window[] windows = { new Inventory(), new Skills(), new Equipment(), new Stats()};
 	
 	// TODO? create a stack for active windows, add on open and remove on close.
 	// Pop on esc pressed.
+	
+	public static boolean isShopOpen()
+	{
+		return shop != null;
+	}
 	
 	public Window(Point pos, Dimension s)
 	{
@@ -35,8 +42,23 @@ public abstract class Window
 		texture = Util.getTexture("UI/window/" + getClass().getSimpleName().toLowerCase() + ".png");
 	}
 
+	public static void openShop(int id)
+	{
+		shop = new Shop(id);
+		for(Window w : windows)
+		{
+			w.close();
+		}
+	}
+	public static void closeShop()
+	{
+		shop = null;
+	}
+	
 	public static void renderAll()
 	{
+		if(shop != null)
+			shop.render();
 		for (Window w : windows)
 		{
 			if (w.isActive())
@@ -67,6 +89,7 @@ public abstract class Window
 				} else if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) // close all
 				{ 
 					w.close();
+					closeShop();
 				}
 			}
 		}
@@ -74,6 +97,11 @@ public abstract class Window
 
 	public static void mouseInput()
 	{
+		if(shop != null )
+		{
+			shop.mouseInput();
+			return;
+		}
 		for (Window w : windows)
 		{
 			if (Mouse.getX() >= w.getX() && Mouse.getX() <= w.getX() + w.getWidth()

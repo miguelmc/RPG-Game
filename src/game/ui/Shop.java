@@ -5,22 +5,26 @@ import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.GameObject;
 import game.structure.MapManager;
+import game.util.Util;
 import game.util.XMLParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.newdawn.slick.opengl.Texture;
+
 public class Shop extends GameObject{
 
-	List<Item> items = new ArrayList<Item>();
-	Item itemSelected;
+	private Texture texture;
+	private List<Item> items = new ArrayList<Item>();
+	private Item itemSelected;
 	
 	
 	public Shop(int id)
 	{
 		super(id);
-		
+		texture = Util.getTexture("shop/" + hexID() +"/texture.png");
 		parseShop();
 		
 	}
@@ -41,7 +45,18 @@ public class Shop extends GameObject{
 	
 	public void render()
 	{
-		//TODO
+		int X=297, Y=85;
+		Util.render(texture, 40, 50, 512, 512, 512, 512);
+		for(int i=0; i<items.size(); i++)
+		{
+			items.get(i).render(X + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+		}
+		
+	}
+	
+	public void mouseInput() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public Item getItemByID(int id)
@@ -83,5 +98,7 @@ public class Shop extends GameObject{
 		else
 			MsgBoxManager.sendText("Make sure you have enough space in your inventory.", false);
 	}
+
 	
+
 }

@@ -29,35 +29,35 @@ import org.lwjgl.util.Dimension;
 /**
  * Game launcher class. Contains the main loop and initializes the game.
  */
-public class Main
-{
+public class Main {
 
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
 
-	static //static "constructor"
+	static // static "constructor"
 	{
 		XMLParser parser = new XMLParser("game_config.xml");
 
 		NAME = parser.getAttribute("GAME", "name");
-		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game", "width")), 
-								 Integer.parseInt(parser.getAttribute("Game", "height")));
-		Slot.SIZE = Integer.parseInt(parser.getAttribute("Game", "tile_size").replace("px", ""));
+		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game",
+				"width")), Integer.parseInt(parser.getAttribute("Game",
+				"height")));
+		Slot.SIZE = Integer.parseInt(parser.getAttribute("Game", "tile_size")
+				.replace("px", ""));
 
-		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(), Slot.SIZE * GRIDSIZE.getHeight());
+		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(), Slot.SIZE
+				* GRIDSIZE.getHeight());
 	}
-	
-	public Main()
-	{
+
+	public Main() {
 
 		// create window
-		try
-		{
-			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM.getHeight()));
+		try {
+			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM
+					.getHeight()));
 			Display.setTitle(NAME);
 			Display.create();
-		} catch (LWJGLException e)
-		{
+		} catch (LWJGLException e) {
 			System.out.println("Unable to create display");
 			System.exit(1);
 		}
@@ -65,8 +65,9 @@ public class Main
 		initGL();
 
 		// Game Loop
-		while (!Display.isCloseRequested())// as long as close button is not pressed
-		{ 
+		while (!Display.isCloseRequested())// as long as close button is not
+											// pressed
+		{
 			input();
 			MapManager.update(); // updates the current map
 
@@ -82,40 +83,46 @@ public class Main
 		System.exit(0);
 	}
 
-	private void initGL()
-	{
+	private void initGL() {
 		// init GL
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to upper-left corner
+		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to
+																// upper-left
+																// corner
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND); // enable transparency
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable transparency
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable
+															// transparency
 	}
 
-	private void input()
-	{
+	private void input() {
 		// give input to the map and windows unless the messagebox is active
 
 		while (Keyboard.next()) // checks for a keyboard event
 		{
-			if (MsgBoxManager.isActive())
-			{
+			if (MsgBoxManager.isActive()) {
 				MsgBoxManager.input();
-			} else
+			} 
+			else
 			{
-				MapManager.input();
 				Window.keyboardInput();
+				if(!Window.isShopOpen())
+				{
+					MapManager.input();
+				}
+				
 			}
+			
 		}
 
-		while (Mouse.next()) // checks for a mouse event
+		while (Mouse.next())
+			// checks for a mouse event
 			Window.mouseInput();
 
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		new Main();
 	}
 

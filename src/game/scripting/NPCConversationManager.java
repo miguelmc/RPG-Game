@@ -3,6 +3,7 @@ package game.scripting;
 import game.features.Quest;
 import game.ui.MsgBoxManager;
 import game.ui.Shop;
+import game.ui.window.Window;
 
 /**
  * The object passed to the NPC scripts. This object's public methods can be
@@ -74,11 +75,13 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 
 	public void openShop(String id) {
-		shop = new Shop(Integer.parseInt(id, 16));
+		Window.openShop(Integer.parseInt(id, 16));
+		
 	}
 
 	public boolean givePlayer(int id) {
 		return getPlayer().addItem(shop.getItemByID(id));
 	}
+
 
 }

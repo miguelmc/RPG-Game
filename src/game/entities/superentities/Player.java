@@ -14,6 +14,7 @@ import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.Shop;
 import game.ui.UserInterface;
+import game.ui.window.Window;
 import game.util.Timer;
 import game.util.Util;
 
@@ -226,7 +227,7 @@ public class Player extends SuperEntity {
 		if (System.currentTimeMillis() > invincibleTimer)
 			setInvincible(false);
 
-		if (MsgBoxManager.isActive())
+		if (MsgBoxManager.isActive() || Window.isShopOpen())
 			return;
 
 		// handles movement
