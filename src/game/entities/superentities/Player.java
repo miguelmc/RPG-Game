@@ -90,7 +90,6 @@ public class Player extends SuperEntity {
 					Monster monster = s.getMonster();
 					if (monster != null) {
 						monster.die();
-						break;
 					}
 				}
 				break;
