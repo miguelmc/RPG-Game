@@ -83,8 +83,6 @@ public class Shop extends GameObject{
 		
 		if(itemSelected != null)
 		{
-			
-			
 				Util.render(itemSelected.getTexture(), 80, 330, 100, 100, 32, 32);
 				Util.write(itemSelected.toString(), 70, 450);
 				
@@ -101,12 +99,8 @@ public class Shop extends GameObject{
 				{
 					Util.write("$"+(int)(itemSelected.getPrice()*.6), 520 - Util.getTextWidth("$"+(int)(itemSelected.getPrice()*.6)), 460);
 					Util.render(sellButton, 350, 450, 100, 46, 40, 18);
-				}
-				
-			
+				}	
 		}
-		
-		
 	}
 	
 	private Item getItemInPosition(Point position)

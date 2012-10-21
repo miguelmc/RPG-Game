@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Map name="The Map" width="25" height="20">
+<Map name="The Map" width="50" height="50">
     <Tiles>
-        <Tile id="2100" amount="250" />
-        <Tile id="2101" amount="250" />
+        <Tile id="2100" amount="1250" />
+        <Tile id="2101" amount="1250" />
     </Tiles>
     <Portals>
 	   <Portal id="2200" x="19" y="18" />
 	   <Portal id="2201" x="1" y="13" />
     </Portals>
     <Monsters>
-        <Monster id="2400" x="3" y="5" />
-	    <Monster id="2400" x="8" y="7" />
-	    <Monster id="2400" x="6" y="2" />
-	    <Monster id="2400" x="10" y="14" />
-	    <Monster id="2400" x="14" y="2" />
-	    <Monster id="2400" x="2" y="14" />
-	    
-	    <Monster id="2400" x="4" y="5" />
-	    <Monster id="2400" x="9" y="7" />
-	    <Monster id="2400" x="7" y="2" />
-	    <Monster id="2400" x="11" y="14" />
-	    <Monster id="2400" x="15" y="2" />
-	    <Monster id="2400" x="3" y="14" />
-	    
-	    <Monster id="2400" x="10" y="7" />
-	    <Monster id="2400" x="8" y="2" />
-	    <Monster id="2400" x="12" y="14" />
-	    <Monster id="2400" x="16" y="2" />
-	    <Monster id="2400" x="4" y="14" />
+        
     </Monsters>
     <NPCs>
-        <NPC id="2501" x="5" y="5" />
+        <NPC id="2500" x="5" y="5" />
     </NPCs>
     <Objects>
         <Object id="2700" x="0" y="10" />
