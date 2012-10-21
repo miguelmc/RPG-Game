@@ -4,6 +4,6 @@ if(pm.getMapID() == 0){
 	}
 }else if(pm.getMapID() == 1){
 	if(pm.playerFacingDir() == pm.DOWN){
-		pm.setMap(0000);
+		pm.setMap(0);
 	}
 }

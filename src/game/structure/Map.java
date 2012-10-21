@@ -332,6 +332,10 @@ public class Map extends GameObject
 	 */
 	public void centerView()
 	{
+		
+		if(size.getWidth() < Main.GRIDSIZE.getWidth() && size.getHeight() < Main.GRIDSIZE.getHeight())
+			return;
+		
 		while (getPlayer().getX() >= Main.GRIDSIZE.getWidth() - Map.VIEW_LIMIT + offset.getX()
 				&& get(new Point(Main.GRIDSIZE.getWidth() + getOffSet().getX(), 0)).getTile() != null)
 		{
