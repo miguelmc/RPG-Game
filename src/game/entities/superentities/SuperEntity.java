@@ -169,14 +169,15 @@ public abstract class SuperEntity extends Entity
 	public boolean hit(int damage)
 	{ // get hit
 		setHP(getHP() - damage);
+		damages.add(damage); // to render the damage
+		damageTime.add(System.currentTimeMillis() + 1700); // TODO? use thread?
 		if (getHP() <= 0)
 		{
 			setHP(0);
 			die();
 			return true;
 		}
-		damages.add(damage); // to render the damage
-		damageTime.add(System.currentTimeMillis() + 1700); // TODO? use thread?
+		
 		return false;
 	}
 

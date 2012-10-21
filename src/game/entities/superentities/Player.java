@@ -490,7 +490,7 @@ public class Player extends SuperEntity
 	{
 		if (stats.containsKey(stat))
 		{
-			stats.put(stat, amount);
+			stats.put(stat, getStat(stat) + amount);
 		}
 		return;
 	}
