@@ -51,7 +51,6 @@ public class Inventory extends Window
 		if (Mouse.getEventButtonState())
 		{
 
-			System.out.println("mouse click");
 
 			setPressed(true);
 
@@ -64,10 +63,6 @@ public class Inventory extends Window
 		{
 			int dX = Mouse.getDX();
 			int dY = Mouse.getDY();
-			if (dX == 0 && dY == 0)
-				System.out.println("Mouse Released");
-			else
-				System.out.println("Mouse Moved");
 			if (!itemGrabbed)
 			{
 				if (Mouse.isButtonDown(0) && isPressed())
