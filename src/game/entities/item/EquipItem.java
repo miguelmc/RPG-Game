@@ -43,6 +43,8 @@ public class EquipItem extends Item
 		stats.put(Stat.MAXMP, Integer.parseInt(statAttributes.get("maxMP")));
 		stats.put(Stat.ATK, Integer.parseInt(statAttributes.get("atk")));
 		stats.put(Stat.STR, Integer.parseInt(statAttributes.get("str")));
+		stats.put(Stat.DEF, Integer.parseInt(statAttributes.get("def")));
+
 	}
 
 	/**
