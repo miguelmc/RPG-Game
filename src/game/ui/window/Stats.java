@@ -7,7 +7,6 @@ import static game.features.Stat.MAXHP;
 import static game.features.Stat.MAXMP;
 import static game.features.Stat.STR;
 import game.Main;
-import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.MapManager;
 import game.util.Util;
