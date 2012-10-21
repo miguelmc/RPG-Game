@@ -1,6 +1,10 @@
 package game.entities.superentities;
 
-import static game.features.Stat.*;
+import static game.features.Stat.ATK;
+import static game.features.Stat.DEF;
+import static game.features.Stat.MAXHP;
+import static game.features.Stat.MAXMP;
+import static game.features.Stat.STR;
 import game.Main;
 import game.entities.NPC;
 import game.entities.Portal;
@@ -12,7 +16,6 @@ import game.features.Quest;
 import game.structure.Map;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
-import game.ui.Shop;
 import game.ui.UserInterface;
 import game.ui.window.Window;
 import game.util.Timer;
@@ -104,9 +107,6 @@ public class Player extends SuperEntity {
 					portal.run();
 				}
 				break;
-			case Keyboard.KEY_P:
-				Shop shop = new Shop(0x0a00);
-				shop.buy(0x6300, this);
 			}
 		}
 	}
