@@ -106,7 +106,7 @@ public class Shop extends GameObject{
 	private Item getItemInPosition(Point position)
 	{
 			
-		if(position.getX()<137)
+		if(position.getX()<137 || position.getY()>300)
 			return null;
 		
 		int row = (position.getY() - 55)/32 - 2;
@@ -203,10 +203,10 @@ public class Shop extends GameObject{
 		if(selection == false)
 			return;
 		
-		itemSelected = null;
 		player.gainGold((int) (itemSelected.getPrice()*.6));
 				
 		player.loseItem(itemSelected.id(), 1);
+		itemSelected = null;
 	}
 
 	

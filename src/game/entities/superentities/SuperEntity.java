@@ -105,7 +105,8 @@ public abstract class SuperEntity extends Entity
 
 		Point targetPos = new Point(getX() + xMove, getY() + yMove);
 
-		if (getMap().isPointInMap(targetPos) && getMap().get(targetPos).getStrongEntity() == null)
+		if (getMap().isPointInMap(targetPos) && getMap().get(targetPos).getStrongEntity() == null &&
+				getMap().get(targetPos).getTile().id() != 0x2102)
 			return true;
 
 		return false;
