@@ -40,7 +40,6 @@ public class Equipment extends Window {
 			equip.getValue().render(position.getX() + getX(),
 									position.getY() + getY());
 		}
-		
 	}
 
 	@Override
