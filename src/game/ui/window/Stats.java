@@ -1,10 +1,13 @@
 package game.ui.window;
 
+import static game.entities.superentities.Player.TOTAL;
+import static game.features.Stat.ATK;
+import static game.features.Stat.MAXHP;
+import static game.features.Stat.MAXMP;
+import static game.features.Stat.STR;
 import game.entities.superentities.Player;
 import game.structure.MapManager;
 import game.util.Util;
-import static game.entities.superentities.Player.*;
-import static game.features.Stat.*;
 
 import java.awt.Color;
 import java.awt.Font;

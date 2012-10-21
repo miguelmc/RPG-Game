@@ -173,7 +173,7 @@ public class Inventory extends Window
 						linesList.add(Stat.values()[i].NAME + ": "
 								+ Integer.toString(equip.getStat(Stat.values()[i])));
 				}
-				System.out.println(item.getDescription());
+
 				String[] description = Util.tokenizeText(item.getDescription(), 190, 4);
 				
 				lines = new String[linesList.size()+description.length];

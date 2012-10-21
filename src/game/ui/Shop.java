@@ -4,6 +4,7 @@ import game.entities.Entity;
 import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.GameObject;
+import game.structure.MapManager;
 import game.util.XMLParser;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.Map;
 public class Shop extends GameObject{
 
 	List<Item> items = new ArrayList<Item>();
+	Item itemSelected;
+	
 	
 	public Shop(int id)
 	{
@@ -31,7 +34,7 @@ public class Shop extends GameObject{
 		
 		for(Map<String, String> item: shopItems)
 		{
-			items.add((Item) Entity.createEntity(Integer.parseInt(item.get("id"))));
+			items.add((Item) Entity.createEntity(Integer.parseInt(item.get("id"), 16)));
 		}
 		
 	}
@@ -41,35 +44,44 @@ public class Shop extends GameObject{
 		//TODO
 	}
 	
+	public Item getItemByID(int id)
+	{
+		for(Item item: items)
+		{
+			if(item.id() == id)
+				return item;
+		}
+		return null;	
+	}
+	
 	public boolean buy(int id, Player player)
 	{
 		
-		Item item = items.get(id);
-		int price = 100;
-		
-		if(player.getGold() < price)
+		itemSelected = getItemByID(id);
+				
+		if(player.getGold() < itemSelected.getPrice())
 			return false;
-		
-		MsgBoxManager.sendText("Are you sure you want to buy " + item + " for $" + price + "?", true);
+				
+		MsgBoxManager.sendText("Are you sure you want to buy " + itemSelected + " for $" + itemSelected.getPrice() + "?", true, "onSelection", this);
 		if(MsgBoxManager.getSelection())
 		{
-			if(player.addItem(item))
-			{
-				player.gainGold(-price);
-				return true;
-			}else
-			{
-				MsgBoxManager.sendText("Make sure you have enough space in your inventory.", false);
-			}
+			
 		}
 		
 		return false;
 		
 	}
 	
-	public void sell(int id, Player player)
+	public void onSelection(Boolean selection)
 	{
+		Player player = MapManager.getMap().getPlayer();
+		if(selection == false)
+			return;
 		
+		if(player.addItem(itemSelected))
+			player.gainGold(-itemSelected.getPrice());
+		else
+			MsgBoxManager.sendText("Make sure you have enough space in your inventory.", false);
 	}
 	
 }

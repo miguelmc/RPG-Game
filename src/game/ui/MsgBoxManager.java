@@ -1,17 +1,20 @@
 package game.ui;
 
-import static org.lwjgl.opengl.GL11.*;
-
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
 import game.entities.NPC;
+import game.util.Util;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
-import game.util.Util;
 
 /**
  * Serves as an interface for sending messages to the player in a textbox. The
@@ -28,6 +31,9 @@ public class MsgBoxManager
 	private static int stateYes;
 	private static int stateNo;
 	private static int state; // the state send to the npc script.
+	private static boolean callNPC = true;
+	private static Method methodCall;
+	private static Object object;
 
 	public static void render()
 	{
@@ -151,7 +157,19 @@ public class MsgBoxManager
 				active = false;
 				// runs a npc script passing a state. If the state is -1, the
 				// messagebox is closed.
-				NPC.getNpc().run(yesNo ? (selection ? stateYes : stateNo) : state);
+				if(callNPC){
+					NPC.getNpc().run(yesNo ? (selection ? stateYes : stateNo) : state);
+				}else{
+					try {
+						methodCall.invoke(object, selection);
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
 				selection = true;
 				break;
 			case Keyboard.KEY_RIGHT:
@@ -184,6 +202,19 @@ public class MsgBoxManager
 	public static void setActive(boolean active)
 	{
 		MsgBoxManager.active = active;
+	}
+
+	public static void sendText(String text, boolean b, String method, Object object) {
+		sendText(text, true);
+		try {
+			methodCall = object.getClass().getMethod(method, new Class<?>[]{Boolean.class});
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		callNPC = false;
+		MsgBoxManager.object = object;
 	}
 
 }

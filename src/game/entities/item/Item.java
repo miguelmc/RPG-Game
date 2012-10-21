@@ -17,7 +17,7 @@ public abstract class Item extends Entity
 {
 
 	private String NAME, DESCRIPTION;
-	private int quantity;
+	private int quantity, price;
 
 	public Item(int id, int amount)
 	{
@@ -33,6 +33,7 @@ public abstract class Item extends Entity
 	{
 		NAME = parser.getAttribute(getClass().getSimpleName(), "name");
 		DESCRIPTION = parser.getAttribute(getClass().getSimpleName(), "description");
+		price = Integer.parseInt(parser.getAttribute(getClass().getSimpleName(), "price"));
 	}
 
 	public Item(int id, Point pos)
@@ -105,6 +106,10 @@ public abstract class Item extends Entity
 		
 		return stackedItems;
 		
+	}
+
+	public int getPrice() {
+		return price;
 	}
 
 }
