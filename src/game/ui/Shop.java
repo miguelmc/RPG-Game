@@ -115,9 +115,7 @@ public class Shop extends GameObject{
 		
 		if(column>=0 && column < 5 && row >= 0 && row < 6)
 			return items.get(row*5+column);
-		return null;
-		
-		
+		return null;	
 	}
 	
 	public void mouseInput() {
