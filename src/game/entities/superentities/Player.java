@@ -457,6 +457,7 @@ public class Player extends SuperEntity {
 		raiseStat(EXTRA + MAXHP.ID, equip.getStat(MAXHP));
 		raiseStat(EXTRA + MAXMP.ID, equip.getStat(MAXMP));
 		raiseStat(EXTRA + ATK.ID, equip.getStat(ATK));
+		raiseStat(EXTRA + DEF.ID, equip.getStat(DEF));
 		raiseStat(EXTRA + STR.ID, equip.getStat(STR));
 	}
 
