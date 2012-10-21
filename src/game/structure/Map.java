@@ -57,7 +57,7 @@ public class Map extends GameObject
 		// TODO recycle equipped items, and inventory items
 
 		List<Slot> slots = getAllSlots();
-
+		
 		for (Slot slot : slots)
 		{
 			for (Entity entity : slot.getAll())
