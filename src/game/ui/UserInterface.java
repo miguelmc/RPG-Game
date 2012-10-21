@@ -8,13 +8,11 @@ import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLineWidth;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
 import game.entities.superentities.Player;
 import game.features.Stat;
 import game.structure.MapManager;
-import game.structure.Slot;
 import game.ui.window.Window;
 import game.util.Util;
 
@@ -92,8 +90,6 @@ public class UserInterface
 		
 		glColor3f(0f, 0f, 0f);
 		glLoadIdentity();
-		//glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
-				//* Slot.SIZE, 0);
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		glVertex2f((float) (10), (float) (10));
@@ -133,8 +129,6 @@ public class UserInterface
 
 		glColor3f(0f, 0f, 0f);
 		glLoadIdentity();
-		//glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
-				//* Slot.SIZE, 0);
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		glVertex2f((float) (200), (float) (10));
@@ -173,8 +167,6 @@ public class UserInterface
 		
 		glColor3f(0f, 0f, 0f);
 		glLoadIdentity();
-		//glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
-				//* Slot.SIZE, 0);
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		glVertex2f((float) (390), (float) (10));
