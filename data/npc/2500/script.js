@@ -1,4 +1,4 @@
-var quest = 2304
+var quest = 2304;
 switch(cm.getState()){
 case 0:
 	if(cm.isQuestInProgress(quest)){

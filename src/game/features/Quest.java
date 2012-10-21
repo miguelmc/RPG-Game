@@ -25,9 +25,22 @@ public class Quest extends GameObject
 	private Map<Integer, List<Integer>> monsterKills = new HashMap<Integer, List<Integer>>(); 
 	private boolean turnedIn = false;
 	private Map<Integer, Integer> requiredItems = new HashMap<Integer, Integer>();
-	private ArrayList<Item> itemsNeeded = new ArrayList<Item>(), itemReward = new ArrayList<Item>();
+	private ArrayList<Item> itemReward = new ArrayList<Item>();
 	private int requiredGold = 0, goldReward = 0, expReward = 0;
+	
+	private static Map<Integer, Integer> levelRequirement = new HashMap<Integer, Integer>();
 
+	static
+	{
+		XMLParser parser = new XMLParser("quest/LevelRequirement.xml");
+		
+		List<Map<String, String>> reqLevels = parser.getChildrenAttributes("Requirement");
+		for(Map<String, String> questReq: reqLevels)
+		{
+			levelRequirement.put(Integer.parseInt(questReq.get("id"), 16), Integer.parseInt(questReq.get("level")));
+		}
+	}
+	
 	public Quest(int id)
 	{
 		super(id);
@@ -53,6 +66,8 @@ public class Quest extends GameObject
 		{
 			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
 		}
+		
+		System.out.println(requiredItems);
 
 		requiredGold = Integer.parseInt(parser.getAttribute("Quest/requirements/gold", "amount"));
 		
@@ -112,23 +127,16 @@ public class Quest extends GameObject
 
 	public boolean isCompleted()
 	{
-
-		boolean complete = true;
-
-		for (Item i : itemsNeeded)
+		for (Map.Entry<Integer, Integer> item : requiredItems.entrySet())
 		{
-			if (!getMap().getPlayer().hasItem(i.id(), i.getQuantity()))
-			{
-				complete = false;
-			}
+			if (!getMap().getPlayer().hasItem(item.getKey(), item.getValue()))
+				return false;
 		}
 
-		if (!(getMap().getPlayer().getGold() >= requiredGold) || !killsComplete())
-		{
-			complete = false;
-		}
+		if (getMap().getPlayer().getGold() < requiredGold || !killsComplete())
+			return false;
 
-		return complete;
+		return true;
 	}
 
 	private boolean killsComplete()
@@ -156,11 +164,6 @@ public class Quest extends GameObject
 		return DESCRIPTION;
 	}
 
-	public ArrayList<Item> getItemsNeeded()
-	{
-		return itemsNeeded;
-	}
-
 	public boolean isTurnedIn()
 	{
 		return turnedIn;
@@ -171,10 +174,8 @@ public class Quest extends GameObject
 		if (!isCompleted())
 			return;
 
-		for (Item i : itemsNeeded)
-		{
-			getMap().getPlayer().loseItem(i.id(), i.getQuantity());
-		}
+		for (Map.Entry<Integer, Integer> item : requiredItems.entrySet())
+			getMap().getPlayer().loseItem(item.getKey(), item.getValue());
 
 		getMap().getPlayer().gainGold(-requiredGold);
 		getMap().getPlayer().gainGold(goldReward);
@@ -190,16 +191,13 @@ public class Quest extends GameObject
 
 	public static int getReqLevel(int id)
 	{
-		// TODO
-		return 0;
+		return levelRequirement.get(id);
 	}
 
 	public static void activate(int id)
 	{
 		if (getMap().getPlayer().getLevel() >= getReqLevel(id))
-		{
 			getMap().getPlayer().addQuest(new Quest(id));
-		}
 	}
 
 	public String toString()

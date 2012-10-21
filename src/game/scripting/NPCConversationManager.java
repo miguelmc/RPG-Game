@@ -40,10 +40,7 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 
 	public boolean isQuestAvailable(int id) {
-		if (Quest.getReqLevel(id) <= getPlayer().getLevel()) {
-			return true;
-		}
-		return false;
+		return Quest.getReqLevel(id) <= getPlayer().getLevel();
 	}
 
 	public boolean isQuestComplete(int id) {

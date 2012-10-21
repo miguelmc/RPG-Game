@@ -3,7 +3,7 @@ package game.features;
 public enum Stat
 {
 
-	MAXHP(0x00, "MaxHP"), MAXMP(0x01, "Max MP"), ATK(0x02, "Attack"), STR(0x03, "Strength"), DEF(0x04, "Defense");
+	MAXHP(0x00, "maxHP"), MAXMP(0x01, "maxMP"), ATK(0x02, "atk"), STR(0x03, "str"), DEF(0x04, "def");
 
 	public final int ID;
 	public final String NAME;
