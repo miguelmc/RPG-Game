@@ -39,11 +39,14 @@ public class EquipItem extends Item
 
 		Map<String, String> statAttributes = parser.getAttributes("EquipItem/stats");
 
-		stats.put(Stat.MAXHP, Integer.parseInt(statAttributes.get("maxHP")));
-		stats.put(Stat.MAXMP, Integer.parseInt(statAttributes.get("maxMP")));
-		stats.put(Stat.ATK, Integer.parseInt(statAttributes.get("atk")));
-		stats.put(Stat.STR, Integer.parseInt(statAttributes.get("str")));
-		stats.put(Stat.DEF, Integer.parseInt(statAttributes.get("def")));
+		for(Stat stat: Stat.values())
+		{
+			String value = statAttributes.get(stat.NAME);
+			
+			if(value != null)
+				stats.put(stat, Integer.parseInt(value));
+		}
+		
 
 	}
 
@@ -77,7 +80,7 @@ public class EquipItem extends Item
 	 */
 	public int getStat(Stat stat)
 	{
-		return stats.get(stat);
+		return stats.get(stat) != null ? stats.get(stat) : 0;
 	}
 	
 	/**
