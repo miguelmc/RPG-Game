@@ -27,6 +27,12 @@ public class Shop extends GameObject{
 	private List<Item> playerItems = new ArrayList<Item> (MapManager.getMap().getPlayer().getItems());
 	private Item itemSelected;
 	private long lastItemSelection = 0;
+	private static final Texture buyButton;
+	
+	static
+	{
+		buyButton = Util.getTexture("shop/buy.png");
+	}
 	
 	public Shop(int id)
 	{
@@ -86,19 +92,28 @@ public class Shop extends GameObject{
 			}
 			
 			Util.write("$"+itemSelected.getPrice(), 520 - Util.getTextWidth("$"+itemSelected.getPrice()), 460);
+		
+			Util.render(buyButton, 350, 450, 100, 46, 40, 18);
+			
 		}
+		
 		
 	}
 	
 	private Item getItemInPosition(Point position)
 	{
-				
+			
+		if(position.getX()<137)
+			return null;
+		
 		int row = (position.getY() - 55)/32 - 2;
 		int column = (position.getX() - 137)/32;
 		
 		int index = row*5 + column;
 		
-		if(index >= 0 && index < items.size())
+		System.out.println(column);
+		
+		if(column>=0 && column < 5 && row >= 0 && row < 6)
 			return items.get(row*5+column);
 		return null;
 		
@@ -109,14 +124,14 @@ public class Shop extends GameObject{
 		
 		if(Mouse.getEventButtonState())
 		{
-			itemSelected = getItemInPosition(new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
-			if(System.currentTimeMillis() < lastItemSelection+200)
-			{
+			int x = Mouse.getX();
+			int y = Main.DIM.getHeight() - Mouse.getY() + 1;
+			Item selection = getItemInPosition(new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
+			itemSelected = selection != null ? selection : itemSelected;
+			if(System.currentTimeMillis() < lastItemSelection+200 || (x > 350 && y > 450 && x < 350 + 100 && y < 450 + 46))
 				buy();
-			}
 			lastItemSelection = System.currentTimeMillis();
 		}
-		
 		
 	}
 	
@@ -137,10 +152,6 @@ public class Shop extends GameObject{
 			return false;
 				
 		MsgBoxManager.sendText("Are you sure you want to buy " + itemSelected + " for $" + itemSelected.getPrice() + "?", true, "onSelection", this);
-		if(MsgBoxManager.getSelection())
-		{
-			
-		}
 		
 		return false;
 		
