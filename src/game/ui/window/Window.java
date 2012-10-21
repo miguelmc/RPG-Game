@@ -23,7 +23,7 @@ public abstract class Window
 	private Texture texture;
 	private boolean active = false, pressed = false;
 
-	private static Window[] windows = { new Inventory(), new Skills(), new Equipment()};
+	private static Window[] windows = { new Inventory(), new Skills(), new Equipment(), new Stats()};
 	
 	// TODO? create a stack for active windows, add on open and remove on close.
 	// Pop on esc pressed.

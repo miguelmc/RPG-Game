@@ -1,3 +1,3 @@
-<EquipItem name="Piece of bent leather" description="Seems that you can use this as a helmet" type="helmet">
+<EquipItem name="Piece of leather" description="Seems that you can use this as a helmet" type="helmet">
     <stats maxHP="5" maxMP="0" atk="0" str="2" />
 </EquipItem>

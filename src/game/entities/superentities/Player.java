@@ -109,12 +109,6 @@ public class Player extends SuperEntity
 					portal.run();
 				}
 				break;
-			case Keyboard.KEY_S:
-				System.out.println("Level: " + level);
-				System.out.println("Attack: " + getStat(TOTAL + ATK.ID));
-				System.out.println("Strength: " + getStat(TOTAL + STR.ID));
-				System.out.println("Average Damage: " + getAverageDamage());
-				break;
 			}
 		}
 	}
@@ -216,7 +210,7 @@ public class Player extends SuperEntity
 		useMP(2);
 	}
 
-	protected double getAverageDamage()
+	public double getAverageDamage()
 	{
 		return getStat(TOTAL + ATK.ID) * 2 + getStat(TOTAL + STR.ID);
 	}
