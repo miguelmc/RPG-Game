@@ -2,6 +2,7 @@ package game.ui.window;
 
 import static game.entities.superentities.Player.TOTAL;
 import static game.features.Stat.ATK;
+import static game.features.Stat.DEF;
 import static game.features.Stat.MAXHP;
 import static game.features.Stat.MAXMP;
 import static game.features.Stat.STR;
@@ -43,8 +44,7 @@ public class Stats extends Window{
 		Util.write(Integer.toString(player.getStat(TOTAL+MAXHP.ID)), getX()+X, getY()+Y_INTERVAL[2]);
 		Util.write(Integer.toString(player.getStat(TOTAL+MAXMP.ID)), getX()+X, getY()+Y_INTERVAL[3]);
 		Util.write(Integer.toString(player.getStat(TOTAL+ATK.ID)), getX()+X, getY()+Y_INTERVAL[4]);
-		//TODO: Defense
-		//Util.write(Integer.toString(player.getStat(TOTAL+.ID)), getX()+X, getY()+Y_INTERVAL[5]);
+		Util.write(Integer.toString(player.getStat(TOTAL+DEF.ID)), getX()+X, getY()+Y_INTERVAL[5]);
 		Util.write(Integer.toString(player.getStat(TOTAL+STR.ID)), getX()+X, getY()+Y_INTERVAL[6]);
 		Util.write(Integer.toString((int)(player.getAverageDamage()+.5)), getX()+X, getY()+Y_INTERVAL[7]);
 	}

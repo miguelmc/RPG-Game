@@ -1,9 +1,6 @@
 package game.entities.superentities;
 
-import static game.features.Stat.ATK;
-import static game.features.Stat.MAXHP;
-import static game.features.Stat.MAXMP;
-import static game.features.Stat.STR;
+import static game.features.Stat.*;
 import game.Main;
 import game.entities.NPC;
 import game.entities.Portal;
@@ -59,11 +56,13 @@ public class Player extends SuperEntity {
 		stats.put(BASE + MAXMP.ID, 100);
 		stats.put(BASE + ATK.ID, 1);
 		stats.put(BASE + STR.ID, 10);
+		stats.put(BASE + DEF.ID, 5);
 
 		stats.put(EXTRA + MAXHP.ID, 0);
 		stats.put(EXTRA + MAXMP.ID, 0);
 		stats.put(EXTRA + ATK.ID, 0);
 		stats.put(EXTRA + STR.ID, 0);
+		stats.put(EXTRA + DEF.ID, 0);
 
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXMP.ID));
@@ -116,7 +115,7 @@ public class Player extends SuperEntity {
 		boolean moveCamera = false;
 		int dir = 0;
 
-		// movement handled by updated due to movement based on key down not key
+		// movement handled by update due to movement based on key down not key
 		// press
 
 		switch (key) {
@@ -268,6 +267,9 @@ public class Player extends SuperEntity {
 	}
 
 	public boolean hit(int damage) {
+		damage -= getStat(TOTAL+DEF.ID)/10;
+		if(damage < 0)
+			damage = 0;
 		if (!isInvincible()) {
 			invincible = true;
 			invincibleTimer = System.currentTimeMillis() + 1000;
@@ -355,7 +357,9 @@ public class Player extends SuperEntity {
 	}
 
 	private void levelUp() {
-		raiseStat(BASE + ATK.ID, 2);
+		raiseStat(BASE + ATK.ID, 1);
+		raiseStat(BASE + STR.ID, 2);
+		raiseStat(BASE + DEF.ID, 1);
 		level++;
 		UserInterface.sendNotification("LEVEL UP! You are now level "
 				+ getLevel());
