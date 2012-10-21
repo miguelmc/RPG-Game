@@ -8,6 +8,8 @@ import game.structure.MapManager;
 import game.util.Util;
 import game.util.XMLParser;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class Shop extends GameObject{
 
 	private Texture texture;
 	private List<Item> items = new ArrayList<Item>();
+	private List<Item> playerItems = new ArrayList<Item> (MapManager.getMap().getPlayer().getItems());
 	private Item itemSelected;
 	
 	
@@ -45,13 +48,20 @@ public class Shop extends GameObject{
 	
 	public void render()
 	{
-		int X=297, Y=85;
+		int sellX=297, buyX = 130, Y=85, goldX = 120, goldY = 513;
 		Util.render(texture, 40, 50, 512, 512, 512, 512);
+		for(int i=0; i<playerItems.size(); i++)
+		{
+			playerItems.get(i).render(sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+		}
 		for(int i=0; i<items.size(); i++)
 		{
-			items.get(i).render(X + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
+			items.get(i).render(buyX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5));
 		}
 		
+		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
+		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), goldX,
+				goldY);
 	}
 	
 	public void mouseInput() {
