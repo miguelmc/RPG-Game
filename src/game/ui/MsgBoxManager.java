@@ -1,20 +1,16 @@
 package game.ui;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
-import game.entities.NPC;
+import game.util.Renderer;
 import game.util.Util;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.Dimension;
+import org.lwjgl.util.Point;
 
 /**
  * Serves as an interface for sending messages to the player in a textbox. The
@@ -24,121 +20,70 @@ import org.lwjgl.opengl.GL11;
 public class MsgBoxManager
 {
 	
-	//TODO have a runnable instead of automatically running a given script or having a method
-
+	public static final int OK = 0, YES_NO = 1;
+	
 	private static String message = "";
 	private static boolean selection = true; // only for "Yes/No" messagebox
-	private static boolean yesNo = false;
-	private static boolean active = false;
-	private static int stateYes;
-	private static int stateNo;
-	private static int state; // the state send to the npc script.
-	private static boolean callNPC = true;
-	private static Method methodCall;
-	private static Object object;
+	private static int type = OK;
+	private static boolean active;
+	private static Runnable action;
 
 	public static void render()
-	{
+	{		
+		Dimension size = new Dimension(Main.DIM.getWidth() - 40, 140);
+		Point position = new Point(20, Main.DIM.getHeight() - 25 - size.getHeight());
+
+		GL11.glColor4f(0f, 0f, 0f, 0.6f);
+		Renderer.renderQuad(position, size); // renders the background
 		
-		if (isActive())
+		GL11.glColor4f(1f, 1f, 1f, 0.3f); // inner rectangle with different color
+		Renderer.renderQuad(new Point(position.getX() + 5, position.getY() + 5), 
+							new Dimension(size.getWidth() - 10, size.getHeight() - 10));
+			
+		//writes the text
+		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
+		String lines[] = Util.tokenizeText(message, Main.DIM.getWidth() - 50, 4);
+		for (int i = 0; i < lines.length; i++)
+			if (!lines[i].isEmpty())
+				Util.write(lines[i], position.getX() + 15, position.getY() + 10 + Util.getFontHeight() * i);
+
+		if (type == YES_NO)
 		{
-			int boxHeight = 140;
-			int x1 = 20;
-			int x2 = Main.DIM.getWidth() - 20;
-			int y1 = Main.DIM.getHeight() - 25 - boxHeight;
-			int y2 = Main.DIM.getHeight() - 25;
-
-			GL11.glColor4f(0f, 0f, 0f, 0.6f);
-			glBegin(GL_QUADS);
-			glVertex2f(x1, y1);
-			glVertex2f(x2, y1);
-			glVertex2f(x2, y2);
-			glVertex2f(x1, y2);
-			glEnd();
-
-			GL11.glColor4f(1f, 1f, 1f, 0.3f);
-			glBegin(GL_QUADS);
-			glVertex2f(x1 + 5, y1 + 5);
-			glVertex2f(x2 - 5, y1 + 5);
-			glVertex2f(x2 - 5, y2 - 5);
-			glVertex2f(x1 + 5, y2 - 5);
-			glEnd();
-
-			Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
-			String lines[] = Util.tokenizeText(message, Main.DIM.getWidth() - 50, 4);
-			for (int i = 0; i < lines.length; i++)
-			{
-				if (!lines[i].equals(""))
-				{
-					Util.write(lines[i], x1 + 15, y1 + 10 + Util.getFontHeight() * i);
-				}
-			}
-
-			if (yesNo)
-			{
-				x1 = (int) (Main.DIM.getWidth() * .7);
-				x2 = (int) (Main.DIM.getWidth() * .93);
-				y1 = y2 - 20;
-				y2 = y2 + 25;
-				GL11.glColor4f(0f, 0f, 0f, .7f);
-				glBegin(GL_QUADS);
-				glVertex2f(x1, y1);
-				glVertex2f(x2, y1);
-				glVertex2f(x2, y2);
-				glVertex2f(x1, y2);
-				glEnd();
-
-				GL11.glColor4f(1f, 1f, 1f, .4f);
-				glBegin(GL_QUADS);
-				glVertex2f(x1 + 5, y1 + 5);
-				glVertex2f(x2 - 5, y1 + 5);
-				glVertex2f(x2 - 5, y2 - 5);
-				glVertex2f(x1 + 5, y2 - 5);
-				glEnd();
-
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-				int avgx = (int) ((x1 + x2) / 2);
-
-				int translate = 0;
-				if (!selection)
-				{
-					translate = avgx - x1 - 4;
-				}
-
-				GL11.glColor4f(1f, 1f, 0f, .55f);
-				glBegin(GL_QUADS);
-				glVertex2f(x1 + 5 + translate, y1 + 5);
-				glVertex2f(avgx + translate, y1 + 5);
-				glVertex2f(avgx + translate, y2 - 5);
-				glVertex2f(x1 + 5 + translate, y2 - 5);
-				glEnd();
-
-				Util.write("Yes", x1 + 10, y1 + 5);
-				Util.write("No", x1 + 88, y1 + 5);
-			}
-			GL11.glColor4f(1f, 1f, 1f, 1f);
+			Dimension optionBoxSize = new Dimension((int)(Main.DIM.getWidth()*.25), 45);
+			Point optionBoxPos = new Point((int)(Main.DIM.getHeight()*.7), Main.DIM.getHeight() - 50);
+			
+			GL11.glColor4f(0f, 0f, 0f, .7f); //renders the optionBox
+			Renderer.renderQuad(optionBoxPos, optionBoxSize);
+			
+			Point highlightPos = new Point(optionBoxPos.getX() + 5 + (selection ? 0 : (optionBoxSize.getWidth() - 10)/2), optionBoxPos.getY() + 5);
+			GL11.glColor4f(1f, 1f, 0f, .55f); // renders the option selection highlight
+			Renderer.renderQuad(highlightPos, new Dimension((optionBoxSize.getWidth() - 10)/2, optionBoxSize.getHeight() - 10));
+			
+			//Writes the yes/no option
+			Util.write("Yes", optionBoxPos.getX() + 25, optionBoxPos.getY() + 5);
+			Util.write("No", optionBoxPos.getX() + (optionBoxSize.getWidth() - 10)/2 + 35,  optionBoxPos.getY() + 5);
 		}
+		
+		GL11.glColor4f(1f, 1f, 1f, 1f);
+		
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>sendText</b> <br>
-	 * <p>
-	 * <tt>public static void sendText(String str, boolean YesNo)</tt>
-	 * </p>
-	 * Creates a message box. An "Ok" messagebox is sent if YesNo is false and a
-	 * "Yes/No" messagebox if true. <br>
-	 * <br>
-	 */
-	public static void sendText(String str, boolean YesNo)
+	public static void sendMessage(String message, int type, Runnable runnable)
 	{
-		message = str;
-		yesNo = YesNo;
 		active = true;
+		MsgBoxManager.message = message;
+		MsgBoxManager.type = type;
+		action = runnable;
+		
+		System.out.println("active");
+		
 	}
-
+	
+	public static void sendMessage(String message, int type)
+	{
+		sendMessage(message, type, null);
+	}
+	
 	public static boolean isActive()
 	{
 		return active;
@@ -150,30 +95,14 @@ public class MsgBoxManager
 		{
 			switch (Keyboard.getEventKey())
 			{
-			case Keyboard.KEY_ESCAPE:
-				state = -1;
-				stateYes = -1;
-				stateNo = -1;
-			case Keyboard.KEY_SPACE: // space and enter do the same
+			case Keyboard.KEY_SPACE:
 			case Keyboard.KEY_RETURN:
-				message = "";
 				active = false;
-				// runs a npc script passing a state. If the state is -1, the
-				// messagebox is closed.
-				if(callNPC){
-					NPC.getNpc().run(yesNo ? (selection ? stateYes : stateNo) : state);
-				}else{
-					try {
-						methodCall.invoke(object, selection);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
-				}
-				selection = true;
+				if(action != null)
+					action.run();
+				break;
+			case Keyboard.KEY_ESCAPE:
+				active = false;
 				break;
 			case Keyboard.KEY_RIGHT:
 				selection = false;
@@ -186,38 +115,9 @@ public class MsgBoxManager
 
 	}
 
-	public static void setYesNo(int yes, int no)
-	{
-		stateYes = yes;
-		stateNo = no;
-	}
-
-	public static void setState(int state)
-	{
-		MsgBoxManager.state = state;
-	}
-
-	public static boolean getSelection()
+	public static boolean getAnswer()
 	{
 		return selection;
-	}
-
-	public static void setActive(boolean active)
-	{
-		MsgBoxManager.active = active;
-	}
-
-	public static void sendText(String text, boolean b, String method, Object object) {
-		sendText(text, true);
-		try {
-			methodCall = object.getClass().getMethod(method, new Class<?>[]{Boolean.class});
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		callNPC = false;
-		MsgBoxManager.object = object;
 	}
 
 }

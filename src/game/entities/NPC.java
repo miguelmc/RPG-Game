@@ -2,6 +2,7 @@ package game.entities;
 
 import game.scripting.NPCConversationManager;
 import game.structure.Slot;
+import game.ui.MsgBoxManager;
 import game.util.Util;
 import game.util.XMLParser;
 
@@ -21,22 +22,20 @@ import javax.script.ScriptException;
  * The player can chat with the character and the scripts are defined in javascript.
  * Serve as an interface for quests.
  */
-public class NPC extends Entity
+public class NPC extends Entity implements Runnable
 {
 
 	private String name;
 	private static java.util.Map<Integer, String> names = new HashMap<Integer, String>();
-	private static NPC npc; //reference to the npc whose script is being executed.
-	private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");;
+	private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 	private static NPCConversationManager cm = new NPCConversationManager();
 
 	static{
-		//There's no xml file for every npc, all the names are stored in a single file mapped with their ids.
-				XMLParser parser = new XMLParser("npc/names.xml");
+		XMLParser parser = new XMLParser("npc/names.xml");
 
-				List<java.util.Map<String, String>> npcNames = parser.getChildrenAttributes("NPCs");
-				for (java.util.Map<String, String> data : npcNames)
-					names.put(Integer.parseInt(data.get("id"), 16), data.get("name"));
+		List<java.util.Map<String, String>> npcNames = parser.getChildrenAttributes("NPCs");
+		for (java.util.Map<String, String> data : npcNames)
+			names.put(Integer.parseInt(data.get("id"), 16), data.get("name"));
 	}
 	
 	public NPC(int id)
@@ -57,33 +56,22 @@ public class NPC extends Entity
 
 	public void run()
 	{
-		run(0); //run script with initial state = 0
-	}
-
-	public void run(int state)
-	{
-		if (state == -1) //state for closing the conversation
-			return;
-		
-		npc = this;
-		cm.setState(state);
+		NPCConversationManager.setNPC(this);
+				
 		engine.put("cm", cm);
-
+				
 		try
 		{
-			engine.eval(new FileReader("data/npc/" + hexID() + "/script.js"));
+			engine.eval(new FileReader("data/npc/" + Util.hexID(id()) + "/script.js"));
 		} catch (FileNotFoundException e)
 		{
-			cm.sendOk("Script not found: data/npc/" + hexID() + "/script.js");
+			MsgBoxManager.sendMessage("Script not found: data/npc/" + Util.hexID(id()) + "/script.js", MsgBoxManager.OK);
 		} catch (ScriptException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	public static NPC getNpc()
-	{
-		return npc;
-	}
+
 
 }

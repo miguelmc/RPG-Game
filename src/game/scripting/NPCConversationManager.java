@@ -1,5 +1,6 @@
 package game.scripting;
 
+import game.entities.NPC;
 import game.features.Quest;
 import game.ui.MsgBoxManager;
 import game.ui.Shop;
@@ -11,29 +12,40 @@ import game.ui.window.Window;
  */
 public class NPCConversationManager extends AbstractScriptManager {
 
-	private int state = 0;
 	private Shop shop;
+	private static NPC activeNPC;
+	private int state, onYes, onNo;
+	private boolean yesNo;
 
-	public void sendOk(String s, int state) {
-		MsgBoxManager.sendText(s, false);
-		MsgBoxManager.setState(state);
+	public void sendOk(String message, int state) {
+		
+		yesNo = false;
+		
+		if(state == -1)
+		{
+			MsgBoxManager.sendMessage(message, MsgBoxManager.OK);
+			state = 0;
+		}else
+			MsgBoxManager.sendMessage(message, MsgBoxManager.OK, activeNPC);
 	}
 
 	public void sendOk(String s) {
 		sendOk(s, -1);
 	}
 
-	public void sendYesNo(String s, int stateYes, int stateNo) {
-		MsgBoxManager.sendText(s, true);
-		MsgBoxManager.setYesNo(stateYes, stateNo);
+	public void sendYesNo(String message, int stateYes, int stateNo) {
+		
+		yesNo = true;
+		onYes = stateYes;
+		onNo = stateNo;
+		
+		MsgBoxManager.sendMessage(message, MsgBoxManager.YES_NO, activeNPC);
 	}
 
 	public int getState() {
+		if(yesNo)
+			return MsgBoxManager.getAnswer() ? onYes : onNo;
 		return state;
-	}
-
-	public void setState(int state2) {
-		state = state2;
 	}
 
 	public void activateQuest(int id) {
@@ -78,6 +90,11 @@ public class NPCConversationManager extends AbstractScriptManager {
 
 	public boolean givePlayer(int id) {
 		return getPlayer().addItem(shop.getItemByID(id));
+	}
+	
+	public static void setNPC(NPC npc)
+	{
+		activeNPC = npc;
 	}
 
 

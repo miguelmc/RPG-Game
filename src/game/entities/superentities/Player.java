@@ -296,8 +296,7 @@ public class Player extends SuperEntity {
 		if (item != null && !(item instanceof EquipItem)) {
 			item.add(i.getQuantity());
 			if (i.getQuantity() > 0)
-				UserInterface.sendNotification("You got an item: "
-						+ i.getName() + " x" + i.getQuantity() + ".");
+				UserInterface.sendNotification("You got an item: " + i.getName() + " x" + i.getQuantity() + ".");
 			return true;
 		}
 		if (items.size() < INV_LIMIT) {

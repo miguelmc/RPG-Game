@@ -1,5 +1,6 @@
 package game.features;
 
+import game.entities.Entity;
 import game.entities.item.Item;
 import game.structure.GameObject;
 import game.ui.UserInterface;
@@ -76,22 +77,22 @@ public class Quest extends GameObject
 		List<Map<String, String>> itemRewards = parser.getChildrenAttributes("Quest/rewards/items");
 		for (Map<String, String> attributes : itemRewards)
 		{
-			requiredItems.put(Integer.parseInt(attributes.get("id"), 16), Integer.parseInt(attributes.get("amount")));
+			itemReward.add((Item) Entity.createEntity((Integer.parseInt(attributes.get("id"), 16))));
+			itemReward.get(itemReward.size()-1).setQuantity(Integer.parseInt(attributes.get("amount")));
 		}
 	}
 
 	public void monsterKill(int id)
 	{
-		if (!isTurnedIn())
+		if(monsterKills.get(id) == null || isTurnedIn())
+			return;
+		
+		int killsLeft = monsterKills.get(id).get(0);
+		if (killsLeft > 0)
 		{
-			int killsLeft = monsterKills.get(id).get(0);
-			if (killsLeft > 0)
-			{
-				monsterKills.get(id).set(0, killsLeft - 1);
-				int totalKills = monsterKills.get(id).get(1);
-				UserInterface.sendNotification("Quest " + getName() + ": " + (totalKills - killsLeft + 1) + "/"
-						+ totalKills);
-			}
+			monsterKills.get(id).set(0, killsLeft - 1);
+			int totalKills = monsterKills.get(id).get(1);
+			UserInterface.sendNotification("Quest " + getName() + ": " + (totalKills - killsLeft + 1) + "/" + totalKills);
 		}
 	}
 

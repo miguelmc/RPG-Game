@@ -32,7 +32,7 @@ public class Shop extends GameObject{
 	private long lastItemSelection = 0;
 	private static Texture buyButton, sellButton;
 	private boolean buy = true;
-	
+		
 	static
 	{
 		buyButton = Util.getTexture("shop/buy.png");
@@ -57,6 +57,7 @@ public class Shop extends GameObject{
 		for(Map<String, String> item: shopItems)
 		{
 			items.add((Item) Entity.createEntity(Integer.parseInt(item.get("id"), 16)));
+			System.out.println(items.get(items.size()-1).getQuantity());
 		}
 		
 	}
@@ -135,7 +136,7 @@ public class Shop extends GameObject{
 		}
 	}
 	
-	private Item getItemInPosition(Point position)
+	private Item getItemInPosition(Point position) // FIXME NOT WORKING PROPERLY
 	{
 			
 		if(position.getX()<137 || position.getY()>300)
@@ -205,46 +206,55 @@ public class Shop extends GameObject{
 		return null;	
 	}
 	
-	public boolean buy()
+	public void buy()
 	{					
 		if(MapManager.getMap().getPlayer().getGold() < itemSelected.getPrice())
-			return false;
+		{
+			MsgBoxManager.sendMessage("You cant afford to buy that...", MsgBoxManager.OK);
+			return;
+		}
 				
-		MsgBoxManager.sendText("Are you sure you want to buy " + itemSelected + " for $" + itemSelected.getPrice() + "?", true, "onBuyCheck", this);
-		
-		return false;
-		
+		MsgBoxManager.sendMessage("Are you sure you want to buy " + itemSelected + " for $" + itemSelected.getPrice() + "?", MsgBoxManager.YES_NO, onBuy);
 	}
+	
+	private Runnable onBuy = new Runnable(){
+		public void run()
+		{
+			Player player = MapManager.getMap().getPlayer();
+			if(!MsgBoxManager.getAnswer())
+			{
+				MsgBoxManager.sendMessage("Make up your mind...", MsgBoxManager.OK);
+			}else
+			{
+				System.out.println(itemSelected.getQuantity());
+				if(player.addItem(itemSelected))
+					player.gainGold(-itemSelected.getPrice());
+				else
+					MsgBoxManager.sendMessage("Make sure you have enough space in your inventory.", MsgBoxManager.OK);
+			}
+		}
+	};
 	
 	public void sell()
 	{
-		MsgBoxManager.sendText("Are you sure you want to sell " + itemSelected + " for $" + (int)(itemSelected.getPrice()*.6) + "?", true, "onSellCheck", this);
+		MsgBoxManager.sendMessage("Are you sure you want to sell " + itemSelected + " for $" + (int)(itemSelected.getPrice()*.6) + "?", MsgBoxManager.YES_NO, onSell);
 	}
 	
-	public void onBuyCheck(Boolean selection)
-	{
-		Player player = MapManager.getMap().getPlayer();
-		if(selection == false)
-			return;
-		
-		if(player.addItem(itemSelected))
-			player.gainGold(-itemSelected.getPrice());
-		else
-			MsgBoxManager.sendText("Make sure you have enough space in your inventory.", false);
-	}
-	
-	public void onSellCheck(Boolean selection)
-	{
-		Player player = MapManager.getMap().getPlayer();
-		if(selection == false)
-			return;
-		
-		player.gainGold((int) (itemSelected.getPrice()*.6));
+	private Runnable onSell = new Runnable(){
+		public void run()
+		{
+			Player player = MapManager.getMap().getPlayer();
+			if(!MsgBoxManager.getAnswer())
+			{
+				MsgBoxManager.sendMessage("Make up your mind...", MsgBoxManager.OK);
+			}else
+			{
+				player.gainGold((int) (itemSelected.getPrice()*.6));
 				
-		player.loseItem(itemSelected.id(), 1);
-		itemSelected = null;
-	}
-
-	
+				player.loseItem(itemSelected.id(), 1);
+				itemSelected = null;
+			}
+		}
+	};
 
 }

@@ -57,9 +57,10 @@ public class Renderer {
 		glBegin(GL_QUADS);
 			glVertex2f(0, 0);
 			glVertex2f(size.getWidth(), 0);
-			glVertex2f(size.getHeight(), size.getHeight());
+			glVertex2f(size.getWidth(), size.getHeight());
 			glVertex2f(0, size.getHeight());
 		glEnd();
+		glLoadIdentity();
 	}
 
 	public static void renderLines(Point...points)
@@ -74,6 +75,8 @@ public class Renderer {
 				glVertex2i(points[i+1].getX(), points[i+1].getY());
 			}
 		glEnd();
+		glLoadIdentity();
+
 	}
 	
 	public static class Builder
