@@ -6,6 +6,9 @@ import game.entities.item.UsableItem;
 import game.entities.superentities.Monster;
 import game.structure.GameObject;
 import game.structure.MapManager;
+import game.structure.Slot;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 
 import org.lwjgl.util.Dimension;
@@ -25,7 +28,6 @@ public abstract class Entity extends GameObject
 	private Point renderOffset = new Point();
 	private boolean strong = false;
 	private Point position;
-	private Texture texture;
 	private boolean invisible = false;
 
 	public Entity(int id)
@@ -35,7 +37,7 @@ public abstract class Entity extends GameObject
 
 	public static Entity createEntity(int id)
 	{
-		// static constructor
+		// static factory
 		EntityType type = EntityType.getType(id);
 
 		switch (type)
@@ -65,32 +67,15 @@ public abstract class Entity extends GameObject
 	public void render()
 	{
 		if (!isInvisible())
-			Util.renderEntity(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(),
-					getRenderSize());
+			Renderer.render(new Builder(
+					getTexture(),
+					new Point(Util.pointArithmetic(Slot.SIZE, renderOffset(), getPositionInGrid())),
+					new Dimension(renderSize().getWidth()*Slot.SIZE, renderSize().getHeight()*Slot.SIZE)) );
 	}
 
-	public void UIRender()
-	{
-	}
+	public void UIRender(){}
 
-	public void update()
-	{
-	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>render</b> <br>
-	 * <p>
-	 * <tt>public void render(int x, int y)</tt>
-	 * </p>
-	 * Renders the texture of the entity at position <i>x, y</i> <br>
-	 * <br>
-	 */
-	public void render(int x, int y) //TODO make it a static method with an id parameter to render its texture (to be called by the inventory)
-	{
-		Util.renderEntity(getTexture(), new Point(0, 0), new Point(x, y), renderSize);
-	}
+	public void update(){} //optionally implemented by subclasses
 
 	public Point position()
 	{
@@ -107,18 +92,7 @@ public abstract class Entity extends GameObject
 		return position().getY();
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>setPosition</b> <br>
-	 * <p>
-	 * <tt>public void setPosition(Point pos)</tt>
-	 * </p>
-	 * Removes <i>this</i> entity from the map and adds it to the map in
-	 * position <i>pos</i>. <br>
-	 * <br>
-	 */
-	public void setPosition(Point pos)
+	public void moveTo(Point pos)
 	{
 		if (position() != null)
 		{
@@ -128,136 +102,39 @@ public abstract class Entity extends GameObject
 		position = new Point(pos); // save a reference to the position
 	}
 
-	public void setPosition(int x, int y)
-	{
-		setPosition(new Point(x, y));
-	}
-
-	public void setX(int x)
-	{
-		setPosition(x, getY());
-	}
-
-	public void setY(int y)
-	{
-		setPosition(getX(), y);
-	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>getPositionInGrid</b> <br>
-	 * <p>
-	 * <tt>public Point getPositionInGrid()</tt>
-	 * </p>
-	 * Returns the position of the entity relative to the camera. <br>
-	 * <br>
-	 */
 	public Point getPositionInGrid()
 	{
 		return new Point(getX() - getMap().getOffSet().getX(), getY() - getMap().getOffSet().getY());
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>setStrong</b> <br>
-	 * <p>
-	 * <tt>protected void setStrong()</tt>
-	 * </p>
-	 * Sets the entity to be strong. Entities are not strong by default. A slot
-	 * cannot have more than one strong entity. <br>
-	 * <br>
-	 * 
-	 * @see #setStrong()
-	 */
 	protected void setStrong()
 	{
 		strong = true;
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>setStrong</b> <br>
-	 * <p>
-	 * <tt>public boolean isStrong()</tt>
-	 * </p>
-	 * Returns whether the entity is strong or not. Entities are not strong by
-	 * default. A slot cannot have more than one strong entity.
-	 * <p>
-	 * 
-	 * @see #setStrong()
-	 */
 	public boolean isStrong()
 	{
 		return strong;
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>renderSize</b> <br>
-	 * <p>
-	 * <tt>public Dimension renderSize()</tt>
-	 * </p>
-	 * Returns the size in tiles that the texture will be rendered. <br>
-	 * <br>
-	 * 
-	 * @see com.game.structure.Slot#SIZE
-	 */
-	public Dimension getRenderSize()
+	public Dimension renderSize()
 	{
 		return new Dimension(renderSize);
 	}
 
-	public void setRenderSize(int width, int height)
-	{
-		renderSize.setSize(width, height);
-	}
-
 	public Texture getTexture()
 	{
-		if(texture == null && !(this instanceof Object.Block))
-		{
+		if(MapManager.getMap().getTextureManager().get(id()) == null && !(this instanceof Object.Block))
 			MapManager.getMap().getTextureManager().add(id());
-			texture = MapManager.getMap().getTextureManager().get(id());
-		}
-			return texture;
+		
+		return MapManager.getMap().getTextureManager().get(id());
 	}
-
-	public void setTexture(Texture t)
+	
+	public Point renderOffset()
 	{
-		texture = t; // reference to the texture held by TextureManager
+		return new Point(renderOffset);
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getRenderOffSet</b> <br>
-	 * <p>
-	 * <tt>public Point getRenderOffSet()</tt>
-	 * </p>
-	 * Returns the offset in pixels of the texture rendered. <br>
-	 * <br>
-	 * 
-	 * @see #setRenderOffset(int x, int y)
-	 */
-	public Point getRenderOffset()
-	{
-		return new Point(renderOffset); // new point for immutability
-	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>setRenderOffSet</b> <br>
-	 * <p>
-	 * <tt>public void setRenderOffset(int x, int y)</tt>
-	 * </p>
-	 * Sets an offset in its render position in pixels.
-	 * <br>
-	 */
 	public void setRenderOffset(int x, int y)
 	{
 		renderOffset.setLocation(x, y);
@@ -265,20 +142,9 @@ public abstract class Entity extends GameObject
 
 	public void move(Point move)
 	{
-		setPosition(getX() + move.getX(), getY() + move.getY());
+		moveTo(new Point(getX() + move.getX(), getY() + move.getY()));
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>modifyPos</b> <br>
-	 * <p>
-	 * <tt>public void modifyPos(Point pos)</tt>
-	 * </p>
-	 * Changes the position reference of the entity without changing its
-	 * position in the map. <br>
-	 * <br>
-	 */
 	public void modifyPos(Point pos)
 	{
 		position = pos;
@@ -288,9 +154,14 @@ public abstract class Entity extends GameObject
 	{
 		return invisible;
 	}
-
-	public void setInvisible(boolean inv)
+	
+	protected void setInvisible(boolean invisible)
 	{
-		invisible = inv;
+		this.invisible = invisible;
 	}
+
+	protected void setRenderSize(int width, int height) {
+		renderSize.setSize(width, height);
+	}
+	
 }

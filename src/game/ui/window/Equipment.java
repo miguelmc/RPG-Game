@@ -13,6 +13,8 @@ import game.entities.item.EquipItem.EquipType;
 import game.entities.item.Item;
 import game.features.Stat;
 import game.structure.MapManager;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 
 import java.awt.Color;
@@ -38,7 +40,6 @@ public class Equipment extends Window {
 		positions.put(EquipType.SHOES, new Point(74, 198));
 		positions.put(EquipType.WEAPON, new Point(16, 96));
 		positions.put(EquipType.SHIELD, new Point(126, 96));
-
 	}
 
 	public Equipment() {
@@ -51,10 +52,12 @@ public class Equipment extends Window {
 		for (Map.Entry<EquipType, EquipItem> equip : MapManager.getMap()
 				.getPlayer().getEquips().entrySet()) {
 			Point position = positions.get(equip.getKey());
-			Util.render(equip.getValue().getTexture(), position.getX() + getX()
-					- 5, position.getY() + getY() - 10, itemSize, itemSize, 32,
-					32);
-
+			
+			Renderer.render(new Builder(
+					equip.getValue().getTexture(),
+					new Point(position.getX() + getX() - 5, position.getY() + getY() - 10),
+					new Dimension(itemSize, itemSize))
+					.imageSize(32, 32));
 		}
 
 		Item item = getItemInPosition(Mouse.getX(), Main.DIM.getHeight()
@@ -88,9 +91,10 @@ public class Equipment extends Window {
 
 		glColor4f(1, 1, 1, .5f);
 
-		Util.render(tex, Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1,
-				200, Util.getFontHeight() * lines.length + 55,
-				tex.getTextureWidth(), tex.getTextureHeight());
+		Renderer.render(new Builder(
+				tex,
+				new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1),
+				new Dimension(200, Util.getFontHeight() * lines.length + 55)));
 
 		// render a white square with half transparency
 		glLoadIdentity();
@@ -105,8 +109,10 @@ public class Equipment extends Window {
 
 		glColor4f(1, 1, 1, 1); // return to full opacity
 
-		item.render(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1
-				+ 10);
+		Renderer.render(new Builder(
+				item.getTexture(),
+				new Point(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10),
+				new Dimension(32, 32)));
 
 		Util.write(item.getName(), Mouse.getX() + 42 + 10, Main.DIM.getHeight()
 				- Mouse.getY() + 1 + 10);

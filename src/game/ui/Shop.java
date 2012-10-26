@@ -7,6 +7,8 @@ import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.structure.GameObject;
 import game.structure.MapManager;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 import game.util.XMLParser;
 
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
@@ -61,11 +64,20 @@ public class Shop extends GameObject{
 	public void render()
 	{
 		int sellX=297, buyX = 130, Y=85, goldX = 120, goldY = 513;
-		Util.render(texture, 40, 50, 512, 512, 512, 512);
+		Renderer.render(new Builder(
+				texture,
+				new Point(40, 50),
+				new Dimension(512, 512)));
+		
 		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 		for(int i=0; i<playerItems.size(); i++)
 		{
-			Util.render(playerItems.get(i).getTexture(), sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5), 32, 32, 32, 32);
+			
+			Renderer.render(new Builder(
+					playerItems.get(i).getTexture(),
+					new Point(sellX + 7 + 32 * (i % 5), Y + 30 + 32 * (i / 5)),
+					new Dimension(32, 32)));			
+			
 			if (!(playerItems.get(i) instanceof EquipItem))
 			{
 				Util.write(Integer.toString(playerItems.get(i).getQuantity()), sellX + 7 + 32 * (i % 5) + 3,
@@ -74,7 +86,10 @@ public class Shop extends GameObject{
 		}
 		for(int i=0; i<items.size(); i++)
 		{
-			Util.render(items.get(i).getTexture(), buyX + 7 + 32 * (i % 5),  Y + 30 + 32 * (i / 5), 32, 32, 32, 32);
+			Renderer.render(new Builder(
+					items.get(i).getTexture(),
+					new Point(buyX + 7 + 32 * (i % 5),  Y + 30 + 32 * (i / 5)),
+					new Dimension(32, 32)));
 		}
 		
 		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
@@ -83,23 +98,40 @@ public class Shop extends GameObject{
 		
 		if(itemSelected != null)
 		{
-				Util.render(itemSelected.getTexture(), 80, 330, 100, 100, 32, 32);
-				Util.write(itemSelected.toString(), 70, 450);
+			
+			Renderer.render(new Builder(
+					itemSelected.getTexture(),
+					new Point(80, 330),
+					new Dimension(100, 100))
+					.imageSize(32, 32));
+			Util.write(itemSelected.toString(), 70, 450);
+			
+			String lines[] = Util.tokenizeText(itemSelected.getDescription(), 280, 3);
+			
+			for(int i=0; i<lines.length; i++)
+				Util.write(lines[i], 200, 320+Util.getFontHeight()*i);
+			
+			if(buy)
+			{	
+				Util.write("$"+itemSelected.getPrice(), 520 - Util.getTextWidth("$"+itemSelected.getPrice()), 460);
 				
-				String lines[] = Util.tokenizeText(itemSelected.getDescription(), 280, 3);
+				Renderer.render(new Builder(
+						buyButton,
+						new Point(350, 450),
+						new Dimension(100, 46))
+						.imageSize(40, 18));
 				
-				for(int i=0; i<lines.length; i++)
-					Util.write(lines[i], 200, 320+Util.getFontHeight()*i);
+			}else
+			{
+				Util.write("$"+(int)(itemSelected.getPrice()*.6), 520 - Util.getTextWidth("$"+(int)(itemSelected.getPrice()*.6)), 460);
 				
-				if(buy)
-				{	
-					Util.write("$"+itemSelected.getPrice(), 520 - Util.getTextWidth("$"+itemSelected.getPrice()), 460);
-					Util.render(buyButton, 350, 450, 100, 46, 40, 18);
-				}else
-				{
-					Util.write("$"+(int)(itemSelected.getPrice()*.6), 520 - Util.getTextWidth("$"+(int)(itemSelected.getPrice()*.6)), 460);
-					Util.render(sellButton, 350, 450, 100, 46, 40, 18);
-				}	
+				Renderer.render(new Builder(
+						sellButton,
+						new Point(350, 450),
+						new Dimension(100, 46))
+						.imageSize(40, 18));
+				
+			}
 		}
 	}
 	
@@ -139,10 +171,15 @@ public class Shop extends GameObject{
 		
 		if(Mouse.getEventButtonState())
 		{
+			
 			int x = Mouse.getX();
 			int y = Main.DIM.getHeight() - Mouse.getY() + 1;
 			Item selection = getItemInPosition(new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
 			itemSelected = selection != null ? selection : itemSelected;
+			
+			if(itemSelected == null)
+				return;
+			
 			if(System.currentTimeMillis() < lastItemSelection+200 || (x > 350 && y > 450 && x < 350 + 100 && y < 450 + 46))
 			{
 				if(buy)
@@ -169,8 +206,7 @@ public class Shop extends GameObject{
 	}
 	
 	public boolean buy()
-	{
-						
+	{					
 		if(MapManager.getMap().getPlayer().getGold() < itemSelected.getPrice())
 			return false;
 				

@@ -3,6 +3,8 @@ package game.ui.window;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import game.Main;
 import game.ui.Shop;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 
 import org.lwjgl.input.Keyboard;
@@ -69,7 +71,12 @@ public abstract class Window
 	public void render()
 	{
 		glColor4f(1, 1, 1, .6f);
-		Util.render(texture, getPosition().getX(), getPosition().getY(), size.getWidth(), size.getHeight(), 174, 256);
+		Renderer.render(new Builder(
+				texture,
+				getPosition(),
+				size)
+				.imageSize(174, 256));
+		
 		glColor4f(1, 1, 1, 1);
 	}
 

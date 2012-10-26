@@ -3,6 +3,8 @@ package game.entities.superentities;
 import game.entities.Entity;
 import game.features.Skill;
 import game.structure.Slot;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 
 import java.awt.Color;
@@ -10,6 +12,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
@@ -76,7 +79,7 @@ public abstract class SuperEntity extends Entity
 
 		if (canMove(dir))
 		{
-			setPosition(Util.addRelPoints(position(), new Point(0, 1), dir));
+			moveTo(Util.addRelPoints(position(), new Point(0, 1), dir));
 			// TODO play move animation
 		}
 	}
@@ -122,15 +125,20 @@ public abstract class SuperEntity extends Entity
 
 	public void render()
 	{
-		Util.renderEntity(getTexture(), Util.pointArithmetic(-1, position(), getMap().getOffSet()), getRenderOffset(),
-				getRenderSize(), 0, getFacingDir() != LEFT ? 0 : 1, 0); //flip texture when facing left
+		
+		if (!isInvisible())
+			Renderer.render(new Builder(
+					getTexture(),
+					new Point(Util.pointArithmetic(Slot.SIZE, renderOffset(), getPositionInGrid())),
+					new Dimension(renderSize().getWidth()*Slot.SIZE, renderSize().getHeight()*Slot.SIZE))
+					.flipX(getFacingDir() == LEFT));
+		
 		for (Skill s : skills)
 			s.render();
 	}
 
 	public void UIRender()
-	{ // superentities can be attacked, so their damage is displayed above them
-		// at an UI level
+	{ // superentities can be attacked, so their damage is displayed above them at an UI level
 		for (int i = 0; i < damages.size(); i++)
 		{
 			if (damageTime.get(i) > System.currentTimeMillis())

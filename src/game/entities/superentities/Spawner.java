@@ -47,7 +47,7 @@ public class Spawner
 		if (MapManager.getMap().get(position).getStrongEntity() == null)
 		{
 			Monster monster = new Monster(id);
-			monster.setPosition(position);
+			monster.moveTo(position);
 			currentMonster = monster;
 			spawn = false;
 		} else

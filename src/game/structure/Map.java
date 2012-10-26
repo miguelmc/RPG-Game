@@ -6,7 +6,6 @@ import game.entities.Object;
 import game.entities.Object.Block;
 import game.entities.Portal;
 import game.entities.Tile;
-import game.entities.superentities.Monster;
 import game.entities.superentities.Player;
 import game.entities.superentities.Spawner;
 import game.util.TextureManager;
@@ -19,7 +18,6 @@ import java.util.Queue;
 
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
-import org.newdawn.slick.opengl.Texture;
 
 /**
  * The main visual structure of the game.
@@ -53,55 +51,7 @@ public class Map extends GameObject
 
 	private void loadTextures(TextureManager prevTexManager)
 	{
-		// loads all texture of the map, recycle some from the previous map
-		// TODO recycle equipped items, and inventory items
-
-		List<Slot> slots = getAllSlots();
 		
-		for (Slot slot : slots)
-		{
-			for (Entity entity : slot.getAll())
-			{
-				if (prevTexManager != null)
-				{
-					Texture tex = prevTexManager.get(entity.id());
-					if (tex != null)
-					{
-						textureManager.recycle(entity.id(), tex);
-					}
-				} else
-				{
-					if (!entity.isInvisible())
-					{
-						textureManager.add(entity.id());
-					}
-				}
-				entity.setTexture(textureManager.get(entity.id()));
-			}
-
-			Monster monster = slot.getMonster();
-			List<Integer> monsterDrops = new ArrayList<Integer>();
-			if (monster != null)
-			{
-				monsterDrops.addAll(monster.getDropsID());
-			}
-
-			for (Integer id : monsterDrops)
-			{
-				if (prevTexManager != null)
-				{
-					Texture tex = prevTexManager.get(id);
-					if (tex != null)
-					{
-						textureManager.recycle(id, tex);
-					}
-				} else
-				{
-					textureManager.add(id);
-				}
-			}
-
-		}
 
 	}
 

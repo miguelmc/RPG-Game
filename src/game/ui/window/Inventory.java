@@ -13,7 +13,8 @@ import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.features.Stat;
 import game.structure.MapManager;
-import game.structure.Slot;
+import game.util.Renderer;
+import game.util.Renderer.Builder;
 import game.util.Util;
 
 import java.awt.Color;
@@ -50,8 +51,6 @@ public class Inventory extends Window
 
 		if (Mouse.getEventButtonState())
 		{
-
-
 			setPressed(true);
 
 			int clickIndex = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
@@ -121,9 +120,9 @@ public class Inventory extends Window
 		for (int i = 0; i < items.size(); i++)
 		{
 			if (xPos > getPosition().getX() + 7 + 32 * (i % 5)
-					&& xPos < getPosition().getX() + 7 + 32 * (i % 5) + Slot.SIZE
+					&& xPos < getPosition().getX() + 7 + 32 * (i % 5) + 32
 					&& yPos > getPosition().getY() + 30 + 32 * (i / 5)
-					&& yPos < getPosition().getY() + 30 + 32 * (i / 5) + Slot.SIZE)
+					&& yPos < getPosition().getY() + 30 + 32 * (i / 5) + 32)
 				return i;
 		}
 		return -1;
@@ -138,16 +137,17 @@ public class Inventory extends Window
 		for (int i = 0; i < items.size(); i++)
 		{
 			
-			Util.render(items.get(i).getTexture(), getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY()+ 30 + 32 * (i / 5), 32, 32, 32, 32);
-			//items.get(i).render(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY() + 30 + 32 * (i / 5));
+			Renderer.render(new Builder(
+					items.get(i).getTexture(),
+					new Point(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY()+ 30 + 32 * (i / 5)),
+					new Dimension(32, 32)));
+			
 			if (!(items.get(i) instanceof EquipItem))
 			{
 				Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,
 						getPosition().getY() + 30 + 32 * (i / 5));
 			}
 		}
-		
-		
 
 		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), getPosition().getX() + 37,
 				getPosition().getY() + getSize().getHeight() - 25);
@@ -187,7 +187,10 @@ public class Inventory extends Window
 			
 			glColor4f(1, 1, 1, .5f);
 
-			Util.render(tex, Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1, 200, Util.getFontHeight() * lines.length + 55, tex.getTextureWidth(), tex.getTextureHeight());
+			Renderer.render(new Builder(
+					tex,
+					new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1),
+					new Dimension(200, Util.getFontHeight() * lines.length + 55)));
 			
 			//render a white square with half transparency
 			glLoadIdentity();
@@ -202,7 +205,10 @@ public class Inventory extends Window
 
 			glColor4f(1, 1, 1, 1); //return to full opacity
 
-			item.render(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
+			Renderer.render(new Builder(
+					item.getTexture(),
+					new Point(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10),
+					new Dimension(32, 32)));
 			
 			Util.write(item.getName(), Mouse.getX() + 42 + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
 

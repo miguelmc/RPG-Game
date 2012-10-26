@@ -23,6 +23,8 @@ import org.lwjgl.opengl.GL11;
  */
 public class MsgBoxManager
 {
+	
+	//TODO have a runnable instead of automatically running a given script or having a method
 
 	private static String message = "";
 	private static boolean selection = true; // only for "Yes/No" messagebox
@@ -37,6 +39,7 @@ public class MsgBoxManager
 
 	public static void render()
 	{
+		
 		if (isActive())
 		{
 			int boxHeight = 140;

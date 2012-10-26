@@ -26,7 +26,6 @@ public abstract class Item extends Entity
 
 		parseItem(new XMLParser(EntityType.getType(id()) + "/" + hexID() + "/data.xml"));
 
-		setTexture(getMap().getTextureManager().get(id()));
 	}
 
 	protected void parseItem(XMLParser parser)
@@ -71,7 +70,7 @@ public abstract class Item extends Entity
 		quantity += num;
 	}
 
-	public void setPosition(Point pos)
+	public void moveTo(Point pos)
 	{
 		if (position() != null)
 		{

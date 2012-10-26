@@ -1,18 +1,6 @@
 package game.util;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.entities.superentities.SuperEntity;
-import game.structure.Map;
-import game.structure.Slot;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -73,7 +60,6 @@ public class Util
 	@SuppressWarnings("unchecked")
 	public static void useFont(String fontName, int style, int size, Color c)
 	{
-
 		boolean fontExists = false;
 		for (UnicodeFont font : fonts)
 		{
@@ -320,111 +306,6 @@ public class Util
 	/**
 	 * 
 	 * <br>
-	 * <b>render</b> <br>
-	 * <p>
-	 * <tt>public static void render(Texture texture, Point pos)</tt>
-	 * </p>
-	 * Renders the texture at position <i>pos</i>. <br>
-	 * <br>
-	 */
-	public static void renderEntity(Texture texture, Point pos)
-	{
-		renderEntity(texture, pos, new Point(0, 0), new Dimension(0, 0), 0, 0, 0);
-	}
-	
-	/**
-	 * <br>
-	 * <b>render</b> <br>
-	 * <p>
-	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX, int flipY)</tt>
-	 * </p>
-	 * Renders the texture. <br>
-	 * <br>
-	 * 
-	 * @param texture
-	 *            - The texture to be rendered to display.
-	 * @param pos
-	 *            - The position in tiles (Slot.SIZE) where the upper left point
-	 *            of the texture will be rendered.
-	 * @param offset
-	 *            - A position offset in pixel.
-	 * @param size
-	 *            - The desired dimensions of the image in the display in tiles
-	 *            (Slot.SIZE).
-	 * @param rotatedClockWise
-	 *            - The rotation of the image. 0 for normal, + 1 for every 90
-	 *            degrees clockwise.
-	 * @param flipX
-	 *            - TODO
-	 * @param flipY
-	 *            - TODO
-	 * @see org.newdawn.slick.opengl.Texture
-	 */
-	public static void renderEntity(Texture texture, Point pos, Point offset, Dimension size, int rotateClockWise, int flipX,
-			int flipY)
-	{		
-		Point renderPos = new Point(pos.getX() * Slot.SIZE + offset.getX(), pos.getY() * Slot.SIZE + offset.getY());
-
-		if (texture == null
-				|| !Map.isPointInGrid(new Point(renderPos.getX() / Slot.SIZE, renderPos.getY() / Slot.SIZE)))
-			return;
-
-		Point rotates[] = new Point[4];
-		rotates[(0 + rotateClockWise) % 4] = new Point(0, 0);
-		rotates[(1 + rotateClockWise) % 4] = new Point(size.getWidth() * Slot.SIZE, 0);
-		rotates[(2 + rotateClockWise) % 4] = new Point(size.getWidth() * Slot.SIZE, size.getHeight() * Slot.SIZE);
-		rotates[(3 + rotateClockWise) % 4] = new Point(0, size.getHeight() * Slot.SIZE);
-
-		Point flips[] = new Point[4];
-		flips[0] = new Point((flipX + flipY) % 2, flipY);
-		flips[1] = new Point((flips[0].getX() + 1) % 2, flips[0].getY());
-		flips[2] = new Point(flips[1].getX(), (flips[1].getY() + 1) % 2);
-		flips[3] = new Point((flips[2].getX() + 1) % 2, flips[2].getY());
-
-		glEnable(GL_TEXTURE_2D);
-		texture.bind();
-		glLoadIdentity();
-		glTranslatef(renderPos.getX(), renderPos.getY(), 0);
-		glBegin(GL_QUADS);
-		for (int i = 0; i < 4; i++)
-		{
-			glTexCoord2f(flips[i].getX(), flips[i].getY());
-			glVertex2f(rotates[i].getX(), rotates[i].getY());
-		}
-		glEnd();
-		glLoadIdentity();
-		glDisable(GL_TEXTURE_2D);
-	}
-
-	/**
-	 * <br>
-	 * <b>render</b> <br>
-	 * <p>
-	 * <tt>public static void render(Texture texture, Point pos, Point offset, Dimension size)</tt>
-	 * </p>
-	 * Renders the texture. <br>
-	 * <br>
-	 * 
-	 * @param texture
-	 *            - The texture to be rendered to display.
-	 * @param pos
-	 *            - The position in tiles (Slot.SIZE) where the upper left point
-	 *            of the texture will be rendered.
-	 * @param offset
-	 *            - A position offset in pixel.
-	 * @param size
-	 *            - The desired dimensions of the image in the display in tiles
-	 *            (Slot.SIZE).
-	 * @see org.newdawn.slick.opengl.Texture
-	 */
-	public static void renderEntity(Texture texture, Point pos, Point offset, Dimension size)
-	{
-		renderEntity(texture, pos, offset, size, 0, 0, 0);
-	}
-
-	/**
-	 * 
-	 * <br>
 	 * <b>pointArithmetic</b> <br>
 	 * <p>
 	 * <tt>public static Point pointArithmetic(int op, Point p1, Point p2)</tt>
@@ -486,26 +367,6 @@ public class Util
 			hexID = "0" + hexID;
 		}
 		return hexID;
-	}
-	
-	public static void render(Texture texture, int x, int y, int sizeX, int sizeY, float imageWidth, float imageHeight)
-	{	
-		glEnable(GL_TEXTURE_2D);
-		texture.bind();
-		glLoadIdentity();
-		glTranslatef(x, y, 0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(0, 0);
-			glTexCoord2f(imageWidth/texture.getImageWidth(), 0);
-			glVertex2f(sizeX, 0);
-			glTexCoord2f(imageWidth/texture.getImageWidth(), imageHeight/texture.getImageHeight());
-			glVertex2f(sizeX, sizeY);
-			glTexCoord2f(0, imageHeight/texture.getImageHeight());
-			glVertex2f(0, sizeY);
-		glEnd();
-		glLoadIdentity();
-		glDisable(GL_TEXTURE_2D);
 	}
 
 }

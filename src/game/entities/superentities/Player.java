@@ -160,7 +160,7 @@ public class Player extends SuperEntity {
 		if (!canMove(dir))
 			return;
 
-		setPosition(Util.addRelPoints(position(), new Point(0, 1), dir));
+		moveTo(Util.addRelPoints(position(), new Point(0, 1), dir));
 		nextMove = System.currentTimeMillis() + 150;
 
 		if (moveCamera)
