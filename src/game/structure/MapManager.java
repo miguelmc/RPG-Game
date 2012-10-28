@@ -16,13 +16,14 @@ public class MapManager
 
 	private static Set<Map> maps = new HashSet<Map>();
 	private static Map currentMap;
+	private static final int startMap = 0;
 
 	static {
 		// TODO read and create all maps and set current map based on the game config file
 				maps.add(new Map(0));
 				maps.add(new Map(1));
 				maps.add(new Map(2));
-				setMap(0, new Point(4, 6));
+				setMap(startMap, new Point(4, 6));
 	}
 	
 
