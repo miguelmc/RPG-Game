@@ -6,9 +6,9 @@ import game.structure.Slot;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
 import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -143,13 +143,10 @@ public abstract class SuperEntity extends Entity
 		{
 			if (damageTime.get(i) > System.currentTimeMillis())
 			{
-				float xpos = (Util.getTextWidth(damages.get(i).toString()) - Slot.SIZE) / 2;
-				Util.useFont("Arial", Font.BOLD, 10, Color.white);
-				Util.write(
-						damages.get(i).toString(),
-						((getX() - getMap().getOffSet().getX()) * Slot.SIZE - xpos),
-						(getY() - getMap().getOffSet().getY()) * Slot.SIZE - 20 - Util.getFontHeight()
-								* (damages.size() - 1) + i * Util.getFontHeight());
+				Writer.useFont(Fonts.Arial_White_Bold_10);
+				Writer.write(damages.get(i).toString(),
+							 new Point(getPositionInGrid().getX()*Slot.SIZE,
+									   getPositionInGrid().getY()*Slot.SIZE - 20 - Writer.fontHeight() * (damages.size() - 1) + i * Writer.fontHeight()));
 			} else
 			{
 				damages.remove(i);

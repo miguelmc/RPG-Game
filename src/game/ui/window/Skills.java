@@ -1,10 +1,5 @@
 package game.ui.window;
 
-import game.util.Util;
-
-import java.awt.Color;
-import java.awt.Font;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
@@ -19,13 +14,12 @@ public class Skills extends Window{
 	public void render()
 	{
 		super.render();
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
 	}
 	
 	
 	@Override
-	protected void mouse() {
-		// TODO Auto-generated method stub
+	protected void mouse() 
+	{
 		
 	}
 	

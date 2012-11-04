@@ -50,7 +50,7 @@ public class Main {
 	}
 
 	public Main() {
-
+		
 		// create window
 		try {
 			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM
@@ -63,7 +63,7 @@ public class Main {
 		}
 
 		initGL();
-
+		
 		// Game Loop
 		while (!Display.isCloseRequested())// as long as close button is not
 											// pressed

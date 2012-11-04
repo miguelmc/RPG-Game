@@ -43,8 +43,19 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 
 	public int getState() {
+		
 		if(yesNo)
-			return MsgBoxManager.getAnswer() ? onYes : onNo;
+		{
+			if(MsgBoxManager.getAnswer() == MsgBoxManager.YES)
+				return onYes;
+			else if(MsgBoxManager.getAnswer() == MsgBoxManager.NO)
+				return onNo;
+			else
+			{
+				yesNo = false;
+				return -1;
+			}
+		}
 		return state;
 	}
 

@@ -9,10 +9,8 @@ import static game.features.Stat.STR;
 import game.Main;
 import game.entities.superentities.Player;
 import game.structure.MapManager;
-import game.util.Util;
-
-import java.awt.Color;
-import java.awt.Font;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,15 +38,15 @@ public class Stats extends Window{
 	{
 		super.render();
 		Player player = MapManager.getMap().getPlayer();
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
-		Util.write(Integer.toString(player.getLevel()), getX()+X, getY()+Y_INTERVAL[0]);
-		Util.write(player.getExp() + "/" + player.getExpReq(), getX()+X, getY()+Y_INTERVAL[1]);
-		Util.write(Integer.toString(player.getStat(TOTAL+MAXHP.ID)), getX()+X, getY()+Y_INTERVAL[2]);
-		Util.write(Integer.toString(player.getStat(TOTAL+MAXMP.ID)), getX()+X, getY()+Y_INTERVAL[3]);
-		Util.write(Integer.toString(player.getStat(TOTAL+ATK.ID)), getX()+X, getY()+Y_INTERVAL[4]);
-		Util.write(Integer.toString(player.getStat(TOTAL+DEF.ID)), getX()+X, getY()+Y_INTERVAL[5]);
-		Util.write(Integer.toString(player.getStat(TOTAL+STR.ID)), getX()+X, getY()+Y_INTERVAL[6]);
-		Util.write(Integer.toString((int)(player.getAverageDamage()+.5)), getX()+X, getY()+Y_INTERVAL[7]);
+		Writer.useFont(Fonts.Courier_White_Bold_14);
+		Writer.write(Integer.toString(player.getLevel()), new Point(getX()+X, getY()+Y_INTERVAL[0]));
+		Writer.write(player.getExp() + "/" + player.getExpReq(), new Point(getX()+X, getY()+Y_INTERVAL[1]));
+		Writer.write(Integer.toString(player.getStat(TOTAL+MAXHP.ID)), new Point(getX()+X, getY()+Y_INTERVAL[2]));
+		Writer.write(Integer.toString(player.getStat(TOTAL+MAXMP.ID)), new Point(getX()+X, getY()+Y_INTERVAL[3]));
+		Writer.write(Integer.toString(player.getStat(TOTAL+ATK.ID)), new Point(getX()+X, getY()+Y_INTERVAL[4]));
+		Writer.write(Integer.toString(player.getStat(TOTAL+DEF.ID)), new Point(getX()+X, getY()+Y_INTERVAL[5]));
+		Writer.write(Integer.toString(player.getStat(TOTAL+STR.ID)), new Point(getX()+X, getY()+Y_INTERVAL[6]));
+		Writer.write(Integer.toString((int)(player.getAverageDamage()+.5)), new Point(getX()+X, getY()+Y_INTERVAL[7]));
 	}
 	
 	
@@ -65,7 +63,7 @@ public class Stats extends Window{
 			if (Mouse.isButtonDown(0) && isPressed()) {
 
 				if (!((dX > 0 && getX() > Main.DIM.getWidth() * .98)
-						|| (dX < 0 && getX() + getWidth() < Main.DIM.getWidth() * .02)
+						|| (dX < 0 && getX() + SIZE.getWidth() < Main.DIM.getWidth() * .02)
 						|| (dY > 0 && getY() < Main.DIM.getHeight() * .02) || (dY < 0 && getY() > Main.DIM
 						.getHeight() * .98))) {
 					setPosition(getX() + dX, getY() - dY);

@@ -1,41 +1,33 @@
 package game.ui.window;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.Main;
 import game.entities.item.EquipItem;
 import game.entities.item.Item;
 import game.entities.item.UsableItem;
-import game.features.Stat;
 import game.structure.MapManager;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
-import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
-import org.newdawn.slick.opengl.Texture;
 
 public class Inventory extends Window
 {
 
 	List<Item> items = MapManager.getMap().getPlayer().getItems();
-	private int click = -1;
+	private Item click = null;
 	private long timeOfClick = 0L;
 	private boolean itemGrabbed = false;
 
+	private static final Point GOLD_POS = new Point(37, 231);
+	private static final int ITEM_IMG_SIZE = 32;
+	
 	public Inventory()
 	{
 		super(new Point(350, 100), new Dimension(174, 256));
@@ -49,12 +41,13 @@ public class Inventory extends Window
 		// TRY SAVE MOUSE STATE AND COMPARE CURRENT STATE TO DETERMINE IF MOUSE
 		// MOVED OR RELEASED
 
+		Item clickedItem = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
+
 		if (Mouse.getEventButtonState())
 		{
 			setPressed(true);
 
-			int clickIndex = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
-			if (clickIndex != -1)
+			if (clickedItem != null)
 			{
 				
 			}
@@ -66,14 +59,10 @@ public class Inventory extends Window
 			{
 				if (Mouse.isButtonDown(0) && isPressed())
 				{
-					int clickIndex = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
-					Item clickedItem = null;
-					if (clickIndex != -1)
-						clickedItem = items.get(clickIndex);
 					if (clickedItem == null)
 					{
 						if (!((dX > 0 && getX() > Main.DIM.getWidth() * .98)
-								|| (dX < 0 && getX() + getWidth() < Main.DIM.getWidth() * .02)
+								|| (dX < 0 && getX() + SIZE.getWidth() < Main.DIM.getWidth() * .02)
 								|| (dY > 0 && getY() < Main.DIM.getHeight() * .02) || (dY < 0 && getY() > Main.DIM
 								.getHeight() * .98)))
 						{
@@ -94,38 +83,36 @@ public class Inventory extends Window
 		{
 			if (timeOfClick + 200L < System.currentTimeMillis())
 			{
-				click = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
+				click = clickedItem;
 				timeOfClick = System.currentTimeMillis();
-			} else if (getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1) == click
-					&& click <= items.size() - 1 && click >= 0)
+			} else if (clickedItem == click && click != null)
 			{
-				Item item = items.get(click);
-				if (item instanceof UsableItem)
+				if (clickedItem instanceof UsableItem)
 				{
-					MapManager.getMap().getPlayer().useItem(item);
-				} else if (item instanceof EquipItem)
+					MapManager.getMap().getPlayer().useItem(clickedItem);
+				} else if (clickedItem instanceof EquipItem)
 				{
-					EquipItem equip = (EquipItem) item;
+					EquipItem equip = (EquipItem) clickedItem;
 					MapManager.getMap().getPlayer().removeEquip(equip.getType());
 					MapManager.getMap().getPlayer().addEquip(equip);
-					MapManager.getMap().getPlayer().removeItem(item);
+					MapManager.getMap().getPlayer().removeItem(clickedItem);
 				}
-				click = -1;
+				click = null;
 			}
 		}
 	}
 
-	private int getClickedItem(int xPos, int yPos)
+	private Item getItemAt(int xPos, int yPos)
 	{
 		for (int i = 0; i < items.size(); i++)
 		{
-			if (xPos > getPosition().getX() + 7 + 32 * (i % 5)
-					&& xPos < getPosition().getX() + 7 + 32 * (i % 5) + 32
-					&& yPos > getPosition().getY() + 30 + 32 * (i / 5)
-					&& yPos < getPosition().getY() + 30 + 32 * (i / 5) + 32)
-				return i;
+			if (xPos > getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5)
+					&& xPos < getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5) + ITEM_IMG_SIZE
+					&& yPos > getPosition().getY() + 30 + ITEM_IMG_SIZE * (i / 5)
+					&& yPos < getPosition().getY() + 30 + ITEM_IMG_SIZE * (i / 5) + ITEM_IMG_SIZE)
+				return items.get(i);
 		}
-		return -1;
+		return null;
 
 	}
 
@@ -133,91 +120,28 @@ public class Inventory extends Window
 	{
 		super.render();
 
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
+		Writer.useFont(Fonts.Courier_White_Bold_14);
 		for (int i = 0; i < items.size(); i++)
 		{
-			
 			Renderer.render(new Builder(
 					items.get(i).getTexture(),
-					new Point(getPosition().getX() + 7 + 32 * (i % 5), getPosition().getY()+ 30 + 32 * (i / 5)),
+					new Point(getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5), getPosition().getY()+ 30 + ITEM_IMG_SIZE * (i / 5)),
 					new Dimension(32, 32)));
 			
 			if (!(items.get(i) instanceof EquipItem))
 			{
-				Util.write(Integer.toString(items.get(i).getQuantity()), getPosition().getX() + 7 + 32 * (i % 5) + 3,
-						getPosition().getY() + 30 + 32 * (i / 5));
+				Writer.write(Integer.toString(items.get(i).getQuantity()), 
+							 new Point(getX() + 10 + ITEM_IMG_SIZE * (i%5), getY() + 30 + ITEM_IMG_SIZE * (i/5)));
 			}
 		}
 
-		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), getPosition().getX() + 37,
-				getPosition().getY() + getSize().getHeight() - 25);
+		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
+					 new Point(getX() + GOLD_POS.getX(), getY() + SIZE.getHeight() - GOLD_POS.getY()));
 
-		int mouseHover = getClickedItem(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
+		Item item = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
 
-		if (mouseHover != -1)
-		{
-			Item item = items.get(mouseHover);
-
-			String lines[];
-			if (item instanceof EquipItem)
-			{
-				EquipItem equip = ((EquipItem) item);
-				ArrayList<String> linesList = new ArrayList<String>();
-				for (int i = 0; i < Stat.values().length; i++)
-				{
-					if (equip.getStat(Stat.values()[i]) != 0)
-						linesList.add(Stat.values()[i].NAME + ": "
-								+ Integer.toString(equip.getStat(Stat.values()[i])));
-				}
-
-				String[] description = Util.tokenizeText(item.getDescription(), 190, 4);
-				
-				lines = new String[linesList.size()+description.length];
-				int i;
-				for (i = 0; i < linesList.size(); i++)
-					lines[i] = linesList.get(i);
-				for(int j=0; j<description.length; j++)
-					lines[i+j] = description[j];
-			} else
-			{
-				lines = Util.tokenizeText(item.getDescription(), 190, 4);
-			}
-
-			Texture tex = Util.getTexture("UI/window/itemDesc.png");
-			
-			glColor4f(1, 1, 1, .5f);
-
-			Renderer.render(new Builder(
-					tex,
-					new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1),
-					new Dimension(200, Util.getFontHeight() * lines.length + 55)));
-			
-			//render a white square with half transparency
-			glLoadIdentity();
-			glTranslatef(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1, 0);
-			glBegin(GL_QUADS);
-			glVertex2f(10, 10);
-			glVertex2f(42, 10);
-			glVertex2f(42, 42);
-			glVertex2f(10, 42);
-			glEnd();
-			glLoadIdentity();
-
-			glColor4f(1, 1, 1, 1); //return to full opacity
-
-			Renderer.render(new Builder(
-					item.getTexture(),
-					new Point(Mouse.getX() + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10),
-					new Dimension(32, 32)));
-			
-			Util.write(item.getName(), Mouse.getX() + 42 + 10, Main.DIM.getHeight() - Mouse.getY() + 1 + 10);
-
-			for (int i = 0; i < lines.length; i++)
-			{
-				Util.write(lines[i], Mouse.getX() + 10,
-						Main.DIM.getHeight() - Mouse.getY() + 1 + 50 + i * Util.getFontHeight());
-			}
-		}
+		if (item != null)
+			HoverBox.render(item, new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
 	}
 
 	@Override

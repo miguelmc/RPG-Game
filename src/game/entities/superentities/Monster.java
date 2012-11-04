@@ -13,11 +13,10 @@ import game.entities.Entity;
 import game.entities.item.Item;
 import game.features.Quest;
 import game.structure.Slot;
-import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 import game.util.XMLParser;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,11 +126,9 @@ public class Monster extends SuperEntity
 
 		glColor3f(1f, 1f, 1f);
 
-		Util.useFont("Arial", Font.BOLD, 10, Color.white);
-		float xTraslation = width / 2 - (Util.getTextWidth(getName())) / 2;
+		Writer.useFont(Fonts.Arial_White_Bold_10);
 
-		Util.write(getName(), ((getX() - getMap().getOffSet().getX()) * Slot.SIZE + xTraslation), (getY() - getMap()
-				.getOffSet().getY()) * Slot.SIZE - (float) (Slot.SIZE * .3));
+		Writer.write(getName(), new Point((int)((getPositionInGrid().getX() + .5)*Slot.SIZE), getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight()), Writer.CENTER);
 
 		super.UIRender();
 

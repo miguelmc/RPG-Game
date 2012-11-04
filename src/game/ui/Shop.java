@@ -10,10 +10,10 @@ import game.structure.MapManager;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
 import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 import game.util.XMLParser;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,8 @@ public class Shop extends GameObject{
 				new Point(40, 50),
 				new Dimension(512, 512)));
 		
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
+		Writer.useFont(Fonts.Courier_White_Bold_28);
+		
 		for(int i=0; i<playerItems.size(); i++)
 		{
 			
@@ -81,8 +82,8 @@ public class Shop extends GameObject{
 			
 			if (!(playerItems.get(i) instanceof EquipItem))
 			{
-				Util.write(Integer.toString(playerItems.get(i).getQuantity()), sellX + 7 + 32 * (i % 5) + 3,
-						Y + 30 + 32 * (i / 5));
+				Writer.write(Integer.toString(playerItems.get(i).getQuantity()),
+							 new Point(sellX + 7 + 32 * (i % 5) + 3, Y + 30 + 32 * (i / 5)));
 			}
 		}
 		for(int i=0; i<items.size(); i++)
@@ -92,10 +93,9 @@ public class Shop extends GameObject{
 					new Point(buyX + 7 + 32 * (i % 5),  Y + 30 + 32 * (i / 5)),
 					new Dimension(32, 32)));
 		}
-		
-		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
-		Util.write(Integer.toString(MapManager.getMap().getPlayer().getGold()), goldX,
-				goldY);
+				
+		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
+					 new Point(goldX,goldY));
 		
 		if(itemSelected != null)
 		{
@@ -105,16 +105,17 @@ public class Shop extends GameObject{
 					new Point(80, 330),
 					new Dimension(100, 100))
 					.imageSize(32, 32));
-			Util.write(itemSelected.toString(), 70, 450);
 			
-			String lines[] = Util.tokenizeText(itemSelected.getDescription(), 280, 3);
+			Writer.write(itemSelected.toString(), new Point(70, 50));
 			
-			for(int i=0; i<lines.length; i++)
-				Util.write(lines[i], 200, 320+Util.getFontHeight()*i);
+			List<String> description = Writer.toParagraph(itemSelected.getDescription(), 280);
+			
+			Writer.write(description, new Point(200, 320), 3);
 			
 			if(buy)
 			{	
-				Util.write("$"+itemSelected.getPrice(), 520 - Util.getTextWidth("$"+itemSelected.getPrice()), 460);
+				
+				Writer.write("$"+itemSelected.getPrice(), new Point(520, 460), Writer.RIGHT);
 				
 				Renderer.render(new Builder(
 						buyButton,
@@ -124,7 +125,7 @@ public class Shop extends GameObject{
 				
 			}else
 			{
-				Util.write("$"+(int)(itemSelected.getPrice()*.6), 520 - Util.getTextWidth("$"+(int)(itemSelected.getPrice()*.6)), 460);
+				Writer.write("$"+(int)(itemSelected.getPrice()*.6), new Point(520, 460), Writer.RIGHT);
 				
 				Renderer.render(new Builder(
 						sellButton,
@@ -221,7 +222,7 @@ public class Shop extends GameObject{
 		public void run()
 		{
 			Player player = MapManager.getMap().getPlayer();
-			if(!MsgBoxManager.getAnswer())
+			if(MsgBoxManager.getAnswer() == 0)
 			{
 				MsgBoxManager.sendMessage("Make up your mind...", MsgBoxManager.OK);
 			}else
@@ -244,7 +245,7 @@ public class Shop extends GameObject{
 		public void run()
 		{
 			Player player = MapManager.getMap().getPlayer();
-			if(!MsgBoxManager.getAnswer())
+			if(MsgBoxManager.getAnswer() == 0)
 			{
 				MsgBoxManager.sendMessage("Make up your mind...", MsgBoxManager.OK);
 			}else

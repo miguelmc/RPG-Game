@@ -14,11 +14,12 @@ import game.entities.superentities.Player;
 import game.features.Stat;
 import game.structure.MapManager;
 import game.ui.window.Window;
-import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
+
+import org.lwjgl.util.Point;
 
 // TODO change the list to a queue
 // TODO? use notifications timing in a separate thread?
@@ -31,33 +32,16 @@ public class UserInterface
 
 	private static ArrayList<String> notifications = new ArrayList<String>();
 	private static ArrayList<Long> times = new ArrayList<Long>(); // TODO change to a queue
-
-	static
-	{
-		// load fonts
-		System.out.println("Loading 0%");
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
-		System.out.println("Loading 20%");
-		Util.useFont("Monaco", Font.PLAIN, 25, Color.white);
-		System.out.println("Loading 40%");
-		Util.useFont("Arial", Font.BOLD, 10, Color.white);
-		System.out.println("Loading 60%");
-		Util.useFont("Arial", Font.BOLD, 14, Color.black);
-		System.out.println("Loading 80%");
-		Util.useFont("Courier New", Font.BOLD, 28, Color.white);
-		System.out.println("Loading 100%");
-
-	}
 	
 	public static void render()
 	{
 		// renders all notifications
-		Util.useFont("Arial", Font.BOLD, 14, Color.black);
-		for (int i = notifications.size() - 1; i >= 0; i--)
+		Writer.useFont(Fonts.Arial_Black_Bold_14);
+		for (int i = notifications.size() - 1; i >= 0; i--) //TODO change to queue
 		{
 			if (times.get(i) > System.currentTimeMillis())
 			{
-				Util.write(notifications.get(i), 10, 80 + i * Util.getFontHeight());
+				Writer.write(notifications.get(i), new Point(10, 80 + i * Writer.fontHeight()));
 			} else
 			{
 				notifications.remove(i);
@@ -104,9 +88,9 @@ public class UserInterface
 		glLoadIdentity();
 
 		//Writes hp/maxhp on HP bar
-		Util.useFont("Arial", Font.BOLD, 14, Color.black);
-		Util.write(MapManager.getMap().getPlayer().getHP() + "/" + MapManager.getMap().getPlayer()
-				.getStat(Player.TOTAL + Stat.MAXHP.ID), 10+(width/2) - 20 , 13);
+		
+		Writer.write(MapManager.getMap().getPlayer().getHP() + "/" + MapManager.getMap().getPlayer()
+				.getStat(Player.TOTAL + Stat.MAXHP.ID), new Point(10+(width/2) - 20 , 13));
 		
 		// MP BAR
 		limit = (int) (width * MapManager.getMap().getPlayer().getMP() / MapManager.getMap().getPlayer()
@@ -143,9 +127,9 @@ public class UserInterface
 		glLoadIdentity();
 		
 		//Writes mp/maxmp on MP bar
-		Util.useFont("Courier New", Font.BOLD, 14, Color.white);
-		Util.write(MapManager.getMap().getPlayer().getMP() + "/" + MapManager.getMap().getPlayer()
-						.getStat(Player.TOTAL + Stat.MAXMP.ID), 200+(width/2) - 20 , 13);	
+		Writer.useFont(Fonts.Courier_White_Bold_14);
+		Writer.write(MapManager.getMap().getPlayer().getMP() + "/" + MapManager.getMap().getPlayer()
+						.getStat(Player.TOTAL + Stat.MAXMP.ID), new Point(200+(width/2) - 20 , 13));	
 		
 		// EXP BAR
 		limit = (int) (width * MapManager.getMap().getPlayer().getExp() / MapManager.getMap().getPlayer().getExpReq());
@@ -181,16 +165,16 @@ public class UserInterface
 		glLoadIdentity();
 		
 		//Writes xp/maxxp on XP bar
-		Util.useFont("Arial", Font.BOLD, 14, Color.black);
-		Util.write(MapManager.getMap().getPlayer().getExp() + "/" + MapManager.getMap().getPlayer().getExpReq(),
-				390+(width/2) - 20 , 13);
+		Writer.useFont(Fonts.Arial_Black_Bold_14);
+		Writer.write(MapManager.getMap().getPlayer().getExp() + "/" + MapManager.getMap().getPlayer().getExpReq(),
+				new Point(390+(width/2) - 20 , 13));
 		
 		glColor4f(0f, 0f, 0f, 1f);
 
-		Util.useFont("Courier New", Font.BOLD, 28, Color.white);
-		Util.write(MapManager.getMap().getName(), 10, 40);
-		Util.write(Integer.toString(MapManager.getMap().getPlayer().getLevel()), 
-				Main.DIM.getWidth()-10-Util.getTextWidth(Integer.toString(MapManager.getMap().getPlayer().getLevel())), 5f);
+		Writer.useFont(Fonts.Courier_White_Bold_28);
+		Writer.write(MapManager.getMap().getName(), new Point(10, 40));
+		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getLevel()), 
+				new Point(Main.DIM.getWidth()-10, 5), Writer.RIGHT);
 
 		if (MsgBoxManager.isActive())
 			MsgBoxManager.render();

@@ -21,8 +21,10 @@ import org.newdawn.slick.opengl.Texture;
 public abstract class Window
 {
 
+	//TODO make shop a window and
+	
 	private Point position = new Point(100, 100);
-	private Dimension size = new Dimension(174, 256);
+	protected final Dimension SIZE;
 	private Texture texture;
 	private boolean active = false, pressed = false;
 	private static Shop shop;
@@ -37,10 +39,10 @@ public abstract class Window
 		return shop != null;
 	}
 	
-	public Window(Point pos, Dimension s)
+	public Window(Point pos, Dimension size)
 	{
 		position = pos;
-		size = s;
+		SIZE = size;
 		texture = Util.getTexture("UI/window/" + getClass().getSimpleName().toLowerCase() + ".png");
 	}
 
@@ -74,7 +76,7 @@ public abstract class Window
 		Renderer.render(new Builder(
 				texture,
 				getPosition(),
-				size)
+				SIZE)
 				.imageSize(174, 256));
 		
 		glColor4f(1, 1, 1, 1);
@@ -90,8 +92,8 @@ public abstract class Window
 				{ // each window has a key assigned to open it
 					w.toggleActive(); // open/close window
 					// if for some reason the window goes out of the screen. (this might happen because mouse events and the game run on different threads)
-					if (w.getX() > Main.DIM.getWidth() || w.getX() + w.getWidth() < 0
-							|| w.getY() > Main.DIM.getHeight() || w.getY() + w.getHeight() < 0) 
+					if (w.getX() > Main.DIM.getWidth() || w.getX() + w.SIZE.getWidth() < 0
+							|| w.getY() > Main.DIM.getHeight() || w.getY() + w.SIZE.getHeight() < 0) 
 						w.setPosition(100, 100);
 				} else if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) // close all
 				{ 
@@ -111,9 +113,9 @@ public abstract class Window
 		}
 		for (Window w : windows)
 		{
-			if (Mouse.getX() >= w.getX() && Mouse.getX() <= w.getX() + w.getWidth()
+			if (Mouse.getX() >= w.getX() && Mouse.getX() <= w.getX() + w.SIZE.getWidth()
 					&& Main.DIM.getHeight() - Mouse.getY() + 1 >= w.getY()
-					&& Main.DIM.getHeight() - Mouse.getY() + 1 <= w.getY() + w.getHeight())
+					&& Main.DIM.getHeight() - Mouse.getY() + 1 <= w.getY() + w.SIZE.getHeight())
 			{
 				if (w.isActive())
 				{
@@ -184,34 +186,9 @@ public abstract class Window
 	{
 		position.setY(y);
 	}
-
-	public int getWidth()
-	{
-		return size.getWidth();
-	}
-
-	public void setWidth(int width)
-	{
-		size.setWidth(width);
-	}
-
-	public int getHeight()
-	{
-		return size.getHeight();
-	}
-
-	public void setHeight(int height)
-	{
-		size.setHeight(height);
-	}
 	
 	public Texture getTexture()
 	{
 		return texture;
-	}
-	
-	public Dimension getSize()
-	{
-		return new Dimension(size);
 	}
 }

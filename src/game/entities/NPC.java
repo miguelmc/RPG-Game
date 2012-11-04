@@ -4,10 +4,10 @@ import game.scripting.NPCConversationManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.util.Util;
+import game.util.Writer;
+import game.util.Writer.Fonts;
 import game.util.XMLParser;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -16,6 +16,8 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import org.lwjgl.util.Point;
 
 /**
  * Stands for Non-Player Character.
@@ -48,16 +50,15 @@ public class NPC extends Entity implements Runnable
 	public void UIRender()
 	{
 		//Render NPC name
-		Util.useFont("Arial", Font.BOLD, 10, Color.white);
-		float xTraslation = (Util.getTextWidth(name) - Slot.SIZE) / 2;
-		Util.write(name, ((getX() - getMap().getOffSet().getX())) * Slot.SIZE
-				- xTraslation, getY() * Slot.SIZE - getMap().getOffSet().getY() * Slot.SIZE - (float) (Slot.SIZE * .3));
+		Writer.useFont(Fonts.Arial_White_Bold_10);
+		Point position = new Point((int)((getPositionInGrid().getX()+.5)*Slot.SIZE), getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight());
+		Writer.write(name, position, Writer.CENTER);
 	}
 
 	public void run()
 	{
 		NPCConversationManager.setNPC(this);
-				
+			
 		engine.put("cm", cm);
 				
 		try
