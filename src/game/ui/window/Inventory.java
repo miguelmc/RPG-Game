@@ -136,7 +136,7 @@ public class Inventory extends Window
 		}
 
 		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
-					 new Point(getX() + GOLD_POS.getX(), getY() + SIZE.getHeight() - GOLD_POS.getY()));
+					 new Point(getX() + GOLD_POS.getX(), getY() + GOLD_POS.getY()));
 
 		Item item = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
 
