@@ -36,11 +36,6 @@ public class Inventory extends Window
 	public void mouse()
 	{
 
-		// TODO NO ACCURATE WAY TO DISTINGUISH BETWEEN MOUSE MOVE AND MOUSE
-		// RELEASE SINCE THERE CAN BE A MOUSE MOVED EVENT WITH 0 DX & 0DY
-		// TRY SAVE MOUSE STATE AND COMPARE CURRENT STATE TO DETERMINE IF MOUSE
-		// MOVED OR RELEASED
-
 		Item clickedItem = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
 
 		if (Mouse.getEventButtonState())
