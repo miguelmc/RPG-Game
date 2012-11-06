@@ -6,14 +6,11 @@ import static game.features.Stat.DEF;
 import static game.features.Stat.MAXHP;
 import static game.features.Stat.MAXMP;
 import static game.features.Stat.STR;
-import game.Main;
 import game.entities.superentities.Player;
 import game.structure.MapManager;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 

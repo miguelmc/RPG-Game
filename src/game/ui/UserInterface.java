@@ -70,10 +70,10 @@ public class UserInterface
 		for(int i=notifications.size()-1; it.hasNext(); i--)
 			Writer.write(it.next().notification, new Point(NOTIFICATIONS_POS.getX(), NOTIFICATIONS_POS.getY() + i*Writer.fontHeight()));
 		
-		
 		WindowManager.render();
-		Writer.useFont(Fonts.Arial_Black_Bold_14);
 		
+		Writer.useFont(Fonts.Arial_Black_Bold_14);
+		//TODO use Renderer
 		// HP BAR
 		int width = 128;
 		int limit = (int) (width * MapManager.getMap().getPlayer().getHP() / MapManager.getMap().getPlayer()

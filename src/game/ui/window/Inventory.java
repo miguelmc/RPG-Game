@@ -45,7 +45,7 @@ public class Inventory extends Window
 				super.mouse();
 			else
 			{
-				if(grabTime + 250 > System.currentTimeMillis())
+				if(grabTime + DOUBLE_CLICK_DELAY > System.currentTimeMillis())
 				{
 					grabbedItem = null;
 					grabTime = 0;
