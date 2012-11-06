@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -156,6 +157,12 @@ public class Util
 			hexID = "0" + hexID;
 		}
 		return hexID;
+	}
+
+	public static boolean inRange(Point pos, Point origin, Dimension dim) {
+		return pos.getX() > origin.getX() && pos.getY() > origin.getY()
+				&& pos.getX() < origin.getX() + dim.getWidth()
+				&& pos.getY() < origin.getY() + dim.getHeight();
 	}
 
 }

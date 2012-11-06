@@ -69,12 +69,6 @@ public class Equipment extends Window {
 		return null;
 	}
 
-	@Override
-	protected void mouse() {
-		// TODO Auto-generated method stub
-
-	}
-
 	int getKey() {
 		return Keyboard.KEY_E;
 	}

@@ -1,5 +1,7 @@
 package game.util;
 
+import game.Main;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -22,8 +24,11 @@ public class Writer {
 	
 	public static void write(String text, Point position, int alignment)
 	{
-		currentFont.unicodeFont.drawString((int)(position.getX() - alignment*.5*currentFont.getWidth(text)), position.getY(), text);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		if(!Main.DEBUG)
+		{
+			currentFont.unicodeFont.drawString((int)(position.getX() - alignment*.5*currentFont.getWidth(text)), position.getY(), text);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+		}
 	}
 	
 	public static void write(String text, Point position)
@@ -49,7 +54,10 @@ public class Writer {
 	
 	public static List<String> toParagraph(String text, int maxLineWidth)
 	{
+		
 		List<String> lines = new ArrayList<String>();
+		
+		if(Main.DEBUG) return lines;
 		
 		Queue<String> words = new LinkedList<String>();
 		
@@ -67,12 +75,12 @@ public class Writer {
 	}
 	
 	public static int fontHeight() {
+		if(Main.DEBUG) return 10;
 		return currentFont.HEIGHT;
 	}
 	
 	public enum Fonts
 	{
-
 		Courier_White_Bold_14("Courier New", Font.BOLD, 14, Color.white),
 		Monaco_White_Plain_25("Monaco", Font.PLAIN, 25, Color.white),
 		Arial_White_Bold_10("Arial", Font.BOLD, 10, Color.white),
@@ -84,25 +92,27 @@ public class Writer {
 		
 		@SuppressWarnings("unchecked")
 		private Fonts(String name, int style, int size, Color color){
-			
-			unicodeFont = new UnicodeFont(new Font(name, style, size));
-			unicodeFont.addAsciiGlyphs();
-			unicodeFont.getEffects().add(new ColorEffect(color));
-			try
+			if(!Main.DEBUG)
 			{
-				unicodeFont.loadGlyphs();
-			} catch (SlickException e)
-			{
-				e.printStackTrace();
-			}
-			
-			System.out.println(1);
-			
-			HEIGHT = unicodeFont.getHeight("Q");
+				unicodeFont = new UnicodeFont(new Font(name, style, size));
+				unicodeFont.addAsciiGlyphs();
+				unicodeFont.getEffects().add(new ColorEffect(color));
+				try
+				{
+					unicodeFont.loadGlyphs();
+				} catch (SlickException e)
+				{
+					e.printStackTrace();
+				}
+							
+				HEIGHT = unicodeFont.getHeight("Q");
+			}else
+				HEIGHT = 10;
 		}
 		
 		public int getWidth(String text)
 		{
+			if(Main.DEBUG) return 5*text.length();
 			return unicodeFont.getWidth(text);
 		}
 		

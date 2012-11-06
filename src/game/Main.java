@@ -16,12 +16,12 @@ import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
-import game.ui.window.Window;
+import game.ui.window.WindowManager;
+import game.util.MouseManager;
 import game.util.XMLParser;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Dimension;
@@ -33,28 +33,28 @@ public class Main {
 
 	public static String NAME = "Game";
 	public static Dimension GRIDSIZE, DIM;
+	
+	public static boolean DEBUG = false;
 
-	static // static "constructor"
+	static // static initializer
 	{
 		XMLParser parser = new XMLParser("game_config.xml");
 
 		NAME = parser.getAttribute("GAME", "name");
-		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game",
-				"width")), Integer.parseInt(parser.getAttribute("Game",
-				"height")));
+		GRIDSIZE = new Dimension(Integer.parseInt(parser.getAttribute("Game", "width")),
+								 Integer.parseInt(parser.getAttribute("Game", "height")));
 		Slot.SIZE = Integer.parseInt(parser.getAttribute("Game", "tile_size")
 				.replace("px", ""));
 
-		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(), Slot.SIZE
-				* GRIDSIZE.getHeight());
+		DIM = new Dimension(Slot.SIZE * GRIDSIZE.getWidth(),
+							Slot.SIZE * GRIDSIZE.getHeight());
 	}
 
 	public Main() {
 		
 		// create window
 		try {
-			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM
-					.getHeight()));
+			Display.setDisplayMode(new DisplayMode(DIM.getWidth(), DIM.getHeight()));
 			Display.setTitle(NAME);
 			Display.create();
 		} catch (LWJGLException e) {
@@ -65,10 +65,9 @@ public class Main {
 		initGL();
 		
 		// Game Loop
-		while (!Display.isCloseRequested())// as long as close button is not
-											// pressed
+		while (!Display.isCloseRequested())// as long as close button is not pressed
 		{
-			input();
+			input(); //handles mouse and keyboard events
 			MapManager.update(); // updates the current map
 
 			glClear(GL_COLOR_BUFFER_BIT); // clears the screen
@@ -76,7 +75,7 @@ public class Main {
 			UserInterface.render(); // renders the interface
 
 			Display.update(); // update the screen
-			Display.sync(120); // set fps to 60
+			Display.sync(60); // set fps to 60
 		}
 
 		Display.destroy();
@@ -87,42 +86,37 @@ public class Main {
 		// init GL
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to
-																// upper-left
-																// corner
+		glOrtho(0, DIM.getWidth(), DIM.getHeight(), 0, 1, -1); // set origin to upper-left corner
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND); // enable transparency
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable
-															// transparency
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // enable transparency
 	}
 
 	private void input() {
-		// give input to the map and windows unless the messagebox is active
-
-		while (Keyboard.next()) // checks for a keyboard event
+		while (Keyboard.next())
 		{
 			if (MsgBoxManager.isActive()) {
 				MsgBoxManager.input();
 			} 
 			else
 			{
-				Window.keyboardInput();
-				if(!Window.isShopOpen())
-				{
+				WindowManager.keyboard();
+				if(!WindowManager.isShopOpen())
 					MapManager.input();
-				}
-				
 			}
-			
 		}
 
-		while (Mouse.next())
-			// checks for a mouse event
-			Window.mouseInput();
+		while (MouseManager.hasEvent())
+			WindowManager.mouse();
 
 	}
 
 	public static void main(String[] args) {
+		
+		for(String arg: args)
+			if(arg.equals("d"))
+				DEBUG = true;
+		
 		if (System.getProperty("os.name").startsWith("Win")) {
 			Thread sleeper = new Thread(new Runnable() {
 				public void run() {

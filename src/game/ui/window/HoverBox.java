@@ -1,6 +1,5 @@
 package game.ui.window;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
 import game.entities.item.EquipItem;
 import game.entities.item.Item;
 import game.features.Stat;
@@ -40,10 +39,8 @@ public class HoverBox {
 			}
 		}
 		
-		//adds the item description to the paragraph
+		//adds the  item description to the paragraph
 		paragraph.addAll(Writer.toParagraph(item.getDescription(), 185));
-
-		glColor4f(1, 1, 1, .5f); //half opacity
 		
 		Renderer.render(new Builder(
 				Util.getTexture("UI/window/itemDesc.png"),
@@ -52,8 +49,6 @@ public class HoverBox {
 
 		//renders the item's image's background
 		Renderer.renderQuad(new Point(position.getX() + 10, position.getY() + 10), ITEM_IMG_SIZE);
-
-		glColor4f(1, 1, 1, 1); //full opacity
 
 		//renders the item's image
 		Renderer.render(new Builder(

@@ -5,28 +5,31 @@ import game.entities.item.EquipItem;
 import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.structure.MapManager;
+import game.util.MouseManager;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
+import game.util.Util;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
 public class Inventory extends Window
 {
 
-	List<Item> items = MapManager.getMap().getPlayer().getItems();
-	private Item click = null;
-	private long timeOfClick = 0L;
-	private boolean itemGrabbed = false;
-
-	private static final Point GOLD_POS = new Point(37, 231);
-	private static final int ITEM_IMG_SIZE = 32;
+	private List<Item> items = MapManager.getMap().getPlayer().getItems();
+	private Item grabbedItem = null;
+	private long grabTime;
+	
+	private static final int DOUBLE_CLICK_DELAY = 250;
+	private static final Point GOLD_POS = new Point(37, 231), SQUARES_ORIGIN = new Point(7, 30);
+	private static final int SQUARE_SIZE = 32;
+	private static final Dimension INV_SIZE = new Dimension(5, 6);
 	
 	public Inventory()
 	{
@@ -35,83 +38,55 @@ public class Inventory extends Window
 
 	public void mouse()
 	{
-
-		Item clickedItem = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
-
-		if (Mouse.getEventButtonState())
-		{
-			setPressed(true);
-
-			if (clickedItem != null)
+		if(MouseManager.mousePressed())
+		{	
+			Item clickedItem = getItemAt(MouseManager.getPosition());
+			if(clickedItem == null)
+				super.mouse();
+			else
 			{
-				
-			}
-		} else if (!Mouse.getEventButtonState())
-		{
-			int dX = Mouse.getDX();
-			int dY = Mouse.getDY();
-			if (!itemGrabbed)
-			{
-				if (Mouse.isButtonDown(0) && isPressed())
+				if(grabTime + 250 > System.currentTimeMillis())
 				{
-					if (clickedItem == null)
-					{
-						if (!((dX > 0 && getX() > Main.DIM.getWidth() * .98)
-								|| (dX < 0 && getX() + SIZE.getWidth() < Main.DIM.getWidth() * .02)
-								|| (dY > 0 && getY() < Main.DIM.getHeight() * .02) || (dY < 0 && getY() > Main.DIM
-								.getHeight() * .98)))
-						{
-							setPosition(getX() + dX, getY() - dY);
-						}
-					}
-				} else if (dX == 0 && dY == 0)
+					grabbedItem = null;
+					grabTime = 0;
+					if(clickedItem instanceof EquipItem)
+						MapManager.getMap().getPlayer().addEquip((EquipItem) clickedItem);
+					else if(clickedItem instanceof UsableItem)
+						MapManager.getMap().getPlayer().useItem((UsableItem) clickedItem);
+				}else
 				{
-					setPressed(false);
+					grabTime = System.currentTimeMillis();
+					grabbedItem = clickedItem;
 				}
-			} else if (dX == 0 && dY == 0)
-			{
-				itemGrabbed = false;
 			}
-		}
-
-		if (Mouse.getEventButtonState())
+		}else
 		{
-			if (timeOfClick + 200L < System.currentTimeMillis())
-			{
-				click = clickedItem;
-				timeOfClick = System.currentTimeMillis();
-			} else if (clickedItem == click && click != null)
-			{
-				if (clickedItem instanceof UsableItem)
-				{
-					MapManager.getMap().getPlayer().useItem(clickedItem);
-				} else if (clickedItem instanceof EquipItem)
-				{
-					EquipItem equip = (EquipItem) clickedItem;
-					MapManager.getMap().getPlayer().removeEquip(equip.getType());
-					MapManager.getMap().getPlayer().addEquip(equip);
-					MapManager.getMap().getPlayer().removeItem(clickedItem);
-				}
-				click = null;
-			}
+			super.mouse();
 		}
+		
 	}
 
-	private Item getItemAt(int xPos, int yPos)
+	private Item getItemAt(Point position)
 	{
-		for (int i = 0; i < items.size(); i++)
-		{
-			if (xPos > getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5)
-					&& xPos < getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5) + ITEM_IMG_SIZE
-					&& yPos > getPosition().getY() + 30 + ITEM_IMG_SIZE * (i / 5)
-					&& yPos < getPosition().getY() + 30 + ITEM_IMG_SIZE * (i / 5) + ITEM_IMG_SIZE)
-				return items.get(i);
-		}
+		if(!Util.inRange(position, 
+						new Point(getX() + SQUARES_ORIGIN.getX(),
+								  getY() + SQUARES_ORIGIN.getY()), 
+						new Dimension(SQUARE_SIZE*INV_SIZE.getWidth(), 
+								      SQUARE_SIZE*INV_SIZE.getHeight())))
+			return null;
+				
+		Point invPos = new Point((position.getX() - SQUARES_ORIGIN.getX() - getX())/SQUARE_SIZE, 
+								 (position.getY() - SQUARES_ORIGIN.getY() - getY())/SQUARE_SIZE);
+		
+		
+		if(invPos.getY()*INV_SIZE.getWidth() + invPos.getX() < items.size())
+			return items.get(invPos.getY()*INV_SIZE.getWidth() + invPos.getX());
+		
 		return null;
 
 	}
 
-	public void render()
+	public void render() 
 	{
 		super.render();
 
@@ -120,29 +95,42 @@ public class Inventory extends Window
 		{
 			Renderer.render(new Builder(
 					items.get(i).getTexture(),
-					new Point(getPosition().getX() + 7 + ITEM_IMG_SIZE * (i % 5), getPosition().getY()+ 30 + ITEM_IMG_SIZE * (i / 5)),
-					new Dimension(32, 32)));
+					new Point(getPosition().getX() + 7 + SQUARE_SIZE * (i % 5), getPosition().getY()+ 30 + SQUARE_SIZE * (i / 5)),
+					new Dimension(SQUARE_SIZE, SQUARE_SIZE)));
 			
 			if (!(items.get(i) instanceof EquipItem))
 			{
 				Writer.write(Integer.toString(items.get(i).getQuantity()), 
-							 new Point(getX() + 10 + ITEM_IMG_SIZE * (i%5), getY() + 30 + ITEM_IMG_SIZE * (i/5)));
+							 new Point(getX() + 10 + SQUARE_SIZE * (i%5), getY() + 30 + SQUARE_SIZE * (i/5)));
 			}
 		}
 
 		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
 					 new Point(getX() + GOLD_POS.getX(), getY() + GOLD_POS.getY()));
-
-		Item item = getItemAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
-
+		
+		if (grabbedItem != null)
+		{
+			Dimension renderSize = new Dimension(SQUARE_SIZE, SQUARE_SIZE);
+			Point renderPos = new Point(MouseManager.getX() - renderSize.getWidth()/2, 
+										MouseManager.getY() - renderSize.getHeight()/2);
+			Renderer.render(new Builder(
+							grabbedItem.getTexture(),
+							renderPos,
+							renderSize));
+		}
+		
+		Item item = getItemAt(MouseManager.getPosition());
+		
+		GL11.glColor4f(1,1,1,.5f); //TODO render the hover with same opacity as window
 		if (item != null)
 			HoverBox.render(item, new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
+		GL11.glColor4f(1,1,1,1);
+		
 	}
-
-	@Override
-	int getKey()
+	
+	public void onClose()
 	{
-		return Keyboard.KEY_I;
+		grabbedItem = null;
 	}
-
+	
 }

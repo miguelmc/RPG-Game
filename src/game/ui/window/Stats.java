@@ -34,9 +34,10 @@ public class Stats extends Window{
 		super(new Point(100, 450), new Dimension(174, 256));
 	}
 	
-	public void render()
+	public void render() 
 	{
 		super.render();
+		
 		Player player = MapManager.getMap().getPlayer();
 		Writer.useFont(Fonts.Courier_White_Bold_14);
 		Writer.write(Integer.toString(player.getLevel()), new Point(getX()+X, getY()+Y_INTERVAL[0]));
@@ -47,38 +48,6 @@ public class Stats extends Window{
 		Writer.write(Integer.toString(player.getStat(TOTAL+DEF.ID)), new Point(getX()+X, getY()+Y_INTERVAL[5]));
 		Writer.write(Integer.toString(player.getStat(TOTAL+STR.ID)), new Point(getX()+X, getY()+Y_INTERVAL[6]));
 		Writer.write(Integer.toString((int)(player.getAverageDamage()+.5)), new Point(getX()+X, getY()+Y_INTERVAL[7]));
-	}
-	
-	
-	@Override
-	protected void mouse() {
-		if (Mouse.getEventButtonState())
-		{
-			setPressed(true);
-		} else if (!Mouse.getEventButtonState())
-		{
-			int dX = Mouse.getDX();
-			int dY = Mouse.getDY();
-
-			if (Mouse.isButtonDown(0) && isPressed()) {
-
-				if (!((dX > 0 && getX() > Main.DIM.getWidth() * .98)
-						|| (dX < 0 && getX() + SIZE.getWidth() < Main.DIM.getWidth() * .02)
-						|| (dY > 0 && getY() < Main.DIM.getHeight() * .02) || (dY < 0 && getY() > Main.DIM
-						.getHeight() * .98))) {
-					setPosition(getX() + dX, getY() - dY);
-					}
-			} else if (dX == 0 && dY == 0) {
-				setPressed(false);
-			}
-
-		}
-
-	}
-	
-	int getKey()
-	{
-		return Keyboard.KEY_S;
-	}
+	}	
 
 }

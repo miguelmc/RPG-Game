@@ -26,7 +26,7 @@ public class Timer extends Thread
 	 *            - The method to call. (Use getClass().getMethod("methodName",
 	 *            new Class<?>[0]));
 	 * @param alertTime
-	 *            - The time interval (in miliseconds) between each method call.
+	 *            - The time interval (in milliseconds) between each method call.
 	 */
 	public Timer(Object obj, String method, int alertTime)
 	{
@@ -34,7 +34,7 @@ public class Timer extends Thread
 	}
 	
 	/**
-	 * Calls the method every fixed amount of time for <i>repetitions</i> times.
+	 * Calls the method every fixed amount of time for <i>repetitions</i> times or until join() is called on <i>this</i>.
 	 * <br>
 	 * <br>
 	 * @param obj

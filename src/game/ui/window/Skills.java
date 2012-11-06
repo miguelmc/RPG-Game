@@ -11,16 +11,9 @@ public class Skills extends Window{
 		super(new Point(350, 450), new Dimension(174, 256));
 	}
 	
-	public void render()
+	public void render() 
 	{
 		super.render();
-	}
-	
-	
-	@Override
-	protected void mouse() 
-	{
-		
 	}
 	
 	int getKey()

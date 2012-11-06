@@ -18,7 +18,7 @@ import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
-import game.ui.window.Window;
+import game.ui.window.WindowManager;
 import game.util.Timer;
 import game.util.Util;
 
@@ -226,7 +226,7 @@ public class Player extends SuperEntity {
 
 		super.update();
 
-		if (MsgBoxManager.isActive() || Window.isShopOpen())
+		if (MsgBoxManager.isActive() || WindowManager.isShopOpen())
 			return;
 
 		// handles movement
@@ -265,17 +265,14 @@ public class Player extends SuperEntity {
 		return super.hit(damage);
 	}
 
-	public void useItem(Item item) {
-		if (item != null) {
-			if (item instanceof UsableItem) {
-				UsableItem i = (UsableItem) (item);
-				i.use();
-				i.setQuantity(i.getQuantity() - 1);
-				if (item.getQuantity() == 0) {
-					removeItem(item);
-				}
-			}
-		}
+	public void useItem(UsableItem item) {
+		if(!items.contains(item))
+			return;
+		
+		item.use();
+		item.setQuantity(item.getQuantity() - 1);
+		if (item.getQuantity() == 0)
+			removeItem(item);
 	}
 
 	public void removeItem(Item item) {
@@ -430,7 +427,10 @@ public class Player extends SuperEntity {
 
 	public void addEquip(EquipItem equip) {
 		if (equips.get(equip.getType()) != null)
-			return;
+			removeEquip(equip.getType());
+		
+		items.remove(items.indexOf(equip));
+		
 		equips.put(equip.getType(), equip);
 		raiseStat(EXTRA + MAXHP.ID, equip.getStat(MAXHP));
 		raiseStat(EXTRA + MAXMP.ID, equip.getStat(MAXMP));

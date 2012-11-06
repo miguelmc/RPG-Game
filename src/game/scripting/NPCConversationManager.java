@@ -4,7 +4,7 @@ import game.entities.NPC;
 import game.features.Quest;
 import game.ui.MsgBoxManager;
 import game.ui.Shop;
-import game.ui.window.Window;
+import game.ui.window.WindowManager;
 
 /**
  * The object passed to the NPC scripts. This object's public methods can be
@@ -89,14 +89,12 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 
 	public void turnQuestIn(int id) {
-		if (getPlayer().hasQuest(id) && getPlayer().getQuest(id).isCompleted()) {
+		if (getPlayer().hasQuest(id) && getPlayer().getQuest(id).isCompleted())
 			getPlayer().getQuest(id).turnIn();
-		}
 	}
 
 	public void openShop(String id) {
-		Window.openShop(Integer.parseInt(id, 16));
-		
+		WindowManager.openShop(Integer.parseInt(id, 16));
 	}
 
 	public boolean givePlayer(int id) {

@@ -137,16 +137,17 @@ public abstract class SuperEntity extends Entity
 			s.render();
 	}
 
-	public void UIRender()
-	{ // superentities can be attacked, so their damage is displayed above them at an UI level
+	public void UIRender() // superentities can be attacked, so their damage is displayed above them at an UI level
+	{
 		for (int i = 0; i < damages.size(); i++)
 		{
 			if (damageTime.get(i) > System.currentTimeMillis())
 			{
 				Writer.useFont(Fonts.Arial_White_Bold_10);
 				Writer.write(damages.get(i).toString(),
-							 new Point(getPositionInGrid().getX()*Slot.SIZE,
-									   getPositionInGrid().getY()*Slot.SIZE - 20 - Writer.fontHeight() * (damages.size() - 1) + i * Writer.fontHeight()));
+							 new Point((int) ((getPositionInGrid().getX()+.5)*Slot.SIZE),
+									   getPositionInGrid().getY()*Slot.SIZE - 20 - Writer.fontHeight() * (damages.size() - 1) + i * Writer.fontHeight()),
+							 Writer.CENTER);
 			} else
 			{
 				damages.remove(i);

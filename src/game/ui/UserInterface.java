@@ -13,11 +13,13 @@ import game.Main;
 import game.entities.superentities.Player;
 import game.features.Stat;
 import game.structure.MapManager;
-import game.ui.window.Window;
+import game.ui.window.WindowManager;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.lwjgl.util.Point;
 
@@ -30,28 +32,48 @@ import org.lwjgl.util.Point;
 public class UserInterface
 {
 
-	private static ArrayList<String> notifications = new ArrayList<String>();
-	private static ArrayList<Long> times = new ArrayList<Long>(); // TODO change to a queue
+	private static final UserInterface ui = new UserInterface();
+	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
+	
+	class Notification{
+		private String notification;
+		private Long creationTime;
+		private final long lifeTime = 2000L;
+		
+		private boolean died()
+		{
+			return System.currentTimeMillis() > creationTime + lifeTime;
+		}
+		
+		public Notification(String message)
+		{
+			notification = message;
+			creationTime = System.currentTimeMillis();
+		}
+	}
+	
+	private static Queue<Notification> notifications = new LinkedList<Notification>();
 	
 	public static void render()
 	{
+		
 		// renders all notifications
 		Writer.useFont(Fonts.Arial_Black_Bold_14);
-		for (int i = notifications.size() - 1; i >= 0; i--) //TODO change to queue
-		{
-			if (times.get(i) > System.currentTimeMillis())
-			{
-				Writer.write(notifications.get(i), new Point(10, 80 + i * Writer.fontHeight()));
-			} else
-			{
-				notifications.remove(i);
-				times.remove(i);
-				i--;
-			}
-		}
-
-		Window.renderAll();
-
+		
+		Iterator<Notification> it = notifications.iterator();
+		
+		while(it.hasNext() && it.next().died())
+			it.remove();
+		
+		it = notifications.iterator();
+		
+		for(int i=notifications.size()-1; it.hasNext(); i--)
+			Writer.write(it.next().notification, new Point(NOTIFICATIONS_POS.getX(), NOTIFICATIONS_POS.getY() + i*Writer.fontHeight()));
+		
+		
+		WindowManager.render();
+		Writer.useFont(Fonts.Arial_Black_Bold_14);
+		
 		// HP BAR
 		int width = 128;
 		int limit = (int) (width * MapManager.getMap().getPlayer().getHP() / MapManager.getMap().getPlayer()
@@ -189,15 +211,12 @@ public class UserInterface
 	 * <p>
 	 * <tt>public static void sendNotification(String s)</tt>
 	 * </p>
-	 * Send a notification to the screen which dissappears after several seconds.
+	 * Send a notification to the screen which disappears after several seconds.
 	 * <br><br>
 	 */
-	public static void sendNotification(String s)
+	public static void sendNotification(String message)
 	{
-		notifications.add(s);
-		times.add(System.currentTimeMillis() + 2000L);
+		notifications.add(ui.new Notification(message));
 	}
-
-	
 
 }

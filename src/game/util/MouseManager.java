@@ -8,27 +8,33 @@ import org.lwjgl.util.Point;
 public class MouseManager{
 
 	public static final int LEFT = 0, RIGHT = 1;
+	private static int x, y, dx, dy;
+		
+	public static boolean mouseReleased() { return !isButtonDown(0) && !mouseMoved(); }
 	
-	boolean lastEventisReleaseEvent = false;
+	public static boolean mousePressed() { return isButtonDown(0) && !mouseMoved(); }
 	
-	public boolean mouseReleased() { return !isButtonDown(0) && !mouseMoved(); }
+	public static boolean mouseMoved() { return !(getDX() == 0 && getDY() == 0); }
 	
-	public boolean mousePressed() { return isButtonDown(0) && !mouseMoved(); }
+	public static boolean isButtonDown(int button) { return Mouse.isButtonDown(button); }
 	
-	public boolean mouseMoved() { return getDX() != 0 || getDY() != 0; }
+	public static boolean hasEvent()
+	{ 
+		x = Mouse.getX();
+		y = Main.DIM.getHeight() - Mouse.getY() - 1;
+		dx = Mouse.getDX();
+		dy = -Mouse.getDY();
+		return Mouse.next();
+	}
 	
-	public boolean isButtonDown(int button) { return Mouse.isButtonDown(button); }
+	public static int getDX(){ return dx; }
 	
-	public boolean hasEvent() { return Mouse.next(); }
+	public static int getDY(){ return dy; }
 	
-	public int getDX(){	return Mouse.getDX(); }
+	public static int getX() { return x; }
 	
-	public int getDY(){ return -Mouse.getDY(); }
+	public static int getY() { return y; }
 	
-	public int getX() { return Mouse.getX(); }
-	
-	public int getY() { return Main.DIM.getHeight() - Mouse.getY() - 1; }
-	
-	public Point getPosition() { return new Point(Mouse.getX(), Mouse.getY()); }
+	public static Point getPosition() { return new Point(x, y); } //TODO do not create a new point every time it is called
 	
 }
