@@ -22,7 +22,7 @@ public class Equipment extends Window {
 	private static final Map<EquipType, Point> positions = new HashMap<EquipType, Point>();
 	private static final int itemSize = 44;
 	
-	static {
+	static { //TODO read from file
 		positions.put(EquipType.HELMET, new Point(74, 45));
 		positions.put(EquipType.TOPWEAR, new Point(74, 96));
 		positions.put(EquipType.BOTTOMWEAR, new Point(74, 145));

@@ -18,6 +18,7 @@ import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
 // TODO adjust this class to use Util.render and make more animation friendly
+@Deprecated
 public class SubImage
 {
 
