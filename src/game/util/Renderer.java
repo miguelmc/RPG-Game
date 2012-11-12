@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslatef;
@@ -63,16 +64,18 @@ public class Renderer {
 		glLoadIdentity();
 	}
 
-	public static void renderLines(Point...points)
+	public static void renderLines(int width, Point origin, Point...points)
 	{
 		if(points.length%2 != 0)
 			throw new IllegalArgumentException("The points must be in pairs of two.");
 		
+		glTranslatef(origin.getX(), origin.getY(), 0);
+		glLineWidth(1);
 		glBegin(GL_LINES);
-			for(int i=0; i<points.length; i+=2)
+			for(int i=0; i<points.length; i++)
 			{
 				glVertex2i(points[i].getX(), points[i].getY());
-				glVertex2i(points[i+1].getX(), points[i+1].getY());
+				glVertex2i(points[(i+1)%(points.length)].getX(), points[(i+1)%(points.length)].getY());
 			}
 		glEnd();
 		glLoadIdentity();

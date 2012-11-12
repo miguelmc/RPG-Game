@@ -24,9 +24,7 @@ public abstract class SuperEntity extends Entity
 
 	private int damage, facing = DOWN;
 	private ArrayList<Skill> skills = new ArrayList<Skill>();
-	private ArrayList<Integer> damages = new ArrayList<Integer>(); // TODO
-																	// change to
-																	// queue
+	private ArrayList<Integer> damages = new ArrayList<Integer>(); // TODO change to queue
 	private ArrayList<Long> damageTime = new ArrayList<Long>();
 	private Texture textures[] = new Texture[4];
 	public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
@@ -44,33 +42,14 @@ public abstract class SuperEntity extends Entity
 		face(DOWN);
 	}
 
-	/**
-	 * OVERRIDE getTexture() del Entity
-	 */
-	
 	public Texture getTexture()
 	{
 		return textures[getFacingDir()];
 	}
 	
-	/**
-	 * 
-	 * <br>
-	 * <b>face</b> <br>
-	 * <p>
-	 * <tt>protected void face(int dir)</tt>
-	 * </p>
-	 * Sets the facing direction of <i>this</i> superentity. <br>
-	 * <br>
-	 * 
-	 * @see #UP
-	 * @see #RIGHT
-	 * @see #DOWN
-	 * @see #LEFT
-	 */
 	protected void face(int dir)
 	{
-		setFacing(dir);
+		facing = dir;
 	}
 
 	public void move(int dir)
@@ -129,8 +108,8 @@ public abstract class SuperEntity extends Entity
 		if (!isInvisible())
 			Renderer.render(new Builder(
 					getTexture(),
-					new Point(Util.pointArithmetic(Slot.SIZE, renderOffset(), getPositionInGrid())),
-					new Dimension(renderSize().getWidth()*Slot.SIZE, renderSize().getHeight()*Slot.SIZE))
+					new Point(Util.pointArithmetic(Slot.SIZE, getOffset(), getPositionInGrid())),
+					new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getHeight()*Slot.SIZE))
 					.flipX(getFacingDir() == LEFT));
 		
 		for (Skill s : skills)
@@ -157,22 +136,11 @@ public abstract class SuperEntity extends Entity
 		}
 	}
 
-	protected void attack(int skill)
+	protected void attack(Skill skill)
 	{
-		getSkill(skill).attack();
+		skill.attack();
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>hit</b> <br>
-	 * <p>
-	 * <tt>public boolean hit(int damage)</tt>
-	 * </p>
-	 * Does <i>damage</i> to <i>this</i> superentity. Returns true if the
-	 * superentity died. <br>
-	 * <br>
-	 */
 	public boolean hit(int damage)
 	{ // get hit
 		setHP(getHP() - damage);
@@ -200,7 +168,7 @@ public abstract class SuperEntity extends Entity
 			s.stopAll();
 
 		if (!(this instanceof Player))
-		{ // TODO handle player dead
+		{
 			getMap().get(position()).removeStrongEntity();
 		}
 	}
@@ -213,28 +181,25 @@ public abstract class SuperEntity extends Entity
 	public Skill getSkill(int ID)
 	{
 		for (Skill s : skills)
-		{
 			if (s.id() == ID)
 				return s;
-		}
 		return null;
 	}
 
 	public int getDamage()
-	{ // returns a damage based on its average damage with a normal distribution
-		// with a 15% deviation
+	{ 
 		double avgDmg = getAverageDamage();
 		double deviation = avgDmg * .15;
 		double damage = new Random(System.nanoTime()).nextGaussian() * deviation + avgDmg;
-		return (int) (damage + .5); // +.5 to round and not truncate
+		return (int) Math.round(damage);
 	}
 
 	protected double getAverageDamage()
 	{
-		return damage; // overrode by the player to depend on its stats
+		return damage;
 	}
 
-	public void setDamage(int damage)
+	protected void setDamage(int damage)
 	{
 		this.damage = damage;
 	}
@@ -242,11 +207,6 @@ public abstract class SuperEntity extends Entity
 	public int getFacingDir()
 	{
 		return facing;
-	}
-
-	public void setFacing(int dir)
-	{
-		facing = dir;
 	}
 
 	public void stopAllActions()

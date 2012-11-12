@@ -1,18 +1,11 @@
 package game.entities.superentities;
 
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 import game.entities.Entity;
 import game.entities.item.Item;
 import game.features.Quest;
 import game.structure.Slot;
+import game.util.Renderer;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 import game.util.XMLParser;
@@ -23,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
 /**
@@ -34,10 +28,12 @@ public class Monster extends SuperEntity
 
 	// TODO? auto update on its own thread?
 
+	private static final int MIN_MOVE_TIME = 160, MAX_MOVE_TIME = 300;
+	
 	private int exp, movePeriod, moveTimer = 0, hp, maxHP, minGold, maxGold;
 	private String name;
 	private boolean angry = false, dead = false, respawn;
-	private Map<Integer, Integer> dropList = new HashMap<Integer, Integer>();
+	private Map<Integer, Integer> dropList  = new HashMap<Integer, Integer>();
 	private long nextAtk = 0L;
 
 	public Monster(int id)
@@ -50,18 +46,9 @@ public class Monster extends SuperEntity
 		super(id);
 
 		this.respawn = respawn;
-
-		parseMonster();
-
-		setHP(getMaxHP());
-
-		movePeriod = new Random(System.nanoTime()).nextInt(140) + 160;
-	}
-
-	private void parseMonster()
-	{
-		XMLParser parser = new XMLParser("monster/" + hexID() + "/data.xml");
-
+		
+		XMLParser parser = new XMLParser(path() + "data.xml");
+		
 		name = parser.getAttribute("Monster", "name");
 		setDamage(Integer.parseInt(parser.getAttribute("Monster", "damage")));
 		setMaxHP(Integer.parseInt(parser.getAttribute("Monster", "maxHP")));
@@ -71,67 +58,49 @@ public class Monster extends SuperEntity
 		
 		List<java.util.Map<String, String>> drops = parser.getChildrenAttributes("Monster/drops");
 		for (java.util.Map<String, String> data : drops)
-		{
 			dropList.put(Integer.parseInt(data.get("id"), 16), Integer.parseInt(data.get("chance")));
-		}
 		
 		List<java.util.Map<String, String>> skills = parser.getChildrenAttributes("Monster/skills");
 		for (java.util.Map<String, String> skill : skills)
-		{
 			addSkill(Integer.parseInt(skill.get("id")));
-		}
+		
+		setHP(getMaxHP());
+		calculateMovePeriod();
 	}
 
 	public void UIRender()
 	{
-		if (dead)
-			return;
+		if (dead) return;
 
-		float cHP = (float) getHP() / (float) getMaxHP(); // current hp
-
-		int width = Slot.SIZE;
-		int height = Slot.SIZE;
+		float hp = (float)getHP() / (float)getMaxHP(); // current hp percentage
 
 		// HP BAR
 		glColor3f(1f, 0f, 0f); // Red
-		glLoadIdentity();
-		glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
-				* Slot.SIZE, 0);
-		glBegin(GL_QUADS);
-		glVertex2f((float) (width * .13), (float) (height * .07));
-		glVertex2f((float) (width * .13) + (float) (width * .74) * cHP, (float) (height * .07));
-		glVertex2f((float) (width * .13) + (float) (width * .74) * cHP, (float) (height * .2));
-		glVertex2f((float) (width * .13), (float) (height * .2));
-		glEnd();
-		glLoadIdentity();
+		Renderer.renderQuad(new Point((int) (Slot.SIZE * (getPositionInGrid().getX() + .13)),
+									  (int) (Slot.SIZE * (getPositionInGrid().getY() + .07))),
+						    new Dimension((int) (Slot.SIZE * .74 * hp),
+						    			  (int) (Slot.SIZE * .13f)));
 
 		// HP BAR BORDER
 		glColor3f(0f, 0f, 0f);
-		glLoadIdentity();
-		glTranslatef((getX() - getMap().getOffSet().getX()) * Slot.SIZE, (getY() - getMap().getOffSet().getY())
-				* Slot.SIZE, 0);
-		glLineWidth(1);
-		glBegin(GL_LINES);
-		glVertex2f((float) (width * .13), (float) (height * .07));
-		glVertex2f((float) (width * .87), (float) (height * .07));
-		glVertex2f((float) (width * .87), (float) (height * .07));
-		glVertex2f((float) (width * .87), (float) (height * .2));
 		
-		glVertex2f((float) (width * .87), (float) (height * .2));
-		glVertex2f((float) (width * .13), (float) (height * .2));
-		glVertex2f((float) (width * .13), (float) (height * .2));
-		glVertex2f((float) (width * .13), (float) (height * .07));
-		glEnd();
-		glLoadIdentity();
-
+		Renderer.renderLines(1,
+							 new Point((int) (Slot.SIZE * (getPositionInGrid().getX() + .13)),
+									   (int) (Slot.SIZE * (getPositionInGrid().getY() + .07))), 
+							 new Point[]{new Point(0, 0),
+										 new Point((int) (Slot.SIZE * .74), 0),
+										 new Point((int) (Slot.SIZE * .74), (int) (Slot.SIZE * .13)),
+										 new Point(0, (int) (Slot.SIZE * .13))});
+		
 		glColor3f(1f, 1f, 1f);
 
 		Writer.useFont(Fonts.Arial_White_Bold_10);
-
-		Writer.write(getName(), new Point((int)((getPositionInGrid().getX() + .5)*Slot.SIZE), getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight()), Writer.CENTER);
+		Writer.write(getName(), 
+				     new Point((int)((getPositionInGrid().getX() + .5)*Slot.SIZE),
+							   getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight()), 
+					 Writer.CENTER);
 
 		super.UIRender();
-
 	}
 
 	public void update()
@@ -352,6 +321,10 @@ public class Monster extends SuperEntity
 
 	public int getGold(){
 		return new Random().nextInt(maxGold-minGold) + minGold;
+	}
+	
+	private void calculateMovePeriod() {
+		movePeriod = new Random(System.nanoTime()).nextInt(MAX_MOVE_TIME - MIN_MOVE_TIME) + MIN_MOVE_TIME;
 	}
 	
 }

@@ -23,7 +23,6 @@ import java.util.Queue;
 
 import org.lwjgl.util.Point;
 
-// TODO change the list to a queue
 // TODO? use notifications timing in a separate thread?
 /**
  * Manages everything related to the user interface. Renders the windows and
@@ -34,30 +33,10 @@ public class UserInterface
 
 	private static final UserInterface ui = new UserInterface();
 	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
-	
-	class Notification{
-		private String notification;
-		private Long creationTime;
-		private final long lifeTime = 2000L;
-		
-		private boolean died()
-		{
-			return System.currentTimeMillis() > creationTime + lifeTime;
-		}
-		
-		public Notification(String message)
-		{
-			notification = message;
-			creationTime = System.currentTimeMillis();
-		}
-	}
-	
 	private static Queue<Notification> notifications = new LinkedList<Notification>();
-	
+		
 	public static void render()
 	{
-		
-		// renders all notifications
 		Writer.useFont(Fonts.Arial_Black_Bold_14);
 		
 		Iterator<Notification> it = notifications.iterator();
@@ -154,7 +133,7 @@ public class UserInterface
 						.getStat(Player.TOTAL + Stat.MAXMP.ID), new Point(200+(width/2) - 20 , 13));	
 		
 		// EXP BAR
-		limit = (int) (width * MapManager.getMap().getPlayer().getExp() / MapManager.getMap().getPlayer().getExpReq());
+		limit = (int) (width * MapManager.getMap().getPlayer().getExp() / MapManager.getMap().getPlayer().getReqExp());
 		glColor4f(1f, .5f, 0f, .6f);
 		glBegin(GL_QUADS);
 		glVertex2f(390, 10);
@@ -186,9 +165,9 @@ public class UserInterface
 		glEnd();
 		glLoadIdentity();
 		
-		//Writes xp/maxxp on XP bar
+		//Writes exp/maxexp on EXP bar
 		Writer.useFont(Fonts.Arial_Black_Bold_14);
-		Writer.write(MapManager.getMap().getPlayer().getExp() + "/" + MapManager.getMap().getPlayer().getExpReq(),
+		Writer.write(MapManager.getMap().getPlayer().getExp() + "/" + MapManager.getMap().getPlayer().getReqExp(),
 				new Point(390+(width/2) - 20 , 13));
 		
 		glColor4f(0f, 0f, 0f, 1f);
@@ -203,20 +182,26 @@ public class UserInterface
 
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>sendNotification</b>
-	 * <br>
-	 * <p>
-	 * <tt>public static void sendNotification(String s)</tt>
-	 * </p>
-	 * Send a notification to the screen which disappears after several seconds.
-	 * <br><br>
-	 */
 	public static void sendNotification(String message)
 	{
 		notifications.add(ui.new Notification(message));
+	}
+	
+	class Notification{
+		private String notification;
+		private Long creationTime;
+		private final long lifeTime = 2000L;
+		
+		private boolean died()
+		{
+			return System.currentTimeMillis() > creationTime + lifeTime;
+		}
+		
+		public Notification(String message)
+		{
+			notification = message;
+			creationTime = System.currentTimeMillis();
+		}
 	}
 
 }

@@ -23,11 +23,8 @@ public class Skill extends GameObject
 {
 
 	private SubImage sprites[]; // each frame of the animation
-	private int level = 1; // level of the skill
-	private int maxLevel;
-	private int delay;
-	private String description;
-	private String subDescription; // More specific description with variables depending on the level
+	private int level = 1, maxLevel, delay;
+	private String description, subDescription;
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
 	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
 	private SuperEntity attacker;

@@ -19,11 +19,6 @@ import java.util.Queue;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
-/**
- * The main visual structure of the game.
- * The place where all the entities are.
- * Constituted by matrix of slots.
- */
 public class Map extends GameObject
 {
 
@@ -52,18 +47,17 @@ public class Map extends GameObject
 	private void loadTextures(TextureManager prevTexManager)
 	{
 		
-
 	}
 
 	private void parseMap()
 	{
 		XMLParser parser = new XMLParser("map/" + hexID() + ".xml");
-
+		
 		// Parse map info
 		NAME = parser.getAttribute("Map", "name");
 		size.setWidth(Integer.parseInt(parser.getAttribute("Map", "width")));
 		size.setHeight(Integer.parseInt(parser.getAttribute("Map", "height")));
-
+		
 		// initialize matrix
 		matrix = new Slot[size.getWidth()][size.getHeight()];
 		for (int i = 0; i < matrix.length; i++)
@@ -73,7 +67,7 @@ public class Map extends GameObject
 				matrix[i][j] = new Slot();
 			}
 		}
-
+		
 		// Parse tiles
 		Queue<Integer> tileQueue = new LinkedList<Integer>();
 
@@ -87,6 +81,7 @@ public class Map extends GameObject
 				tileQueue.add(id);
 			}
 		}
+		
 
 		for (int i = 0; i < size.getHeight(); i++)
 		{
@@ -96,7 +91,7 @@ public class Map extends GameObject
 				add(tile, new Point(j, i));
 			}
 		}
-
+		
 		// Parse all other entities
 		String xmlElements[] = { "Portals", "Monsters", "NPCs", "Objects" };
 
@@ -108,11 +103,10 @@ public class Map extends GameObject
 				Point position = new Point(Integer.parseInt(data.get("x")), Integer.parseInt(data.get("y")));
 				add(Entity.createEntity(Integer.parseInt(data.get("id"), 16)), position);
 				if (xmlElement.equals("Monsters"))
-				{
 					spawners.add(new Spawner(get(position).getMonster(), 10000));
-				}
 			}
 		}
+		
 	}
 
 	public void input()
@@ -148,22 +142,6 @@ public class Map extends GameObject
 		}
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>add</b> <br>
-	 * <p>
-	 * <tt>public void add(Entity entity, Point position) </tt>
-	 * </p>
-	 * Adds the entity to the slot in the position pos in the map. <br>
-	 * <br>
-	 * 
-	 * @param entity
-	 *            - The entity to add to the map.
-	 * @param position
-	 *            - The position in the map to which the entity will be added.
-	 * @see game.entities.Entity.#setPosition;
-	 */
 	public void add(Entity entity, Point pos)
 	{
 
@@ -186,23 +164,6 @@ public class Map extends GameObject
 
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>moveView</b> <br>
-	 * <p>
-	 * <tt>public void moveView(int horizontal, int vertical) </tt>
-	 * </p>
-	 * Moves the camera in the map. <br>
-	 * <br>
-	 * 
-	 * @param horizontal
-	 *            - The number of tiles to move horizontally.
-	 * @param vertical
-	 *            - The number of tiles to move vertically.
-	 * @see #centerView
-	 * @see #resetCamera
-	 */
 	public void moveView(int horizontal, int vertical)
 	{
 		if (getSize().getWidth() > Main.GRIDSIZE.getWidth())
@@ -225,61 +186,22 @@ public class Map extends GameObject
 		}
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>isPointInMap</b> <br>
-	 * <p>
-	 * <tt>public boolean isPointInMap(Point p)</tt>
-	 * </p>
-	 * Returns true if the point is inside <tt> this </tt> map. <br>
-	 */
 	public boolean isPointInMap(Point pos)
 	{
 		return pos.getX() < size.getWidth() && pos.getY() < size.getHeight() && pos.getX() >= 0 && pos.getY() >= 0;
 	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>isPointInGrid</b> <br>
-	 * <p>
-	 * <tt>public static boolean isPointInGrid(Point p)</tt>
-	 * </p>
-	 * Return true if the point is inside the grid (the size of the window). <br>
-	 * <br>
-	 */
+	
 	public static boolean isPointInGrid(Point p)
 	{
 		return p.getX() >= 0 && p.getY() >= 0 && p.getX() < Main.GRIDSIZE.getWidth()
 				&& p.getY() < Main.GRIDSIZE.getHeight();
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>resetCamera</b> <br>
-	 * <p>
-	 * <tt>public void resetCamera()</tt>
-	 * </p>
-	 * Moves the camera to the upper left position of the map. <br>
-	 * <br>
-	 */
 	public void resetCamera()
 	{
 		moveView(-offset.getX(), -offset.getY());
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>centerView</b> <br>
-	 * <p>
-	 * <tt>public void centerView()</tt>
-	 * </p>
-	 * Moves the camera so the player is within its range. <br>
-	 * <br>
-	 */
 	public void centerView()
 	{
 		
@@ -300,18 +222,6 @@ public class Map extends GameObject
 
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getStrongEntities</b> <br>
-	 * <p>
-	 * <tt>	public List<Entity> getStrongEntities()</tt>
-	 * </p>
-	 * Returns a list of all the strong entities in the map. A slot cannot have
-	 * more than one "strong" entity at a time. A superentity cannot move to a
-	 * slot with a "strong" entity. <br>
-	 * <br>
-	 */
 	public List<Entity> getStrongEntities()
 	{
 
@@ -329,16 +239,6 @@ public class Map extends GameObject
 		return strongEntities;
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getAllSlots</b> <br>
-	 * <p>
-	 * <tt>public List<Slot> getAllSlots()</tt>
-	 * </p>
-	 * Returns a list of all slots in the map. <br>
-	 * <br>
-	 */
 	public List<Slot> getAllSlots()
 	{
 		List<Slot> slots = new ArrayList<Slot>();
@@ -354,16 +254,6 @@ public class Map extends GameObject
 		return slots;
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>get</b> <br>
-	 * <p>
-	 * <tt>public Slot get(Point pos)</tt>
-	 * </p>
-	 * Returns the slot at point <i>pos</i>. <br>
-	 * <br>
-	 */
 	public Slot get(Point pos)
 	{
 		if (isPointInMap(pos))
@@ -401,42 +291,19 @@ public class Map extends GameObject
 		return textureManager;
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>remove</b> <br>
-	 * <p>
-	 * <tt>public void remove(Entity entity)</tt>
-	 * </p>
-	 * Removes the entity from the map. <br>
-	 * <br>
-	 */
 	public void remove(Entity entity)
 	{
 		get(entity.position()).remove(entity);
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getPortalByID</b> <br>
-	 * <p>
-	 * <tt>public Portal getPortalByID(int id)</tt>
-	 * </p>
-	 * Return the portal with the given id in the map. Returns null if the
-	 * portal does not exist. <br>
-	 * <br>
-	 */
 	public Portal getPortalByID(int id)
 	{
 		for (Slot s : getAllSlots())
 		{
 			Portal portal = s.getPortal();
 			if (portal != null)
-			{
 				if (portal.id() == id)
 					return portal;
-			}
 		}
 		return null;
 	}

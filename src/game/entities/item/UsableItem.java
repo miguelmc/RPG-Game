@@ -17,7 +17,13 @@ import javax.script.ScriptException;
 public class UsableItem extends Item
 {
 
-	private static transient ScriptEngine engine;
+	private static ScriptEngine engine;
+	
+	static
+	{
+		engine = new ScriptEngineManager().getEngineByName("JavaScript");
+		engine.put("im", new ItemUsageManager());
+	}
 
 	public UsableItem(int id, int amount)
 	{
@@ -31,13 +37,6 @@ public class UsableItem extends Item
 
 	public void use()
 	{
-
-		if (engine == null)
-		{
-			engine = new ScriptEngineManager().getEngineByName("JavaScript");
-			engine.put("im", new ItemUsageManager());
-		}
-
 		try
 		{
 			engine.eval(new FileReader("data/item/use/" + hexID() + "/script.js"));

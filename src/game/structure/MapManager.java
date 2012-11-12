@@ -20,10 +20,11 @@ public class MapManager
 
 	static {
 		// TODO read and create all maps and set current map based on the game config file
-				maps.add(new Map(0));
-				maps.add(new Map(1));
-				maps.add(new Map(2));
-				setMap(startMap, new Point(4, 6));
+	
+		maps.add(new Map(0));
+		maps.add(new Map(1));
+		maps.add(new Map(2));
+		setMap(startMap, new Point(4, 6));
 	}
 	
 
@@ -46,10 +47,8 @@ public class MapManager
 		}
 
 		for (Map map : maps)
-		{
 			if (map.id() == id)
 				currentMap = map;
-		}
 
 		currentMap.add(player, spawnPoint);
 

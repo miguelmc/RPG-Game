@@ -34,7 +34,7 @@ public class HoverBox {
 			//adds the equip stats to the paragraph
 			for (int i = 0; i < Stat.values().length; i++) {
 				if (equip.getStat(Stat.values()[i]) != 0)
-					paragraph.add(Stat.values()[i].NAME + ": "
+					paragraph.add(Stat.values()[i].toString() + ": "
 								  + Integer.toString(equip.getStat(Stat.values()[i])));
 			}
 		}

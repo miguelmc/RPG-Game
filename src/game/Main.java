@@ -69,7 +69,7 @@ public class Main {
 		{
 			input(); //handles mouse and keyboard events
 			MapManager.update(); // updates the current map
-
+			
 			glClear(GL_COLOR_BUFFER_BIT); // clears the screen
 			MapManager.render(); // render the active map
 			UserInterface.render(); // renders the interface

@@ -21,22 +21,12 @@ public class EquipItem extends Item
 	public EquipItem(int id, Point pos)
 	{
 		super(id, pos);
-	}
-
-	public EquipItem(int id)
-	{
-		this(id, null);
-	}
-
-	@Override
-	protected void parseItem(XMLParser parser)
-	{
-		super.parseItem(parser);
-
+		
+		XMLParser parser = new XMLParser(path() + "data.xml");
+		
 		stats = new HashMap<Stat, Integer>();
-
 		type = EquipType.getType(parser.getAttribute("EquipItem", "type"));
-
+		
 		Map<String, String> statAttributes = parser.getAttributes("EquipItem/stats");
 
 		for(Stat stat: Stat.values())
@@ -46,54 +36,23 @@ public class EquipItem extends Item
 			if(value != null)
 				stats.put(stat, Integer.parseInt(value));
 		}
-		
-
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getType</b>
-	 * <br>
-	 * <p>
-	 * <tt>public EquipType getType()</tt>
-	 * </p>
-	 * There are several type of equip items, such as weapons, topwear, bottomwear, helmet, shoes, etc.
-	 * <br><br>
-	 */
+	public EquipItem(int id)
+	{
+		this(id, null);
+	}
+
 	public EquipType getType()
 	{
 		return type;
 	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>getStat</b>
-	 * <br>
-	 * <p>
-	 * <tt>public int getStat(Stat stat)</tt>
-	 * </p>
-	 * Returns the value of certain stat of the equip item.
-	 * <br><br>
-	 * @see com.game.features.Stat
-	 */
+	
 	public int getStat(Stat stat)
 	{
 		return stats.get(stat) != null ? stats.get(stat) : 0;
 	}
 	
-	/**
-	 * 
-	 * <br>
-	 * <b>getStats</b>
-	 * <br>
-	 * <p>
-	 * <tt>protected Map<Stat, Integer> getStats()</tt>
-	 * </p>
-	 * Returns a map of all stats and their values.
-	 * <br><br>
-	 */
 	protected Map<Stat, Integer> getStats(){
 		return stats;
 	}
@@ -110,37 +69,20 @@ public class EquipItem extends Item
 		return id() + 99999 + stats.hashCode();
 	}
 
-	/**
-	 * The type of equip item. The player can wear one of each type of equip.
-	 */
 	public enum EquipType
 	{
 		
-		TOPWEAR("topwear"), BOTTOMWEAR("bottomwear"), HELMET("helmet"), SHOES("shoes"), WEAPON("weapon"), SHIELD("shield");
+		TOPWEAR(), BOTTOMWEAR(), HELMET(), SHOES(), WEAPON(), SHIELD();
 
-		private String name;
-
-		private EquipType(String name)
-		{
-			this.name = name;
-		}
+		private EquipType() {}
 
 		public static EquipType getType(String name)
 		{
-
 			for (EquipType type : EquipType.values())
-			{
 				if (type.toString().equals(name))
 					return type;
-			}
 
 			return null;
-
-		}
-
-		public String toString()
-		{
-			return name;
 		}
 
 	}

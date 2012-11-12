@@ -1,7 +1,7 @@
 package game.entities.item;
 
 import game.entities.Entity;
-import game.entities.EntityType;
+import game.entities.EntityTypes;
 import game.util.XMLParser;
 
 import java.util.ArrayList;
@@ -23,13 +23,9 @@ public abstract class Item extends Entity
 	{
 		super(id);
 		quantity = amount;
-
-		parseItem(new XMLParser(EntityType.getType(id()) + "/" + hexID() + "/data.xml"));
-
-	}
-
-	protected void parseItem(XMLParser parser)
-	{
+		
+		XMLParser parser = new XMLParser(path() + "data.xml");
+		
 		NAME = parser.getAttribute(getClass().getSimpleName(), "name");
 		DESCRIPTION = parser.getAttribute(getClass().getSimpleName(), "description");
 		price = Integer.parseInt(parser.getAttribute(getClass().getSimpleName(), "price"));
@@ -97,7 +93,7 @@ public abstract class Item extends Entity
 	{
 		List<Item> stackedItems = new ArrayList<Item>();
 		for(Item i: items){
-			if(stackedItems.contains(i) && EntityType.getType(i.id()) != EntityType.EquipItem)
+			if(stackedItems.contains(i) && EntityTypes.getType(i.id()) != EntityTypes.EquipItem)
 				stackedItems.get(stackedItems.indexOf(i)).add(i.getQuantity());
 			else
 				stackedItems.add(i);

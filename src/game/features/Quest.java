@@ -182,7 +182,7 @@ public class Quest extends GameObject
 
 		for (Item i : itemReward)
 		{
-			getMap().getPlayer().addItem(i);
+			getMap().getPlayer().gainItem(i);
 		}
 
 		turnedIn = true;
@@ -196,7 +196,7 @@ public class Quest extends GameObject
 	public static void activate(int id)
 	{
 		if (getMap().getPlayer().getLevel() >= getReqLevel(id))
-			getMap().getPlayer().addQuest(new Quest(id));
+			getMap().getPlayer().activateQuest(new Quest(id));
 	}
 
 	public String toString()
