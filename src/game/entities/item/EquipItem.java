@@ -31,7 +31,7 @@ public class EquipItem extends Item
 
 		for(Stat stat: Stat.values())
 		{
-			String value = statAttributes.get(stat.NAME);
+			String value = statAttributes.get(stat.toString());
 			
 			if(value != null)
 				stats.put(stat, Integer.parseInt(value));
