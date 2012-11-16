@@ -12,9 +12,6 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-
-import java.io.IOException;
-
 import game.menu.MainMenu;
 import game.menu.Settings;
 import game.structure.MapManager;
@@ -99,12 +96,6 @@ public class Main {
 			
 			Display.update(); // update the screen
 			Display.sync(60); // set fps to 60
-		}
-
-		try {
-			MapManager.getMap().getPlayer().save();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		
 		Display.destroy();

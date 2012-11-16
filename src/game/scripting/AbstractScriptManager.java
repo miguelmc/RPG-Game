@@ -68,7 +68,7 @@ public abstract class AbstractScriptManager
 	
 	public boolean gainItem(int id, int amount)
 	{
-		id = Integer.parseInt(Integer.toString(id, 16));
+		id = Integer.parseInt(Integer.toString(id), 16);
 		
 		assert EntityTypes.getType(id) == EntityTypes.EtcItem ||
 			   EntityTypes.getType(id) == EntityTypes.UseItem ||

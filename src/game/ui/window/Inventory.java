@@ -1,5 +1,6 @@
 package game.ui.window;
 
+import static org.lwjgl.opengl.GL11.glColor4f;
 import game.Main;
 import game.entities.item.EquipItem;
 import game.entities.item.Item;
@@ -15,7 +16,6 @@ import game.util.Writer.Fonts;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
@@ -23,7 +23,6 @@ public class Inventory extends Window
 {
 
 	private List<Item> items = MapManager.getMap().getPlayer().getItems();
-	private Item grabbedItem = null;
 	private long grabTime;
 	
 	private static final int DOUBLE_CLICK_DELAY = 250;
@@ -47,7 +46,6 @@ public class Inventory extends Window
 			{
 				if(grabTime + DOUBLE_CLICK_DELAY > System.currentTimeMillis())
 				{
-					grabbedItem = null;
 					grabTime = 0;
 					if(clickedItem instanceof EquipItem)
 						MapManager.getMap().getPlayer().addEquip((EquipItem) clickedItem);
@@ -56,7 +54,6 @@ public class Inventory extends Window
 				}else
 				{
 					grabTime = System.currentTimeMillis();
-					grabbedItem = clickedItem;
 				}
 			}
 		}else
@@ -101,31 +98,18 @@ public class Inventory extends Window
 			if (!(items.get(i) instanceof EquipItem))
 				Writer.write(Integer.toString(items.get(i).getQuantity()), 
 							 new Point(getX() + 10 + SQUARE_SIZE * (i%5), getY() + 30 + SQUARE_SIZE * (i/5)));
+			glColor4f(1, 1, 1, .65f);
 		}
-
+		
 		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
 					 new Point(getX() + GOLD_POS.getX(), getY() + GOLD_POS.getY()));
 		
-		if (grabbedItem != null)
-		{
-			Dimension renderSize = new Dimension(SQUARE_SIZE, SQUARE_SIZE);
-			Point renderPos = new Point(MouseManager.getX() - renderSize.getWidth()/2, 
-										MouseManager.getY() - renderSize.getHeight()/2);
-			Renderer.render(new Builder(
-							grabbedItem.getTexture(),
-							renderPos,
-							renderSize));
-		}
+		glColor4f(1, 1, 1, .65f);
 		
 		Item item = getItemAt(MouseManager.getPosition());
 		
 		if (item != null)
 			HoverBox.render(item, new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
-	}
-	
-	public void onClose()
-	{
-		grabbedItem = null;
 	}
 	
 }

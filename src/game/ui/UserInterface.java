@@ -23,31 +23,21 @@ import java.util.Queue;
 
 import org.lwjgl.util.Point;
 
-// TODO? use notifications timing in a separate thread?
-/**
- * Manages everything related to the user interface. Renders the windows and
- * serves as an interface to send simple notifications. Also loads the fonts.
- */
 public class UserInterface
 {
 
 	private static final UserInterface ui = new UserInterface();
 	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
 	private static Queue<Notification> notifications = new LinkedList<Notification>();
+	private static Queue<Notification> importantNotifications = new LinkedList<Notification>();
 		
 	public static void render()
 	{
 		Writer.useFont(Fonts.Arial_Black_Bold_14);
+		renderNotifications(notifications, NOTIFICATIONS_POS, Writer.LEFT);
 		
-		Iterator<Notification> it = notifications.iterator();
-		
-		while(it.hasNext() && it.next().died())
-			it.remove();
-		
-		it = notifications.iterator();
-		
-		for(int i=notifications.size()-1; it.hasNext(); i--)
-			Writer.write(it.next().notification, new Point(NOTIFICATIONS_POS.getX(), NOTIFICATIONS_POS.getY() + i*Writer.fontHeight()));
+		Writer.useFont(Fonts.Monaco_White_Plain_25);
+		renderNotifications(importantNotifications, new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/4), Writer.CENTER);
 		
 		WindowManager.render();
 		
@@ -181,27 +171,47 @@ public class UserInterface
 			MsgBoxManager.render();
 
 	}
+	
+	private static void renderNotifications(Queue<Notification> notifications2, Point position, int alignment)
+	{
+		Iterator<Notification> it = notifications2.iterator();
+		
+		while(it.hasNext() && it.next().died())
+			it.remove();
+		
+		it = notifications2.iterator();
+		
+		for(int i=notifications2.size()-1; it.hasNext(); i--)
+			Writer.write(it.next().notification, new Point(position.getX(), position.getY() + i*Writer.fontHeight()), alignment);
+	}
 
 	public static void sendNotification(String message)
 	{
-		notifications.add(ui.new Notification(message));
+		notifications.add(ui.new Notification(message,2200));
+	}
+	
+	public static void sendImpNotification(String message)
+	{
+		importantNotifications.add(ui.new Notification(message, 3200));
 	}
 	
 	class Notification{
 		private String notification;
 		private Long creationTime;
-		private final long lifeTime = 2000L;
+		private final int lifeTime;
 		
 		private boolean died()
 		{
 			return System.currentTimeMillis() > creationTime + lifeTime;
 		}
 		
-		public Notification(String message)
+		public Notification(String message, int lifeTime)
 		{
 			notification = message;
 			creationTime = System.currentTimeMillis();
+			this.lifeTime = lifeTime;
 		}
+		
 	}
 
 }

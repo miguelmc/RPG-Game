@@ -339,7 +339,7 @@ public class Player extends SuperEntity {
 		raiseStat(BASE + STR.ID, 2);
 		raiseStat(BASE + DEF.ID, 1);
 		level++;
-		UserInterface.sendNotification("LEVEL UP! You are now level " + getLevel());
+		UserInterface.sendImpNotification("LEVEL UP!!!");
 		stats.put(BASE + MAXHP.ID, getStat(BASE + MAXHP.ID) + 5);
 		stats.put(BASE + MAXMP.ID, getStat(BASE + MAXMP.ID) + 5);
 		setHP(getStat(TOTAL + MAXHP.ID));

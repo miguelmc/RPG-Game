@@ -41,13 +41,9 @@ public class WindowManager {
 	
 	public static void render()
 	{		
-		float opacity = .75f - activeWindows.size()/10f;
+		glColor4f(1, 1, 1, .65f);
 		for(Window window: activeWindows)
-		{
-			glColor4f(1, 1, 1, opacity);
 			window.render();
-			opacity += .1f;
-		}
 		
 		glColor4f(1, 1, 1, 1);
 
