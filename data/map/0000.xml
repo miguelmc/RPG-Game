@@ -1,36 +1,41 @@
-<Map name="asdfg" width="20" height="20">
+<Map name="asdfg" width="30" height="30">
 	<Tiles>
-		<Tile id="2106" amount="85" />
-		<Tile id="2103" amount="4" />
-		<Tile id="2103" amount="2" />
-		<Tile id="2106" amount="13" />
-		<Tile id="2103" amount="7" />
-		<Tile id="2106" amount="12" />
-		<Tile id="2106" amount="2" />
-		<Tile id="2103" amount="2" />
-		<Tile id="2103" amount="3" />
-		<Tile id="2103" amount="1" />
-		<Tile id="2106" amount="12" />
-		<Tile id="2106" amount="1" />
-		<Tile id="2103" amount="6" />
-		<Tile id="2106" amount="13" />
-		<Tile id="2106" amount="1" />
-		<Tile id="2103" amount="1" />
-		<Tile id="2103" amount="1" />
-		<Tile id="2103" amount="1" />
-		<Tile id="2103" amount="3" />
-		<Tile id="2106" amount="13" />
-		<Tile id="2106" amount="1" />
-		<Tile id="2106" amount="1" />
-		<Tile id="2103" amount="4" />
-		<Tile id="2106" amount="15" />
-		<Tile id="2103" amount="1" />
-		<Tile id="2103" amount="2" />
-		<Tile id="2106" amount="193" />
+		<Tile id="2102" amount="6" />
+		<Tile id="2101" amount="4" />
+		<Tile id="2100" amount="20" />
+		<Tile id="2102" amount="5" />
+		<Tile id="2101" amount="3" />
+		<Tile id="2100" amount="22" />
+		<Tile id="2102" amount="3" />
+		<Tile id="2101" amount="4" />
+		<Tile id="2100" amount="23" />
+		<Tile id="2102" amount="2" />
+		<Tile id="2101" amount="4" />
+		<Tile id="2100" amount="24" />
+		<Tile id="2102" amount="1" />
+		<Tile id="2101" amount="5" />
+		<Tile id="2100" amount="24" />
+		<Tile id="2102" amount="1" />
+		<Tile id="2101" amount="3" />
+		<Tile id="2100" amount="26" />
+		<Tile id="2101" amount="3" />
+		<Tile id="2100" amount="27" />
+		<Tile id="2101" amount="2" />
+		<Tile id="2100" amount="28" />
+		<Tile id="2101" amount="2" />
+		<Tile id="2100" amount="28" />
+		<Tile id="2101" amount="2" />
+		<Tile id="2100" amount="28" />
+		<Tile id="2101" amount="1" />
+		<Tile id="2100" amount="599" />
 	</Tiles>
 	<Portals>
 	</Portals>
 	<Monsters>
+		<Monster id="2401" x="1" y="8" />
+		<Monster id="2401" x="3" y="4" />
+		<Monster id="2401" x="5" y="3" />
+		<Monster id="2401" x="9" y="0" />
 	</Monsters>
 	<NPCs>
 	</NPCs>

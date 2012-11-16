@@ -24,9 +24,10 @@ public class Renderer {
 	
 	public static void render(Builder builder)
 	{
+		
 		Point rotates[] = new Point[4];
 		rotates[(0 + builder.rotation) % 4] = new Point(0, 0);
-		rotates[(1 + builder.rotation) % 4] = new Point(builder.size.getWidth(), 0);
+		rotates[(1 + builder.rotation) % 4] = new Point(builder.size.getWidth(),0);
 		rotates[(2 + builder.rotation) % 4] = new Point(builder.size.getWidth(), builder.size.getHeight());
 		rotates[(3 + builder.rotation) % 4] = new Point(0, builder.size.getHeight());
 
@@ -45,7 +46,7 @@ public class Renderer {
 		{
 			glTexCoord2f(flips[i].getX() * builder.imageWidth / builder.texture.getTextureWidth(),
 						 flips[i].getY() * builder.imageHeight / builder.texture.getTextureHeight());
-			glVertex2f(rotates[i].getX(), rotates[i].getY());
+			glVertex2f(builder.offset.getX() + rotates[i].getX(), builder.offset.getY() + rotates[i].getY());
 		}
 		glEnd();
 		glLoadIdentity();
@@ -84,7 +85,6 @@ public class Renderer {
 	
 	public static class Builder
 	{
-		
 		private int flipX;
 		private int flipY;
 		private float imageWidth;
@@ -93,6 +93,7 @@ public class Renderer {
 		private Texture texture;
 		private Point position;
 		private Dimension size;
+		private Point offset = new Point(0, 0);
 		
 		public Builder(Texture texture, Point position, Dimension size)
 		{
@@ -124,5 +125,11 @@ public class Renderer {
 			return this;
 		}
 
+		public Builder offset(Point offset)
+		{
+			offset.setLocation(offset);
+			return this;
+		}
+		
 	}	
 }

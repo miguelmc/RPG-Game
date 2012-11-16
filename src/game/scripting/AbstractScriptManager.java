@@ -1,5 +1,8 @@
 package game.scripting;
 
+import game.entities.Entity;
+import game.entities.EntityTypes;
+import game.entities.item.Item;
 import game.entities.superentities.Player;
 import game.features.Stat;
 import game.structure.MapManager;
@@ -62,7 +65,22 @@ public abstract class AbstractScriptManager
 	{
 		getPlayer().gainGold(amount);
 	}
-
+	
+	public boolean gainItem(int id, int amount)
+	{
+		id = Integer.parseInt(Integer.toString(id, 16));
+		
+		assert EntityTypes.getType(id) == EntityTypes.EtcItem ||
+			   EntityTypes.getType(id) == EntityTypes.UseItem ||
+			   EntityTypes.getType(id) == EntityTypes.EquipItem;
+		
+		Item item = (Item) Entity.createEntity(id);
+		
+		item.setQuantity(amount);
+		
+		return getPlayer().gainItem(item);
+	}
+	
 	protected Player getPlayer()
 	{
 		return MapManager.getMap().getPlayer();

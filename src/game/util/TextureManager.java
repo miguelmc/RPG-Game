@@ -23,7 +23,7 @@ public class TextureManager
 	public void add(int id)
 	{
 
-		String filePath = EntityTypes.getType(id).toString();
+		String filePath = EntityTypes.getType(id).path();
 		filePath += "/" + Util.hexID(id) + "/texture.png";
 
 		if (get(id) != null || EntityTypes.getType(id) == EntityTypes.Monster)

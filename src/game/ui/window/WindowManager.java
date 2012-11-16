@@ -32,7 +32,6 @@ public class WindowManager {
 	{
 		shop = new Shop(id);
 		activeWindows.clear();
-		
 	}
 	
 	public static void closeShop()

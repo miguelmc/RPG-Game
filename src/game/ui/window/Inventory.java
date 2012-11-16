@@ -95,14 +95,12 @@ public class Inventory extends Window
 		{
 			Renderer.render(new Builder(
 					items.get(i).getTexture(),
-					new Point(getPosition().getX() + 7 + SQUARE_SIZE * (i % 5), getPosition().getY()+ 30 + SQUARE_SIZE * (i / 5)),
+					new Point(getPosition().getX() + 7 + SQUARE_SIZE * (i % 5), getPosition().getY() + 30 + SQUARE_SIZE * (i / 5)),
 					new Dimension(SQUARE_SIZE, SQUARE_SIZE)));
 			
 			if (!(items.get(i) instanceof EquipItem))
-			{
 				Writer.write(Integer.toString(items.get(i).getQuantity()), 
 							 new Point(getX() + 10 + SQUARE_SIZE * (i%5), getY() + 30 + SQUARE_SIZE * (i/5)));
-			}
 		}
 
 		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
@@ -121,11 +119,8 @@ public class Inventory extends Window
 		
 		Item item = getItemAt(MouseManager.getPosition());
 		
-		GL11.glColor4f(1,1,1,.5f); //TODO render the hover with same opacity as window
 		if (item != null)
 			HoverBox.render(item, new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
-		GL11.glColor4f(1,1,1,1);
-		
 	}
 	
 	public void onClose()

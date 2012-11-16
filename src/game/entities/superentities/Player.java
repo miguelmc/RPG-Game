@@ -473,6 +473,8 @@ public class Player extends SuperEntity {
 		this.hp = hp;
 		if (getHP() > getStat(TOTAL + MAXHP.ID))
 			setHP(getStat(TOTAL + MAXHP.ID));
+		else if(getHP() < 0)
+			setHP(0);
 	}
 
 	public int getHP() 
@@ -484,9 +486,9 @@ public class Player extends SuperEntity {
 	{
 		this.mp = mp;
 		if (getMP() > getStat(TOTAL + MAXMP.ID))
-			mp = getStat(TOTAL + MAXMP.ID);
+			setMP(getStat(TOTAL + MAXMP.ID));
 		else if(getMP() < 0)
-			mp = 0;
+			setMP(0);
 	}
 
 	public int getMP() 

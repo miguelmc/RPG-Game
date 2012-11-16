@@ -25,7 +25,7 @@ public class SkillActionManager extends AbstractScriptManager
 	{
 		activeAttack = sa;
 		facingDir = sa.getSkill().getAttacker().getFacingDir();
-		origin = sa.getSkill().getAttacker().position();
+		origin = sa.getSkill().getAttacker().getPositionInGrid();
 	}
 
 	public void hit(Point location[], float dmg)
@@ -48,11 +48,6 @@ public class SkillActionManager extends AbstractScriptManager
 			}
 
 		}
-	}
-
-	public void stop()
-	{
-		activeAttack.stop();
 	}
 
 	public void setOrigin(Point position)
@@ -97,5 +92,10 @@ public class SkillActionManager extends AbstractScriptManager
 	public void play(Point p)
 	{
 		activeAttack.play(Util.addRelPoints(origin, p, facingDir));
+	}
+	
+	public void stop()
+	{
+		activeAttack.stop();
 	}
 }

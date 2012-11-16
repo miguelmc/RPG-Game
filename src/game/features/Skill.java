@@ -143,5 +143,4 @@ public class Skill extends GameObject
 	{
 		attacks.clear();
 	}
-
 }
