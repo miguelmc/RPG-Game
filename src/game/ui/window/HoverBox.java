@@ -56,7 +56,7 @@ public class HoverBox {
 		}
 		
 		Renderer.render(new Builder(
-				Util.getTexture("UI/window/itemDesc.png"),
+				Util.getTexture("UI/window/hoverBox.png"),
 				position,
 				new Dimension(HOVER_BOX_WIDTH, Writer.fontHeight() * paragraph.size() + ITEM_IMG_SIZE.getHeight() + PADDING*3)));
 

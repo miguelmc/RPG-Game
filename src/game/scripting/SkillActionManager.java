@@ -3,7 +3,6 @@ package game.scripting;
 import game.entities.superentities.Monster;
 import game.entities.superentities.Player;
 import game.features.SkillAttack;
-import game.structure.Map;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.util.Util;
@@ -21,11 +20,11 @@ public class SkillActionManager extends AbstractScriptManager
 	private Point origin;
 	private int facingDir;
 
-	public SkillActionManager(SkillAttack sa)
+	public SkillActionManager(SkillAttack attack)
 	{
-		activeAttack = sa;
-		facingDir = sa.getSkill().getAttacker().getFacingDir();
-		origin = sa.getSkill().getAttacker().getPositionInGrid();
+		activeAttack = attack;
+		facingDir = attack.getSkill().getAttacker().getFacingDir();
+		origin = attack.getSkill().getAttacker().position();
 	}
 
 	public void hit(Point location[], float dmg)
@@ -33,26 +32,20 @@ public class SkillActionManager extends AbstractScriptManager
 		for (Point p : location)
 		{
 			Point pos = Util.addRelPoints(origin, p, facingDir);
+			if(!MapManager.getMap().isPointInMap(pos))
+				continue;
 			if (activeAttack.getSkill().getAttacker() instanceof Player)
 			{
-				Map map = MapManager.getMap();
-				Monster monster = map.get(pos).getMonster();
+				Monster monster = MapManager.getMap().get(pos).getMonster();
 				if (monster != null)
-				{
-					monster.hit((int) (getPlayer().getDamage() * dmg + .5f));
-				}
+					monster.hit((int) (Math.round(getPlayer().getDamage() * dmg)));
 			} else if (activeAttack.getSkill().getAttacker() instanceof Monster)
 			{
 				if (getPlayer().position().equals(pos))
-					getPlayer().hit((int) (activeAttack.getSkill().getAttacker().getDamage() * dmg + .5f));
+					getPlayer().hit((int) (Math.round(activeAttack.getSkill().getAttacker().getDamage() * dmg)));
 			}
 
 		}
-	}
-
-	public void setOrigin(Point position)
-	{
-		origin = position;
 	}
 
 	public boolean hasMonsterAt(Point p)

@@ -97,9 +97,7 @@ public abstract class SuperEntity extends Entity
 	public void update()
 	{
 		for (Skill s : skills)
-		{
 			s.update();
-		}
 	}
 
 	public void render()

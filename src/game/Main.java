@@ -95,7 +95,7 @@ public class Main {
 			}
 			
 			Display.update(); // update the screen
-			Display.sync(60); // set fps to 60
+			Display.sync(200); // set fps to 60
 		}
 		
 		Display.destroy();

@@ -25,7 +25,6 @@ public class Inventory extends Window
 	private List<Item> items = MapManager.getMap().getPlayer().getItems();
 	private long grabTime;
 	
-	private static final int DOUBLE_CLICK_DELAY = 250;
 	private static final Point GOLD_POS = new Point(37, 231), SQUARES_ORIGIN = new Point(7, 30);
 	private static final int SQUARE_SIZE = 32;
 	private static final Dimension INV_SIZE = new Dimension(5, 6);
@@ -51,15 +50,9 @@ public class Inventory extends Window
 						MapManager.getMap().getPlayer().addEquip((EquipItem) clickedItem);
 					else if(clickedItem instanceof UsableItem)
 						MapManager.getMap().getPlayer().useItem((UsableItem) clickedItem);
-				}else
-				{
-					grabTime = System.currentTimeMillis();
-				}
+				}else grabTime = System.currentTimeMillis();
 			}
-		}else
-		{
-			super.mouse();
-		}
+		}else super.mouse();
 		
 	}
 

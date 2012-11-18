@@ -2,11 +2,11 @@
     <drops>
         <item id="6300" chance="5"/>
         <item id="6301" chance="5"/>
-        <item id="a305" chance="50"/>    
-        <item id="a306" chance="50"/>
-        <item id="6302" chance="50"/>
+        <item id="a305" chance="5"/>    
+        <item id="a306" chance="5"/>
+        <item id="6302" chance="2"/>
     </drops>
     <skills>
-    	<skill id="1792" />
+    	<skill id="0701" />
     </skills>
 </Monster>

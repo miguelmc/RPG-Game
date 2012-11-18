@@ -4,6 +4,7 @@ import game.Main;
 import game.entities.item.EquipItem;
 import game.entities.item.EquipItem.EquipType;
 import game.structure.MapManager;
+import game.util.MouseManager;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
 
@@ -21,6 +22,7 @@ public class Equipment extends Window {
 
 	private static final Map<EquipType, Point> positions = new HashMap<EquipType, Point>();
 	private static final int itemSize = 44;
+	private long grabTime;
 	
 	static { //TODO read from file
 		positions.put(EquipType.HELMET, new Point(74, 45));
@@ -41,32 +43,51 @@ public class Equipment extends Window {
 		//renders every equip
 		Set<Entry<EquipType, EquipItem>> equips = MapManager.getMap().getPlayer().getEquips().entrySet();
 		for (Map.Entry<EquipType, EquipItem> equip : equips) {
-			Renderer.render(new Builder(
-					equip.getValue().getTexture(),
-					new Point(positions.get(equip.getKey()).getX() + getX() - 5,
-							  positions.get(equip.getKey()).getY() + getY() - 10),
-					new Dimension(itemSize, itemSize))
-					.imageSize(32, 32));
+			if(equip.getValue() != null)
+				Renderer.render(new Builder(
+						equip.getValue().getTexture(),
+						new Point(positions.get(equip.getKey()).getX() + getX() - 5,
+								  positions.get(equip.getKey()).getY() + getY() - 10),
+						new Dimension(itemSize, itemSize))
+						.imageSize(32, 32));
 		}
 
-		EquipItem equip = getEquipAt(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1);
+		EquipItem equip = getEquipAt(MouseManager.getPosition());
 
 		if (equip != null) //if the mouse is over an equip
 			HoverBox.render(equip, new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
 	}
 	
-	private EquipItem getEquipAt(int x, int y) {
+	private EquipItem getEquipAt(Point pos) {
 
 		for (Map.Entry<EquipType, EquipItem> equip : MapManager.getMap()
 				.getPlayer().getEquips().entrySet()) {
-			if (x >= positions.get(equip.getKey()).getX() + getX()
-				&& x <= positions.get(equip.getKey()).getX() + getX() + itemSize
-				&& y >= positions.get(equip.getKey()).getY() + getY()
-				&& y <= positions.get(equip.getKey()).getY() + getY() + itemSize)
+			if (pos.getX() >= positions.get(equip.getKey()).getX() + getX()
+				&& pos.getX() <= positions.get(equip.getKey()).getX() + getX() + itemSize
+				&& pos.getY() >= positions.get(equip.getKey()).getY() + getY()
+				&& pos.getY() <= positions.get(equip.getKey()).getY() + getY() + itemSize)
 				return equip.getValue();
 		}
 
 		return null;
+	}
+	
+	public void mouse()
+	{
+		if(MouseManager.mousePressed())
+		{	
+			EquipItem clickedEquip = getEquipAt(MouseManager.getPosition());
+			if(clickedEquip == null)
+				super.mouse();
+			else
+			{
+				if(grabTime + DOUBLE_CLICK_DELAY > System.currentTimeMillis())
+				{
+					grabTime = 0;
+					MapManager.getMap().getPlayer().removeEquip(clickedEquip.getType());
+				}else grabTime = System.currentTimeMillis();
+			}
+		}else super.mouse();
 	}
 
 	int getKey() {

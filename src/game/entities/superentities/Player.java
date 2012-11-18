@@ -23,6 +23,9 @@ import game.ui.window.WindowManager;
 import game.util.Timer;
 import game.util.Util;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,11 +50,11 @@ public class Player extends SuperEntity {
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
-	private long nextAtk = 0, nextMove = 0;
+	private transient long nextAtk = 0, nextMove = 0;
 
-	public Player(int id, Point pos) {
-		super(id);
-		addSkill(0x0700);
+	public Player(Point pos) {
+		super(Integer.parseInt("2600", 16));
+		addSkill(0x0701);
 
 		// TODO player file with base stats, stats per level, damage formula
 		// parameters, etc.
@@ -95,7 +98,7 @@ public class Player extends SuperEntity {
 				action(getMap().get(Util.addRelPoints(position(), new Point(0, 1), getFacingDir())));
 				break;
 			case Keyboard.KEY_Z:
-				attack(getSkill(0x0700));
+				attack(getSkill(0x0701));
 				break;
 			case Keyboard.KEY_X:
 				Portal portal = getMap().get(position()).getPortal();
@@ -419,8 +422,11 @@ public class Player extends SuperEntity {
 
 	public void raiseStat(int stat, int amount) 
 	{
-		if (stats.containsKey(stat))
+		if(stats.containsKey(stat))
 			stats.put(stat, getStat(stat) + amount);
+		
+		setHP(getHP()); //avoid hp>maxhp
+		setMP(getMP());
 	}
 
 	public void addEquip(EquipItem equip) 
@@ -453,7 +459,7 @@ public class Player extends SuperEntity {
 		raiseStat(EXTRA + MAXMP.ID, -equip.getStat(MAXMP));
 		raiseStat(EXTRA + ATK.ID, -equip.getStat(ATK));
 		raiseStat(EXTRA + STR.ID, -equip.getStat(STR));
-
+		
 		equips.put(type, null);
 	}
 
@@ -494,6 +500,17 @@ public class Player extends SuperEntity {
 	public int getMP() 
 	{
 		return mp;
+	}
+	
+	public void save() throws IOException
+	{
+		FileOutputStream fileStream = new FileOutputStream("save.data");
+
+		ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+
+		objectStream.write(position().getX());
+		objectStream.write(position().getY());
+		objectStream.writeObject(this);
 	}
 
 }

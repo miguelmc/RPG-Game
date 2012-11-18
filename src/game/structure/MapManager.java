@@ -27,7 +27,6 @@ public class MapManager
 		setMap(startMap, new Point(4, 6));
 	}
 	
-
 	public static void setMap(int id, Point playerPos)
 	{
 		// TODO each map should have a spawn point
@@ -37,7 +36,7 @@ public class MapManager
 
 		if (currentMap == null) // if this is the starting map, create player
 		{
-			player = new Player(Integer.parseInt("2600", 16), spawnPoint);
+			player = new Player(spawnPoint);
 		} else // else retrieve player from previous map
 		{
 			player = currentMap.getPlayer();
@@ -51,9 +50,10 @@ public class MapManager
 				currentMap = map;
 
 		currentMap.add(player, spawnPoint);
-
 	}
 
+	
+	
 	public static void input()
 	{
 		currentMap.input();

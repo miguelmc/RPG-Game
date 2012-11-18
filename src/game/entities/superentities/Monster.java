@@ -62,7 +62,7 @@ public class Monster extends SuperEntity
 		
 		List<java.util.Map<String, String>> skills = parser.getChildrenAttributes("Monster/skills");
 		for (java.util.Map<String, String> skill : skills)
-			addSkill(Integer.parseInt(skill.get("id")));
+			addSkill(Integer.parseInt(skill.get("id"), 16));
 		
 		setHP(getMaxHP());
 		calculateMovePeriod();
@@ -106,6 +106,8 @@ public class Monster extends SuperEntity
 	public void update()
 	{
 
+		//TODO script monster behavior
+		
 		// AutoMove
 		if (moveTimer == movePeriod)
 		{
@@ -203,7 +205,7 @@ public class Monster extends SuperEntity
 				}
 				if (attack)
 				{
-					getSkill(1792).attack();
+					getSkill(0x0701).attack();
 					nextAtk = System.currentTimeMillis() + 2000;
 				}
 			}
@@ -214,7 +216,6 @@ public class Monster extends SuperEntity
 
 	private void moveRandom(List<Integer> nums)
 	{
-
 		if (nums.size() == 0)
 			return;
 
@@ -241,17 +242,15 @@ public class Monster extends SuperEntity
 
 	public void die()
 	{
-
 		dead = true;
 
 		// drop items
 		Random random = new Random(System.nanoTime());
 		for (Integer id : dropList.keySet())
 		{
-			int num = random.nextInt(101); // generate rand num between 0 and
-											// 100 inclusive
+			int num = random.nextInt(100) + 1; //random num between 1-100 inclusive
 			if (num <= dropList.get(id))
-			{ // if the random number is less than the chance of drop, drop
+			{
 				Item item = (Item) Entity.createEntity(id);
 				getMap().add(item, position());
 			}
@@ -264,7 +263,6 @@ public class Monster extends SuperEntity
 			q.monsterKill(id());
 
 		super.die();
-
 	}
 
 	public boolean isDead()
