@@ -23,6 +23,7 @@ public class MapManager
 				maps.add(new Map(0));
 				maps.add(new Map(1));
 				maps.add(new Map(2));
+				maps.add(new Map(3));
 				setMap(startMap, new Point(4, 6));
 	}
 	

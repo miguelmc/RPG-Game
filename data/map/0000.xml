@@ -65,8 +65,12 @@
         <Tile id="2102" amount="30" />
     </Tiles>
     <Portals>
-	   <Portal id="2200" x="7" y="14" />
-	   <Portal id="2201" x="1" y="13" />
+	  	 <Portal id="2200" x="7" y="14" />
+	  	 <Portal id="2201" x="1" y="13" />
+	   
+	   	<Portal id="2203" x="7" y="0" />
+		<Portal id="2203" x="8" y="0" />
+		<Portal id="2203" x="9" y="0" />
     </Portals>
      <Monsters>
     	<Monster id="2401" x="28" y="5" />
