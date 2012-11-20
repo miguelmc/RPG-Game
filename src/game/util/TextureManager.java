@@ -1,6 +1,6 @@
 package game.util;
 
-import game.entities.EntityType;
+import game.entities.EntityTypes;
 
 import java.util.HashMap;
 
@@ -23,10 +23,10 @@ public class TextureManager
 	public void add(int id)
 	{
 
-		String filePath = EntityType.getType(id).toString();
+		String filePath = EntityTypes.getType(id).path();
 		filePath += "/" + Util.hexID(id) + "/texture.png";
 
-		if (get(id) != null || EntityType.getType(id) == EntityType.Monster)
+		if (get(id) != null || EntityTypes.getType(id) == EntityTypes.Monster)
 			return;
 
 		textures.put(id, Util.getTexture(filePath));

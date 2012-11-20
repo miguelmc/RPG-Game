@@ -49,6 +49,9 @@ public class MsgBoxManager
 	public static void render()
 	{		
 
+		if(!active)
+			return;
+		
 		GL11.glColor4f(0f, 0f, 0f, 0.6f);
 		Renderer.renderQuad(BOX_POSITION, BOX_SIZE); // renders the background
 		

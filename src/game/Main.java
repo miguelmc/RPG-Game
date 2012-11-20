@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
+import game.menu.MainMenu;
+import game.menu.Settings;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
@@ -35,7 +37,9 @@ public class Main {
 	public static Dimension GRIDSIZE, DIM;
 	
 	public static boolean DEBUG = false;
-
+	
+	public static int state = 0;
+	public static final int MAIN_MENU = 0, SETTINGS = 2, GAME = 3;
 	static // static initializer
 	{
 		XMLParser parser = new XMLParser("game_config.xml");
@@ -67,17 +71,33 @@ public class Main {
 		// Game Loop
 		while (!Display.isCloseRequested())// as long as close button is not pressed
 		{
-			input(); //handles mouse and keyboard events
-			MapManager.update(); // updates the current map
-
 			glClear(GL_COLOR_BUFFER_BIT); // clears the screen
-			MapManager.render(); // render the active map
-			UserInterface.render(); // renders the interface
-
+			
+			switch(state)
+			{
+			case MAIN_MENU:
+				MainMenu.input();
+				MainMenu.update();
+				MainMenu.render();
+				break;
+			case SETTINGS:
+				Settings.input();
+				Settings.update();
+				Settings.render();
+				break;
+			case GAME:
+				input(); //handles mouse and keyboard events
+				MapManager.update(); // updates the current map
+				
+				MapManager.render(); // render the active map
+				UserInterface.render(); // renders the interface
+				break;
+			}
+			
 			Display.update(); // update the screen
-			Display.sync(60); // set fps to 60
+			Display.sync(200); // set fps to 60
 		}
-
+		
 		Display.destroy();
 		System.exit(0);
 	}
@@ -133,4 +153,9 @@ public class Main {
 		new Main();
 	}
 
+	public static void setScene(int scene)
+	{
+		state = scene;
+	}
+	
 }

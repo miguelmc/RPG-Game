@@ -12,12 +12,12 @@ public abstract class GameObject
 	public GameObject(int id)
 	{
 		ID = id;
+		
+		assert id >= 0;
 
-		hexID = Integer.toHexString(id());
+		hexID = Integer.toHexString(id);
 		while (hexID.length() != 4)
-		{
 			hexID = "0" + hexID;
-		}
 
 	}
 

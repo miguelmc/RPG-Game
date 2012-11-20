@@ -20,14 +20,21 @@ public class MapManager
 
 	static {
 		// TODO read and create all maps and set current map based on the game config file
+<<<<<<< HEAD
 				maps.add(new Map(0));
 				maps.add(new Map(1));
 				maps.add(new Map(2));
 				maps.add(new Map(3));
 				setMap(startMap, new Point(4, 6));
+=======
+	
+		maps.add(new Map(0));
+		maps.add(new Map(1));
+		maps.add(new Map(2));
+		setMap(startMap, new Point(4, 6));
+>>>>>>> ac1b04301da7cc1bd60fa545aad3bbaa1e62f886
 	}
 	
-
 	public static void setMap(int id, Point playerPos)
 	{
 		// TODO each map should have a spawn point
@@ -37,7 +44,7 @@ public class MapManager
 
 		if (currentMap == null) // if this is the starting map, create player
 		{
-			player = new Player(Integer.parseInt("2600", 16), spawnPoint);
+			player = new Player(spawnPoint);
 		} else // else retrieve player from previous map
 		{
 			player = currentMap.getPlayer();
@@ -47,15 +54,14 @@ public class MapManager
 		}
 
 		for (Map map : maps)
-		{
 			if (map.id() == id)
 				currentMap = map;
-		}
 
 		currentMap.add(player, spawnPoint);
-
 	}
 
+	
+	
 	public static void input()
 	{
 		currentMap.input();

@@ -28,11 +28,13 @@ public class NPC extends Entity implements Runnable
 {
 
 	private String name;
+	
 	private static java.util.Map<Integer, String> names = new HashMap<Integer, String>();
 	private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 	private static NPCConversationManager cm = new NPCConversationManager();
 
 	static{
+		//reads a list of all npc ids mapped with their name
 		XMLParser parser = new XMLParser("npc/names.xml");
 
 		List<java.util.Map<String, String>> npcNames = parser.getChildrenAttributes("NPCs");
@@ -51,7 +53,8 @@ public class NPC extends Entity implements Runnable
 	{
 		//Render NPC name
 		Writer.useFont(Fonts.Arial_White_Bold_10);
-		Point position = new Point((int)((getPositionInGrid().getX()+.5)*Slot.SIZE), getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight());
+		Point position = new Point((int)((getPositionInGrid().getX()+.5)*Slot.SIZE),
+									getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight());
 		Writer.write(name, position, Writer.CENTER);
 	}
 

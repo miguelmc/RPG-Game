@@ -2,10 +2,12 @@ package game.entities.item;
 
 import game.entities.Entity;
 import game.features.Stat;
+import game.ui.UserInterface;
 import game.util.XMLParser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.lwjgl.util.Point;
 
@@ -17,10 +19,41 @@ public class EquipItem extends Item
 
 	private java.util.Map<Stat, Integer> stats;
 	private EquipType type;
-
+	private int upgradesAvailable;
+	
+	private static java.util.Map<EquipType, Integer> maxUpgrades;
+	
+	static
+	{
+		maxUpgrades = new HashMap<EquipType, Integer>();
+		maxUpgrades.put(EquipType.TOPWEAR, 3);
+		maxUpgrades.put(EquipType.BOTTOMWEAR, 3);
+		maxUpgrades.put(EquipType.HELMET, 3);
+		maxUpgrades.put(EquipType.SHOES, 2);
+		maxUpgrades.put(EquipType.WEAPON, 5);
+		maxUpgrades.put(EquipType.SHIELD, 2);
+	}
+ 
 	public EquipItem(int id, Point pos)
 	{
 		super(id, pos);
+		
+		XMLParser parser = new XMLParser(path() + "data.xml");
+		
+		stats = new HashMap<Stat, Integer>();
+		type = EquipType.getType(parser.getAttribute("EquipItem", "type"));
+		
+		Map<String, String> statAttributes = parser.getAttributes("EquipItem/stats");
+
+		for(Stat stat: Stat.values())
+		{
+			String value = statAttributes.get(stat.name().toLowerCase());
+			
+			if(value != null) 
+				stats.put(stat, Integer.parseInt(value));
+		}
+		
+		upgradesAvailable = maxUpgrades.get(EquipType.TOPWEAR);
 	}
 
 	public EquipItem(int id)
@@ -28,72 +61,16 @@ public class EquipItem extends Item
 		this(id, null);
 	}
 
-	@Override
-	protected void parseItem(XMLParser parser)
-	{
-		super.parseItem(parser);
-
-		stats = new HashMap<Stat, Integer>();
-
-		type = EquipType.getType(parser.getAttribute("EquipItem", "type"));
-
-		Map<String, String> statAttributes = parser.getAttributes("EquipItem/stats");
-
-		for(Stat stat: Stat.values())
-		{
-			String value = statAttributes.get(stat.NAME);
-			
-			if(value != null)
-				stats.put(stat, Integer.parseInt(value));
-		}
-		
-
-	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>getType</b>
-	 * <br>
-	 * <p>
-	 * <tt>public EquipType getType()</tt>
-	 * </p>
-	 * There are several type of equip items, such as weapons, topwear, bottomwear, helmet, shoes, etc.
-	 * <br><br>
-	 */
 	public EquipType getType()
 	{
 		return type;
 	}
-
-	/**
-	 * 
-	 * <br>
-	 * <b>getStat</b>
-	 * <br>
-	 * <p>
-	 * <tt>public int getStat(Stat stat)</tt>
-	 * </p>
-	 * Returns the value of certain stat of the equip item.
-	 * <br><br>
-	 * @see com.game.features.Stat
-	 */
+	
 	public int getStat(Stat stat)
 	{
 		return stats.get(stat) != null ? stats.get(stat) : 0;
 	}
 	
-	/**
-	 * 
-	 * <br>
-	 * <b>getStats</b>
-	 * <br>
-	 * <p>
-	 * <tt>protected Map<Stat, Integer> getStats()</tt>
-	 * </p>
-	 * Returns a map of all stats and their values.
-	 * <br><br>
-	 */
 	protected Map<Stat, Integer> getStats(){
 		return stats;
 	}
@@ -109,40 +86,51 @@ public class EquipItem extends Item
 	{
 		return id() + 99999 + stats.hashCode();
 	}
-
-	/**
-	 * The type of equip item. The player can wear one of each type of equip.
-	 */
-	public enum EquipType
+	
+	public boolean upgrade(Stat stat, int amount)
 	{
-		
-		TOPWEAR("topwear"), BOTTOMWEAR("bottomwear"), HELMET("helmet"), SHOES("shoes"), WEAPON("weapon"), SHIELD("shield");
-
-		private String name;
-
-		private EquipType(String name)
+		if(getUpgradesAvailable() == 0)
 		{
-			this.name = name;
+			UserInterface.sendNotification("Your " + getType() + " do not have any upgrades available.");
+			return false;
 		}
+		
+		double stdDev = amount*.2;
+		double randomizedAmount = (new Random().nextGaussian()*stdDev + amount);
+		
+		if(randomizedAmount < 0) randomizedAmount = 0;
+		
+		amount = (int)Math.round(randomizedAmount);
+		
+		upgradesAvailable--;
+		stats.put(stat, stats.get(stat) + amount);
+		
+		UserInterface.sendNotification("Successfully upgraded " + getType() + ": +" + amount);
+		
+		return true;
+	}
+	
+	public int getUpgradesAvailable()
+	{
+		return upgradesAvailable;
+	}
+
+	public enum EquipType
+	{	
+		TOPWEAR(), BOTTOMWEAR(), HELMET(), SHOES(), WEAPON(), SHIELD();
+
+		private EquipType() {}
 
 		public static EquipType getType(String name)
 		{
-
 			for (EquipType type : EquipType.values())
-			{
-				if (type.toString().equals(name))
+				if (type.toString().equalsIgnoreCase(name))
 					return type;
-			}
 
 			return null;
-
 		}
-
-		public String toString()
-		{
-			return name;
-		}
-
 	}
-
+	
+	public void setQuantity(int quanitity) {}
+	
 }

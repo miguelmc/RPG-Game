@@ -37,9 +37,7 @@ public class Spawner
 		}
 
 		if (System.currentTimeMillis() > deadTime + respawnTime && spawn)
-		{
 			spawn();
-		}
 	}
 
 	private void spawn()
@@ -51,9 +49,7 @@ public class Spawner
 			currentMonster = monster;
 			spawn = false;
 		} else
-		{
 			deadTime += 1000; // retry in 1 second
-		}
 	}
 
 }

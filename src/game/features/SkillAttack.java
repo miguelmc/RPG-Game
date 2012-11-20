@@ -1,6 +1,7 @@
 package game.features;
 
 import game.scripting.SkillActionManager;
+import game.structure.MapManager;
 import game.structure.Slot;
 
 import java.io.FileNotFoundException;
@@ -18,11 +19,10 @@ import org.lwjgl.util.Point;
 public class SkillAttack
 {
 
-	private long time = System.currentTimeMillis();
-	private double delay = 50;
-	private int step = 0;
-	private boolean active = true;
-	private int state = 0;
+	private long time = 0, lastFrameTime = 0;
+	private int frame = 0;
+	private boolean active = true, stopCall = false;
+	private int state = -1;
 	private ScriptEngine engine;
 	private Skill skill;
 	private boolean playAnimation = false;
@@ -45,11 +45,18 @@ public class SkillAttack
 	{
 		if (playAnimation)
 		{
-			skill.getSprites()[state++].render(renderPos.getX() * Slot.SIZE, renderPos.getY() * Slot.SIZE, (facingDir + 3) % 4);
-			if (state == skill.getSprites().length)
+			if(System.currentTimeMillis() > lastFrameTime + skill.getTimePerFrame())
+			{
+				state++;
+				lastFrameTime = System.currentTimeMillis();
+			}
+			skill.getSprites()[state].render(renderPos.getX() * Slot.SIZE, renderPos.getY() * Slot.SIZE, (facingDir + 3)%4);
+			if (state == skill.getSprites().length - 1)
 			{
 				state = 0;
 				playAnimation = false;
+				if(stopCall)
+					active = false;
 			}
 		}
 	}
@@ -57,19 +64,19 @@ public class SkillAttack
 	public void play(Point position)
 	{
 		playAnimation = true;
+		Point offset = MapManager.getMap().getOffSet();
+		position.setLocation(position.getX() - offset.getX(), position.getY() - offset.getY());
 		renderPos = position;
 	}
 
 	public void update()
 	{
-		// the skill script is called every 6 frames (.1 seconds) and passed the
-		// variable "step" to determine how long it has been running
-		if (System.currentTimeMillis() > time + delay)
+		if (System.currentTimeMillis() > time + skill.getTimePerFrame() && !stopCall)
 		{
 			time = System.currentTimeMillis();
 			try
 			{
-				engine.put("step", step);
+				engine.put("frame", frame);
 				engine.eval(new FileReader("data/skill/" + skill.hexID() + "/script.js"));
 			} catch (FileNotFoundException e)
 			{
@@ -79,13 +86,13 @@ public class SkillAttack
 			{
 				e.printStackTrace();
 			}
-			step++;
+			frame++;
 		}
 	}
 
 	public void stop()
 	{
-		active = false;
+		stopCall = true;
 	}
 
 	public Skill getSkill()

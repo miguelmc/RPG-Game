@@ -22,6 +22,7 @@ public abstract class Window
 	protected final Dimension SIZE;
 	private Texture texture;
 	private boolean grabbed = false;
+	protected static final int DOUBLE_CLICK_DELAY = 250;
 	
 	public Window(Point pos, Dimension size)
 	{

@@ -23,14 +23,12 @@ public class Skill extends GameObject
 {
 
 	private SubImage sprites[]; // each frame of the animation
-	private int level = 1; // level of the skill
-	private int maxLevel;
-	private int delay;
-	private String description;
-	private String subDescription; // More specific description with variables depending on the level
+	private int level = 1, maxLevel, delay;
+	private String description, subDescription;
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
 	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
 	private SuperEntity attacker;
+	private int timePerFrame;
 
 	public Skill(int id, SuperEntity attacker)
 	{
@@ -51,6 +49,7 @@ public class Skill extends GameObject
 
 		int width = Integer.parseInt(parser.getAttribute("Coordinates", "width"));
 		int height = Integer.parseInt(parser.getAttribute("Coordinates", "height"));
+		timePerFrame = Integer.parseInt(parser.getAttribute("Coordinates", "timePerFrame"));
 
 		Dimension size = new Dimension(width, height);
 
@@ -60,9 +59,11 @@ public class Skill extends GameObject
 		Texture spriteSheet = Util.getTexture("skill/" + hexID() + "/texture.png");
 
 		for (int i = 0; i < sprites.length; i++)
+		{
 			sprites[i] = new SubImage(spriteSheet, new Point(Integer.parseInt(coordinates.get(i).get("x")),
 															 Integer.parseInt(coordinates.get(i).get("y"))), size);
-
+		
+		}
 	}
 
 	public String getDescription()
@@ -104,16 +105,12 @@ public class Skill extends GameObject
 	public void update()
 	{
 		for (ListIterator<SkillAttack> i = attacks.listIterator(); i.hasNext();)
-		{
 			if (i.next().isActive())
 			{
 				i.previous().update(); // updates while the skillattack is active
 				i.next();
 			} else
-			{
 				i.remove(); // remove from the list if the skillattack finished
-			}
-		}
 	}
 
 	public void render()
@@ -146,5 +143,10 @@ public class Skill extends GameObject
 	{
 		attacks.clear();
 	}
-
+	
+	public int getTimePerFrame()
+	{
+		return timePerFrame;
+	}
+	
 }

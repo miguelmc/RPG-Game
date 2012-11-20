@@ -1,17 +1,18 @@
 package game.features;
 
+
 public enum Stat
 {
 
-	MAXHP(0x00, "maxHP"), MAXMP(0x01, "maxMP"), ATK(0x02, "atk"), STR(0x03, "str"), DEF(0x04, "def");
+	MAXHP(1, "MaxHP"), MAXMP(2, "MaxMP"), ATK(3, "Atk"), STR(4, "Str"), DEF(5, "Def");
 
 	public final int ID;
-	public final String NAME;
+	public String name;
 
 	private Stat(int id, String name)
 	{
 		ID = id;
-		NAME = name;
+		this.name = name;
 	}
 
 	public Stat getStat(int id)
@@ -20,6 +21,11 @@ public enum Stat
 			if (s.ID == id)
 				return s;
 		return null;
+	}
+	
+	public String toString()
+	{
+		return name;
 	}
 
 }

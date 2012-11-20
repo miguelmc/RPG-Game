@@ -228,7 +228,7 @@ public class Shop extends GameObject{
 			}else
 			{
 				System.out.println(itemSelected.getQuantity());
-				if(player.addItem(itemSelected))
+				if(player.gainItem(itemSelected))
 					player.gainGold(-itemSelected.getPrice());
 				else
 					MsgBoxManager.sendMessage("Make sure you have enough space in your inventory.", MsgBoxManager.OK);

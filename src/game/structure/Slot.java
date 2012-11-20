@@ -28,16 +28,6 @@ public class Slot
 	private List<Item> items = new ArrayList<Item>();
 	private Object object; // not strong, only its blocks are strong
 
-	/**
-	 * 
-	 * <br>
-	 * <b>getAll</b> <br>
-	 * <p>
-	 * <tt>public List<Entity> getAll()</tt>
-	 * </p>
-	 * Returns a list with all the entities in the slot. <br>
-	 * <br>
-	 */
 	public List<Entity> getAll()
 	{
 		List<Entity> all = new ArrayList<Entity>();
@@ -53,18 +43,6 @@ public class Slot
 			e.update();
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>render</b> <br>
-	 * <p>
-	 * <tt>public void render(int type, int render)</tt>
-	 * </p>
-	 * Renders an entity in the slot depending on the type. 0 - Tile 1 - Portal
-	 * 2 - Items 3 - Strong Entity 4 - Object The render type depends on the
-	 * <i>render</i> 0 - render 1 - midRender 2 - UIRender <br>
-	 * <br>
-	 */
 	public void render(int type, int render)
 	{
 
@@ -112,11 +90,9 @@ public class Slot
 
 	public void setStrongEntity(Entity entity)
 	{
-		assert strongEntity == null; // maker sure no strong entity is being
-										// replaced
+		assert strongEntity == null; // maker sure no strong entity is being replaced
 
-		if (!entity.isStrong())
-			return;
+		if (!entity.isStrong()) return;
 
 		strongEntity = entity;
 	}
@@ -172,7 +148,7 @@ public class Slot
 		} else
 		{
 			Random random = new Random();
-			items.get(items.size() - 1).setRenderOffset((int) (Slot.SIZE / 5 * (random.nextDouble() * 3 - 1.5)),
+			items.get(items.size() - 1).setOffset((int) (Slot.SIZE / 5 * (random.nextDouble() * 3 - 1.5)),
 					(int) (Slot.SIZE / 5 * (random.nextDouble() * 3 - 1.5)));
 		}
 	}
@@ -216,13 +192,13 @@ public class Slot
 		case 1:
 			return;
 		case 2:
-			items.get(0).setRenderOffset(-OFFSET, -OFFSET);
-			items.get(1).setRenderOffset(OFFSET, OFFSET);
+			items.get(0).setOffset(-OFFSET, -OFFSET);
+			items.get(1).setOffset(OFFSET, OFFSET);
 			return;
 		case 3:
-			items.get(0).setRenderOffset(-OFFSET, OFFSET);
-			items.get(1).setRenderOffset(OFFSET, OFFSET);
-			items.get(2).setRenderOffset(0, -OFFSET);
+			items.get(0).setOffset(-OFFSET, OFFSET);
+			items.get(1).setOffset(OFFSET, OFFSET);
+			items.get(2).setOffset(0, -OFFSET);
 			return;
 		default:
 			Random random = new Random(System.nanoTime());
@@ -230,23 +206,12 @@ public class Slot
 			{
 				double offX = OFFSET * (random.nextDouble() * 3 - 1.5);
 				double offY = OFFSET * (random.nextDouble() * 3 - 1.5);
-				item.setRenderOffset((int) offX, (int) offY);
+				item.setOffset((int) offX, (int) offY);
 			}
 			return;
 		}
 	}
 
-	/**
-	 * 
-	 * <br>
-	 * <b>set</b> <br>
-	 * <p>
-	 * <tt>public void set(Entity entity)</tt>
-	 * </p>
-	 * Adds the entity to the slot. Replaces the other entity if its of the same
-	 * type. <br>
-	 * <br>
-	 */
 	public void add(Entity entity)
 	{
 		if (entity instanceof Tile)

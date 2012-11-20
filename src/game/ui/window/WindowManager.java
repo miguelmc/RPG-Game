@@ -32,7 +32,6 @@ public class WindowManager {
 	{
 		shop = new Shop(id);
 		activeWindows.clear();
-		
 	}
 	
 	public static void closeShop()
@@ -42,14 +41,12 @@ public class WindowManager {
 	
 	public static void render()
 	{		
-		float opacity = .75f - activeWindows.size()/10f;
 		for(Window window: activeWindows)
 		{
-			glColor4f(1, 1, 1, opacity);
+			glColor4f(1, 1, 1, .65f);
 			window.render();
-			opacity += .1f;
 		}
-		
+			
 		glColor4f(1, 1, 1, 1);
 
 		

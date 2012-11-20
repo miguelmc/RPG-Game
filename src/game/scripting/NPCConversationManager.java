@@ -98,7 +98,7 @@ public class NPCConversationManager extends AbstractScriptManager {
 	}
 
 	public boolean givePlayer(int id) {
-		return getPlayer().addItem(shop.getItemByID(id));
+		return getPlayer().gainItem(shop.getItemByID(id));
 	}
 	
 	public static void setNPC(NPC npc)

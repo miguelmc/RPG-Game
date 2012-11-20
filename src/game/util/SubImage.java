@@ -1,17 +1,7 @@
 package game.util;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import game.structure.MapManager;
 import game.structure.Slot;
+import game.util.Renderer.Builder;
 
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
@@ -33,8 +23,15 @@ public class SubImage
 		this.size = size;
 	}
 
-	public void render(int x, int y, int flipClockWise)
-	{
+	public void render(int x, int y, int rotation)
+	{		
+		Renderer.render(new Builder(spriteSheet,
+									new Point(x, y),
+									new Dimension(Slot.SIZE, Slot.SIZE))
+									.offset(pos)
+									.rotate(rotation)
+									.imageSize(size.getWidth(), size.getHeight()));
+	/*	
 		float w = spriteSheet.getImageWidth();
 		float h = spriteSheet.getImageHeight();
 
@@ -88,7 +85,7 @@ public class SubImage
 
 		glEnd();
 		glLoadIdentity();
-		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);*/
 	}
 
 }

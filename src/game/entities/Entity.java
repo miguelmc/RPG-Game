@@ -21,11 +21,8 @@ import org.newdawn.slick.opengl.Texture;
  */
 public abstract class Entity extends GameObject
 {
-	
-	//TODO abstract method parse implemented by concrete entities and called from this class' constructor
-
 	private Dimension renderSize = new Dimension(1, 1);
-	private Point renderOffset = new Point();
+	private Point offset = new Point();
 	private boolean strong = false;
 	private Point position;
 	private boolean invisible = false;
@@ -38,7 +35,7 @@ public abstract class Entity extends GameObject
 	public static Entity createEntity(int id)
 	{
 		// static factory
-		EntityType type = EntityType.getType(id);
+		EntityTypes type = EntityTypes.getType(id);
 
 		switch (type)
 		{
@@ -69,8 +66,8 @@ public abstract class Entity extends GameObject
 		if (!isInvisible())
 			Renderer.render(new Builder(
 					getTexture(),
-					new Point(Util.pointArithmetic(Slot.SIZE, renderOffset(), getPositionInGrid())),
-					new Dimension(renderSize().getWidth()*Slot.SIZE, renderSize().getHeight()*Slot.SIZE)) );
+					new Point(Util.pointArithmetic(Slot.SIZE, getOffset(), getPositionInGrid())),
+					new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getHeight()*Slot.SIZE)) );
 	}
 
 	public void UIRender(){}
@@ -82,6 +79,11 @@ public abstract class Entity extends GameObject
 		return position;
 	}
 
+	public String path()
+	{
+		return EntityTypes.getType(id()).path() + "/" + hexID() + "/";
+	}
+	
 	public int getX()
 	{
 		return position().getX();
@@ -95,9 +97,7 @@ public abstract class Entity extends GameObject
 	public void moveTo(Point pos)
 	{
 		if (position() != null)
-		{
 			getMap().get(position()).remove(this);
-		}
 		getMap().get(pos).add(this);
 		position = new Point(pos); // save a reference to the position
 	}
@@ -117,11 +117,6 @@ public abstract class Entity extends GameObject
 		return strong;
 	}
 
-	public Dimension renderSize()
-	{
-		return new Dimension(renderSize);
-	}
-
 	public Texture getTexture()
 	{
 		if(MapManager.getMap().getTextureManager().get(id()) == null && !(this instanceof Object.Block))
@@ -130,14 +125,14 @@ public abstract class Entity extends GameObject
 		return MapManager.getMap().getTextureManager().get(id());
 	}
 	
-	public Point renderOffset()
+	protected Point getOffset()
 	{
-		return new Point(renderOffset);
+		return new Point(offset);
 	}
 
-	public void setRenderOffset(int x, int y)
+	public void setOffset(int x, int y)
 	{
-		renderOffset.setLocation(x, y);
+		offset.setLocation(x, y);
 	}
 
 	public void move(Point move)
@@ -162,6 +157,11 @@ public abstract class Entity extends GameObject
 
 	protected void setRenderSize(int width, int height) {
 		renderSize.setSize(width, height);
+	}
+	
+	public Dimension getRenderSize()
+	{
+		return new Dimension(renderSize);
 	}
 	
 }
