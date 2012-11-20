@@ -20,19 +20,12 @@ public class MapManager
 
 	static {
 		// TODO read and create all maps and set current map based on the game config file
-<<<<<<< HEAD
-				maps.add(new Map(0));
-				maps.add(new Map(1));
-				maps.add(new Map(2));
-				maps.add(new Map(3));
-				setMap(startMap, new Point(4, 6));
-=======
-	
 		maps.add(new Map(0));
 		maps.add(new Map(1));
 		maps.add(new Map(2));
+		maps.add(new Map(3));
 		setMap(startMap, new Point(4, 6));
->>>>>>> ac1b04301da7cc1bd60fa545aad3bbaa1e62f886
+
 	}
 	
 	public static void setMap(int id, Point playerPos)
