@@ -14,11 +14,13 @@ import game.entities.item.Item;
 import game.entities.item.UsableItem;
 import game.features.Quest;
 import game.features.Skill;
+import game.features.Stat;
 import game.structure.Map;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
+import game.ui.window.Skills;
 import game.ui.window.WindowManager;
 import game.util.Timer;
 import game.util.Util;
@@ -34,10 +36,6 @@ import java.util.ListIterator;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Point;
 
-/**
- * The main Entity of the game, which is controlled by the user and perform most
- * of the actions of the game.
- */
 public class Player extends SuperEntity {
 
 	public static final int INV_LIMIT = 30, MAX_LEVEL = 8, BASE = 0x10, EXTRA = 0x20, TOTAL = 0x30;
@@ -50,17 +48,18 @@ public class Player extends SuperEntity {
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
+	private Skill activeSkill;
 	private transient long nextAtk = 0, nextMove = 0;
 
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
 		addSkill(0x0701);
+		addSkill(0x0701);
+		
+		activeSkill = getSkill(0x0701);
 
-		// TODO player file with base stats, stats per level, damage formula
-		// parameters, etc.
-
-		stats.put(BASE + MAXHP.ID, 100);
-		stats.put(BASE + MAXMP.ID, 100);
+		stats.put(BASE + MAXHP.ID, 30);
+		stats.put(BASE + MAXMP.ID, 30);
 		stats.put(BASE + ATK.ID, 1);
 		stats.put(BASE + STR.ID, 10);
 		stats.put(BASE + DEF.ID, 5);
@@ -98,7 +97,7 @@ public class Player extends SuperEntity {
 				action(getMap().get(Util.addRelPoints(position(), new Point(0, 1), getFacingDir())));
 				break;
 			case Keyboard.KEY_Z:
-				attack(getSkill(0x0701));
+				attack(activeSkill);
 				break;
 			case Keyboard.KEY_X:
 				Portal portal = getMap().get(position()).getPortal();
@@ -250,7 +249,7 @@ public class Player extends SuperEntity {
 		}
 
 	}
-
+	
 	public boolean hit(int damage) {
 		damage -= getStat(TOTAL+DEF.ID)/10;
 		
@@ -341,12 +340,12 @@ public class Player extends SuperEntity {
 		raiseStat(BASE + ATK.ID, 1);
 		raiseStat(BASE + STR.ID, 2);
 		raiseStat(BASE + DEF.ID, 1);
+		raiseStat(BASE + MAXHP.ID, 5);
+		raiseStat(BASE + MAXMP.ID, 5);
 		level++;
-		UserInterface.sendImpNotification("LEVEL UP!!!");
-		stats.put(BASE + MAXHP.ID, getStat(BASE + MAXHP.ID) + 5);
-		stats.put(BASE + MAXMP.ID, getStat(BASE + MAXMP.ID) + 5);
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXHP.ID));
+		UserInterface.levelUp();
 	}
 
 	public void useMP(int amount) 
@@ -424,6 +423,9 @@ public class Player extends SuperEntity {
 	{
 		if(stats.containsKey(stat))
 			stats.put(stat, getStat(stat) + amount);
+		
+		if(stat < EXTRA) //BASE
+			UserInterface.sendNotification( Stat.getStat(stat - BASE).name() +  " : +" + amount);
 		
 		setHP(getHP()); //avoid hp>maxhp
 		setMP(getMP());
@@ -511,6 +513,11 @@ public class Player extends SuperEntity {
 		objectStream.write(position().getX());
 		objectStream.write(position().getY());
 		objectStream.writeObject(this);
+	}
+	
+	public void setActiveSkill(Skill skill)
+	{
+		
 	}
 
 }

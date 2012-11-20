@@ -15,7 +15,7 @@ public enum Stat
 		this.name = name;
 	}
 
-	public Stat getStat(int id)
+	public static Stat getStat(int id)
 	{
 		for (Stat s : Stat.values())
 			if (s.ID == id)

@@ -24,18 +24,22 @@ public class Skill extends GameObject
 
 	private SubImage sprites[]; // each frame of the animation
 	private int level = 1, maxLevel, delay;
-	private String description, subDescription;
+	private String description, subDescription, name;
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
 	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
 	private SuperEntity attacker;
 	private int timePerFrame;
+	private Texture thumbnail;
 
 	public Skill(int id, SuperEntity attacker)
 	{
 		super(id);
 		this.attacker = attacker;
 
+		thumbnail = Util.getTexture("skill/" + hexID() + "/thumbnail.png");
+		
 		XMLParser parser = new XMLParser("skill/" + hexID() + "/data.xml");
+		name = parser.getAttribute("Skill", "name");
 		delay = Integer.parseInt(parser.getAttribute("Skill", "delay"));
 		description = parser.getAttribute("Skill", "description");
 		subDescription = parser.getAttribute("Skill/details", "data");
@@ -44,7 +48,7 @@ public class Skill extends GameObject
 
 		String levelList = parser.getAttribute("Skill/details/list", "level");
 		variables.add(levelList.split(","));
-
+		
 		parser.setDocument("skill/" + hexID() + "/coordinates.xml");
 
 		int width = Integer.parseInt(parser.getAttribute("Coordinates", "width"));
@@ -149,4 +153,13 @@ public class Skill extends GameObject
 		return timePerFrame;
 	}
 	
+	public Texture getThumbnail()
+	{
+		return thumbnail;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
 }

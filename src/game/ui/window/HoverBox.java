@@ -2,6 +2,7 @@ package game.ui.window;
 
 import game.entities.item.EquipItem;
 import game.entities.item.Item;
+import game.features.Skill;
 import game.features.Stat;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
@@ -29,9 +30,7 @@ public class HoverBox {
 		Writer.useFont(Fonts.Courier_White_Bold_14);
 		
 		List<String> paragraph = new ArrayList<String>(); //everything written in the hover box						
-		
-		//TODO render item name, equipitem stats are not rendering
-		
+				
 		if(item instanceof EquipItem)
 		{
 			EquipItem equip = (EquipItem) item;
@@ -78,6 +77,11 @@ public class HoverBox {
 		
 		//writes the paragraph
 		Writer.write(paragraph, new Point(position.getX() + PADDING, position.getY() + PADDING*2 + ITEM_IMG_SIZE.getHeight()), -1);
+	}
+
+	public static void render(Skill skill, Point position)
+	{
+		
 	}
 	
 }
