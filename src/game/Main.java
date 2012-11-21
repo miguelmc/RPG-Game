@@ -20,6 +20,7 @@ import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
 import game.ui.window.WindowManager;
 import game.util.MouseManager;
+import game.util.SoundManager;
 import game.util.XMLParser;
 
 import org.lwjgl.LWJGLException;
@@ -66,6 +67,7 @@ public class Main {
 			System.exit(1);
 		}
 
+		SoundManager.initSounds();
 		initGL();
 		
 		// Game Loop
@@ -95,9 +97,10 @@ public class Main {
 			}
 			
 			Display.update(); // update the screen
-			Display.sync(200); // set fps to 60
+			Display.sync(60); // set fps to 60
 		}
 		
+		org.lwjgl.openal.AL.destroy();
 		Display.destroy();
 		System.exit(0);
 	}

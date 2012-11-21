@@ -27,14 +27,14 @@ public class UserInterface
 	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
 	private static Queue<Notification> notifications = new LinkedList<Notification>();
 	private static Queue<Notification> importantNotifications = new LinkedList<Notification>();
-	private static final Dimension BAR_SIZE = new Dimension(128, 25), LEVEL_UP_SIZE = new Dimension(400, 100);
+	private static final Dimension BAR_SIZE = new Dimension(128, 25), LEVEL_UP_SIZE = new Dimension(440, 110);
 	private static final Point HP_POS = new Point(10, 10), MP_POS = new Point(200, 10), EXP_POS = new Point(390, 10),
 							   MAP_NAME_POS = new Point(10, 40), LEVEL_POS = new Point(Main.DIM.getWidth()-10, 5),
 							   LEVEL_UP_POS;
 	private static final Texture levelUpTexture;
 	private static boolean levelUp = false;
 	private static long levelUpTime;
-	private static final int LEVEL_UP_DURATION = 1500;
+	private static final int LEVEL_UP_DURATION = 3500;
 		
 	static
 	{

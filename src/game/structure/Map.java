@@ -219,17 +219,12 @@ public class Map extends GameObject
 
 	public List<Entity> getStrongEntities()
 	{
-
 		List<Entity> strongEntities = new ArrayList<Entity>();
 
 		for (Slot s : getAllSlots())
-		{
 			for (Entity e : s.getAll())
-			{
 				if (e.isStrong())
 					strongEntities.add(e);
-			}
-		}
 
 		return strongEntities;
 	}

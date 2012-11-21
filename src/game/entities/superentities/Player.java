@@ -20,8 +20,8 @@ import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
-import game.ui.window.Skills;
 import game.ui.window.WindowManager;
+import game.util.SoundManager;
 import game.util.Timer;
 import game.util.Util;
 
@@ -219,6 +219,13 @@ public class Player extends SuperEntity {
 		setHP(getStat(TOTAL+MAXHP.ID));
 		setMP(getStat(TOTAL+MAXHP.ID));
 		gainExp(-getExp());
+		
+		for(Slot slot: MapManager.getMap().getAllSlots())
+		{
+			Monster monster = slot.getMonster();
+			if(monster != null)
+				monster.setAngry(false);
+		}
 	}
 	
 	public void update() {
@@ -346,6 +353,7 @@ public class Player extends SuperEntity {
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXHP.ID));
 		UserInterface.levelUp();
+		SoundManager.playSound("Level_Up");
 	}
 
 	public void useMP(int amount) 

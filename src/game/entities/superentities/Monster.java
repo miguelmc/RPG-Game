@@ -333,5 +333,9 @@ public class Monster extends SuperEntity
 	public boolean isAngry() {
 		return angry;
 	}
+
+	public void setAngry(boolean angry) {
+		this.angry = angry;
+	}
 	
 }
