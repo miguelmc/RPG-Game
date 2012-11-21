@@ -27,11 +27,11 @@ public class UserInterface
 	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
 	private static Queue<Notification> notifications = new LinkedList<Notification>();
 	private static Queue<Notification> importantNotifications = new LinkedList<Notification>();
-	private static final Dimension BAR_SIZE = new Dimension(128, 25), LEVEL_UP_SIZE = new Dimension(440, 110);
+	private static final Dimension BAR_SIZE = new Dimension(128, 25), LEVEL_UP_SIZE = new Dimension(440, 110), SHORTCUTS_SIZE;
 	private static final Point HP_POS = new Point(10, 10), MP_POS = new Point(200, 10), EXP_POS = new Point(390, 10),
 							   MAP_NAME_POS = new Point(10, 40), LEVEL_POS = new Point(Main.DIM.getWidth()-10, 5),
-							   LEVEL_UP_POS;
-	private static final Texture levelUpTexture;
+							   LEVEL_UP_POS, SHORTCUTS_POS;
+	private static final Texture levelUpTexture, skillShortcuts;
 	private static boolean levelUp = false;
 	private static long levelUpTime;
 	private static final int LEVEL_UP_DURATION = 3500;
@@ -40,6 +40,10 @@ public class UserInterface
 	{
 		levelUpTexture = Util.getTexture("UI/levelUp.png");
 		LEVEL_UP_POS = new Point(Main.DIM.getWidth()/2, (int)(Main.DIM.getHeight()*.3));
+		
+		skillShortcuts = Util.getTexture("UI/skillShortcuts.png");
+		SHORTCUTS_SIZE = new Dimension(84, 384);
+		SHORTCUTS_POS = new Point(0, 170);
 	}
 	
 	public static void render()
@@ -51,7 +55,12 @@ public class UserInterface
 		
 		Writer.useFont(Fonts.Monaco_White_Plain_25);
 		renderNotifications(importantNotifications, new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/4), Writer.CENTER);
-				
+			
+		glColor4f(1, 1, 1, .5f); //border
+
+		Renderer.render(new Builder(skillShortcuts, SHORTCUTS_POS, SHORTCUTS_SIZE).imageSize(56, 256));
+		glColor4f(1, 1, 1, 1); //border
+
 		Player player = MapManager.getMap().getPlayer();
 		
 		renderBar(HP_POS, new float[]{1, 0, 0}, player.getHP(), player.getStat(Player.TOTAL + Stat.MAXHP.ID));
