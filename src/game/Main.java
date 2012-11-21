@@ -162,20 +162,6 @@ public class Main {
 		for(String arg: args)
 			if(arg.equals("d"))
 				DEBUG = true;
-		
-		if (System.getProperty("os.name").startsWith("Win")) {
-			Thread sleeper = new Thread(new Runnable() {
-				public void run() {
-					while (true)
-						try {
-							Thread.sleep(Long.MAX_VALUE);
-						} catch (InterruptedException e) {
-						}
-				}
-			});
-			sleeper.setDaemon(true);
-			sleeper.start();
-		}
 		new Main();
 	}
 

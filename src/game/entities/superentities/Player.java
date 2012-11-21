@@ -51,6 +51,7 @@ public class Player extends SuperEntity {
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
 	private Skill activeSkill;
 	private transient long nextAtk = 0, nextMove = 0;
+	private transient boolean once = false;
 
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
@@ -193,7 +194,14 @@ public class Player extends SuperEntity {
 	protected void attack(Skill skill) {
 		
 		if (System.currentTimeMillis() < nextAtk)
+		{
+			if(!once)
+			{
+				delayAttack(500);
+				once = true;
+			}
 			return;
+		}
 		
 		if (getMP() < 2) //TODO check for the skill mp
 		{
@@ -201,6 +209,7 @@ public class Player extends SuperEntity {
 			return;
 		}
 		super.attack(skill);
+		once = false;
 		delayAttack(skill.getDelay());
 		useMP(2);
 	}
