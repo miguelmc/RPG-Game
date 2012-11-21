@@ -380,7 +380,7 @@ public class Player extends SuperEntity {
 
 	public int getReqExp() 
 	{
-		return level * 10;
+		return 50*level*level - 150*level + 200;
 	}
 
 	public int getLevel() 
