@@ -9,52 +9,70 @@ import java.util.Map;
 
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
+import org.newdawn.slick.opengl.Texture;
 
 public class Animation{
 
 	private List<Point> coordinates = new ArrayList<Point>();
-	private Dimension imageSize;
 	private Iterator<Point> iterator;
-	private boolean repeat;
-	private final int period;
-	private long nextFrame;
-		
-	public Animation(String xmlDoc, int period, boolean repeat)
-	{
-		parseCoordinates(xmlDoc);
-		this.period = period;
-		this.repeat = repeat;
-		nextFrame = System.currentTimeMillis() + period;
-	}
+	private Builder builder;
+	private int timePerFrame;
+	private long lastRenderTime = 0;
+	private Point offset;
+	private int currentFrame;
 	
-	private void parseCoordinates(String xmlDoc) {
+	public Animation(String xmlDoc, Texture texture)
+	{	
 		XMLParser parser = new XMLParser(xmlDoc);
 		
-		int width = Integer.parseInt(parser.getAttribute("Coordinates", "width"));
-		int height = Integer.parseInt(parser.getAttribute("Coordinates", "height"));
-
-		imageSize = new Dimension(width, height);
-
-		List<Map<String, String>> xmlCoordinates = parser.getChildrenAttributes("Coordinates");
+		timePerFrame = Integer.parseInt(parser.getAttribute("Animation", "timePerFrame"));
 		
-		for(Map<String, String> map: xmlCoordinates)
-			coordinates.add(new Point(Integer.parseInt(map.get("x")), Integer.parseInt(map.get("y"))));
-	}
-
-	public void render(Builder builder)
-	{
-		if(iterator != null)
-			if(System.currentTimeMillis() >= nextFrame)		 
-				if(iterator.hasNext())
-				{
-					builder.offset(iterator.next()).imageSize(imageSize.getWidth(), imageSize.getHeight());
-					Renderer.render(builder);
-					nextFrame = System.currentTimeMillis() + period;
-				}else if(repeat) iterator = coordinates.iterator();
-	}
+		Dimension imageSize = new Dimension();
+		imageSize.setWidth(Integer.parseInt(parser.getAttribute("Animation", "imageWidth")));
+		imageSize.setHeight(Integer.parseInt(parser.getAttribute("Animation", "imageHeight")));
 		
+		builder = new Builder(texture, new Point(0, 0), new Dimension(0, 0)).imageSize(imageSize.getWidth(), imageSize.getHeight());
+		
+		List<Map<String, String>> coordinatesXML = parser.getChildrenAttributes("Animation/Coordinates");
+		for(Map<String, String> coordinate: coordinatesXML)
+			coordinates.add(new Point(Integer.parseInt(coordinate.get("x")), Integer.parseInt(coordinate.get("y"))));	
+		
+		currentFrame = coordinates.size();
+	}
+	
 	public void play()
 	{
 		iterator = coordinates.iterator();
+		currentFrame = 0;
+		lastRenderTime = System.currentTimeMillis();
 	}
+	
+	public void render(Point position, Dimension size, boolean flipX)
+	{
+		if(iterator != null && currentFrame < coordinates.size())
+		{
+			Renderer.render(builder.setPosition(position).setSize(size).offset(coordinates.get(currentFrame)).flipX(flipX));
+			
+			if(System.currentTimeMillis() > lastRenderTime + timePerFrame)
+			{
+				lastRenderTime = System.currentTimeMillis();
+				currentFrame++;
+			}
+		}
+	}
+		
+	public int currentFrame()
+	{
+		return currentFrame + 1;
+	}
+	
+	public int totalFrames()
+	{
+		return coordinates.size();
+	}
+
+	public boolean rendering() {
+		return currentFrame < coordinates.size();
+	}
+	
 }

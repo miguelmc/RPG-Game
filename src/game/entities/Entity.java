@@ -70,6 +70,8 @@ public abstract class Entity extends GameObject
 					new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getHeight()*Slot.SIZE)) );
 	}
 
+	public void midRender(){}
+	
 	public void UIRender(){}
 
 	public void update(){} //optionally implemented by subclasses

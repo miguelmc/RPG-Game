@@ -35,10 +35,13 @@ public abstract class SuperEntity extends Entity
 		super(id);
 		setStrong();
 
-		textures[UP] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/back.png");
-		textures[RIGHT] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/side.png");
-		textures[DOWN] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/front.png");
-		textures[LEFT] = textures[RIGHT];
+		if(!(this instanceof Player))
+		{
+			textures[UP] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/back.png");
+			textures[RIGHT] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/side.png");
+			textures[DOWN] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/front.png");
+			textures[LEFT] = textures[RIGHT];
+		}
 
 		face(DOWN);
 	}
@@ -103,14 +106,16 @@ public abstract class SuperEntity extends Entity
 
 	public void render()
 	{
-		
 		if (!isInvisible())
 			Renderer.render(new Builder(
 					getTexture(),
 					new Point(Util.pointArithmetic(Slot.SIZE, getOffset(), getPositionInGrid())),
 					new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getHeight()*Slot.SIZE))
 					.flipX(getFacingDir() == LEFT));
-		
+	}
+	
+	public void midRender()
+	{
 		for (Skill s : skills)
 			s.render();
 	}

@@ -133,13 +133,9 @@ public class Map extends GameObject
 		// Do not render slot by slot, but by entity type (i.e. first all tiles,
 		// then all items, etc)
 		for (int j = 0; j < 3; j++)
-		{
 			for (int i = 0; i < 5; i++)
-			{
 				for (Slot s : getAllSlots())
 					s.render(i, j);
-			}
-		}
 	}
 
 	public void add(Entity entity, Point pos)
