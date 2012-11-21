@@ -62,6 +62,8 @@ public class Slot
 			{
 				if (render == 0)
 					item.render();
+				else if(render == 1)
+					item.midRender();
 				else if (render == 2)
 					item.UIRender();
 			}
@@ -78,6 +80,8 @@ public class Slot
 		{
 			if (render == 0)
 				entity.render();
+			else if(render == 1)
+				entity.midRender();
 			else if (render == 2)
 				entity.UIRender();
 		}

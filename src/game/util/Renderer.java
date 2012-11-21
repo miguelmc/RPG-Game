@@ -140,5 +140,17 @@ public class Renderer {
 			return this;
 		}
 		
+		public Builder setSize(Dimension size)
+		{
+			this.size.setSize(size);
+			return this;
+		}
+		
+		public Builder setPosition(Point position)
+		{
+			this.position.setLocation(position);
+			return this;
+		}
+		
 	}	
 }
