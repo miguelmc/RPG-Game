@@ -21,13 +21,16 @@ import game.ui.UserInterface;
 import game.ui.window.WindowManager;
 import game.util.MouseManager;
 import game.util.SoundManager;
+import game.util.Writer;
 import game.util.XMLParser;
+import game.util.Writer.Fonts;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Dimension;
+import org.lwjgl.util.Point;
 
 /**
  * Game launcher class. Contains the main loop and initializes the game.
@@ -40,7 +43,7 @@ public class Main {
 	public static boolean DEBUG = false;
 	
 	public static int state = 0;
-	public static final int MAIN_MENU = 0, SETTINGS = 2, GAME = 3;
+	public static final int MAIN_MENU = 0, SETTINGS = 2, GAME = 3, DEAD = 4;
 	static // static initializer
 	{
 		XMLParser parser = new XMLParser("game_config.xml");
@@ -70,6 +73,8 @@ public class Main {
 		SoundManager.initSounds();
 		initGL();
 		
+		boolean blink = false;
+		long next = 0;
 		// Game Loop
 		while (!Display.isCloseRequested())// as long as close button is not pressed
 		{
@@ -93,6 +98,24 @@ public class Main {
 				
 				MapManager.render(); // render the active map
 				UserInterface.render(); // renders the interface
+				break;
+			case DEAD:
+				
+				while(Keyboard.next())
+				{
+					Main.setScene(Main.GAME);
+				}
+				if(System.currentTimeMillis() > next)
+				{
+					blink = !blink;
+					next = System.currentTimeMillis() + 550;
+				}
+				
+				Writer.useFont(Fonts.Monaco_White_Plain_25);
+				Writer.write("YOU ARE DEAD", new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/2 - 40), Writer.CENTER);
+				Writer.write("Press any key to continue...", new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/2), Writer.CENTER);
+				if(blink)
+					Writer.write("|", new Point(582, 375));
 				break;
 			}
 			

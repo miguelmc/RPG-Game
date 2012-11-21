@@ -40,7 +40,8 @@ public class Player extends SuperEntity {
 
 	public static final int INV_LIMIT = 30, MAX_LEVEL = 8, BASE = 0x10, EXTRA = 0x20, TOTAL = 0x30;
 	public static final int HELMET = 0, TOPWEAR = 1, BOTTOMWEAR = 2, SHOES = 3, WEAPON = 4;
-	private static final int REGEN = 3;
+	private static final int HPREGEN = 1;
+	private static final int MPREGEN = 2;
 	
 	private int level = 1, exp = 0, gold = 0, mp;
 	private volatile int hp;
@@ -73,13 +74,13 @@ public class Player extends SuperEntity {
 		setHP(getStat(TOTAL + MAXHP.ID));
 		setMP(getStat(TOTAL + MAXMP.ID));
 
-		Timer timer = new Timer(this, "regen", 10000);
+		Timer timer = new Timer(this, "regen", 3000);
 		timer.start();
 	}
 
 	public void regen() {
-		setHP(getHP() + REGEN);
-		setMP(getMP() + REGEN);
+		setHP(getHP() + HPREGEN);
+		setMP(getMP() + MPREGEN);
 	}
 
 	public void input() {
@@ -215,6 +216,7 @@ public class Player extends SuperEntity {
 	public void die() {
 		UserInterface.sendNotification("You died.");
 		super.die();
+		Main.state = 4;
 		MapManager.setMap(0, new Point(4, 5));
 		setHP(getStat(TOTAL+MAXHP.ID));
 		setMP(getStat(TOTAL+MAXHP.ID));
@@ -259,6 +261,7 @@ public class Player extends SuperEntity {
 	
 	public boolean hit(int damage) {
 		damage -= getStat(TOTAL+DEF.ID)/10;
+		SoundManager.playSound("Hit_1");
 		
 		if(damage < 0) damage = 0;
 		
@@ -291,12 +294,14 @@ public class Player extends SuperEntity {
 
 		Item item = getItem(i.id());
 		if (item != null && !(item instanceof EquipItem)) {
+			SoundManager.playSound("Pick_Up");
 			item.add(i.getQuantity());
 			if (i.getQuantity() > 0)
 				UserInterface.sendNotification("You got an item: " + i.getName() + " x" + i.getQuantity() + ".");
 			return true;
 		}
 		if (items.size() < INV_LIMIT) {
+			SoundManager.playSound("Pick_Up");
 			items.add(i);
 			if (i.getQuantity() > 0)
 				UserInterface.sendNotification("You got an item: "

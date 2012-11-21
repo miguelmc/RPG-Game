@@ -45,7 +45,9 @@
 		<Tile id="2100" amount="9" />
 	</Tiles>
 	<Portals>
+		<Portal id="2203" x="8" y="19" />
 		<Portal id="2203" x="9" y="19" />
+		<Portal id="2203" x="10" y="19" />
 	</Portals>
 	<Monsters>
 	</Monsters>

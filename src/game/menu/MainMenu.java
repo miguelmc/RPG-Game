@@ -44,5 +44,4 @@ public class MainMenu {
 		if(blink)
 			Writer.write("|", new Point(582, 375));
 	}
-	
 }

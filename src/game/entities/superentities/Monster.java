@@ -6,6 +6,7 @@ import game.entities.item.Item;
 import game.features.Quest;
 import game.structure.Slot;
 import game.util.Renderer;
+import game.util.SoundManager;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 import game.util.XMLParser;
@@ -239,6 +240,7 @@ public class Monster extends SuperEntity
 
 	public boolean hit(int damage)
 	{
+		SoundManager.playSound("Hit_2");
 		angry = true;
 		moveTimer = movePeriod;
 

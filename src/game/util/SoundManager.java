@@ -15,6 +15,10 @@ public class SoundManager {
 	public static void initSounds()
 	{
 		addSound("Level_Up", "data/sound_effects/Level_Up.wav");
+		addSound("Hit_1", "data/sound_effects/Hit_1.wav");
+		addSound("Hit_2", "data/sound_effects/Hit_2.wav");
+		addSound("Hit_3", "data/sound_effects/Hit_3.wav");
+		addSound("Pick_Up", "data/sound_effects/Pick_Up.wav");
 	}
 	
 	public static void addSound(String name, String path)
