@@ -19,7 +19,7 @@ public abstract class Window
 	
 	private Point position;
 	private final Point initialPos;
-	protected final Dimension SIZE;
+	protected final Dimension size;
 	private Texture texture;
 	private boolean grabbed = false;
 	protected static final int DOUBLE_CLICK_DELAY = 250;
@@ -28,7 +28,7 @@ public abstract class Window
 	{
 		position = pos;
 		initialPos = new Point(pos);
-		SIZE = size;
+		this.size = size;
 		texture = Util.getTexture("UI/window/" + getClass().getSimpleName().toLowerCase() + ".png");
 	}
 	
@@ -37,7 +37,7 @@ public abstract class Window
 		Renderer.render(new Builder(
 				texture,
 				getPosition(),
-				SIZE)
+				size)
 				.imageSize(174, 256));
 	}
 	
@@ -52,7 +52,7 @@ public abstract class Window
 	}
 
 	public void mouse() {
-		if (Util.inRange(MouseManager.getPosition(), getPosition(), SIZE))
+		if (Util.inRange(MouseManager.getPosition(), getPosition(), size))
 		{
 			if (MouseManager.mousePressed())
 				grabbed = true;
@@ -91,4 +91,9 @@ public abstract class Window
 	}
 	
 	public void onClose() {}
+	
+	public Dimension getSize()
+	{
+		return size;
+	}
 }

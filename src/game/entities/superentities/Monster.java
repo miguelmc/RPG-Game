@@ -213,8 +213,13 @@ public class Monster extends SuperEntity
 
 		super.update();
 	}
+	
+	public void attack(int skillID)
+	{
+		getSkill(skillID).attack();
+	}
 
-	private void moveRandom(List<Integer> nums)
+	public void moveRandom(List<Integer> nums)
 	{
 		if (nums.size() == 0)
 			return;
@@ -323,6 +328,10 @@ public class Monster extends SuperEntity
 	
 	private void calculateMovePeriod() {
 		movePeriod = new Random(System.nanoTime()).nextInt(MAX_MOVE_TIME - MIN_MOVE_TIME) + MIN_MOVE_TIME;
+	}
+
+	public boolean isAngry() {
+		return angry;
 	}
 	
 }

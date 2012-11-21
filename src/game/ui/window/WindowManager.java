@@ -94,7 +94,7 @@ public class WindowManager {
 		
 		if(isShopOpen())
 			shop.mouseInput();
-		else if(Util.inRange(MouseManager.getPosition(), activeWindows.lastElement().getPosition(), activeWindows.lastElement().SIZE))
+		else if(Util.inRange(MouseManager.getPosition(), activeWindows.lastElement().getPosition(), activeWindows.lastElement().size))
 		{
 			activeWindows.lastElement().mouse();
 		}else if(MouseManager.mousePressed()) //if the event is a click
@@ -103,7 +103,7 @@ public class WindowManager {
 			while(it.hasPrevious())
 			{
 				Window window = it.previous();
-				if(Util.inRange(MouseManager.getPosition(), window.getPosition(), window.SIZE)) //if the window is clicked
+				if(Util.inRange(MouseManager.getPosition(), window.getPosition(), window.size)) //if the window is clicked
 				{
 					activeWindows.remove(window); //send it to the top
 					activeWindows.push(window);

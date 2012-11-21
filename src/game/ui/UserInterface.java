@@ -7,6 +7,8 @@ import game.features.Stat;
 import game.structure.MapManager;
 import game.ui.window.WindowManager;
 import game.util.Renderer;
+import game.util.Renderer.Builder;
+import game.util.Util;
 import game.util.Writer;
 import game.util.Writer.Fonts;
 
@@ -16,6 +18,7 @@ import java.util.Queue;
 
 import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
+import org.newdawn.slick.opengl.Texture;
 
 public class UserInterface
 {
@@ -24,10 +27,21 @@ public class UserInterface
 	private static final Point NOTIFICATIONS_POS = new Point(10, 70);
 	private static Queue<Notification> notifications = new LinkedList<Notification>();
 	private static Queue<Notification> importantNotifications = new LinkedList<Notification>();
-	private static final Dimension BAR_SIZE = new Dimension(128, 25);
+	private static final Dimension BAR_SIZE = new Dimension(128, 25), LEVEL_UP_SIZE = new Dimension(400, 100);
 	private static final Point HP_POS = new Point(10, 10), MP_POS = new Point(200, 10), EXP_POS = new Point(390, 10),
-							   MAP_NAME_POS = new Point(10, 40), LEVEL_POS = new Point(Main.DIM.getWidth()-10, 5);
+							   MAP_NAME_POS = new Point(10, 40), LEVEL_POS = new Point(Main.DIM.getWidth()-10, 5),
+							   LEVEL_UP_POS;
+	private static final Texture levelUpTexture;
+	private static boolean levelUp = false;
+	private static long levelUpTime;
+	private static final int LEVEL_UP_DURATION = 1500;
 		
+	static
+	{
+		levelUpTexture = Util.getTexture("UI/levelUp.png");
+		LEVEL_UP_POS = new Point(Main.DIM.getWidth()/2, (int)(Main.DIM.getHeight()*.3));
+	}
+	
 	public static void render()
 	{
 		WindowManager.render();
@@ -49,6 +63,21 @@ public class UserInterface
 		
 		Writer.write("Level: " + player.getLevel(), LEVEL_POS , Writer.RIGHT);
 
+		if(levelUp) //renders the level up animation
+		{
+			
+			float scale = (float) (((System.currentTimeMillis() - levelUpTime)) / (LEVEL_UP_DURATION *.25));
+			if(scale > 1) scale = 1;
+						
+			Renderer.render(new Builder(levelUpTexture, 
+										new Point((int) (LEVEL_UP_POS.getX() - LEVEL_UP_SIZE.getWidth()*.5*scale),
+												  (int) (LEVEL_UP_POS.getY() - LEVEL_UP_SIZE.getHeight()*.5*scale)), 
+										new Dimension((int) (LEVEL_UP_SIZE.getWidth()*scale), 
+													  (int) (LEVEL_UP_SIZE.getHeight()*scale))));
+			if(System.currentTimeMillis() > levelUpTime + LEVEL_UP_DURATION)
+				levelUp = false;
+		}
+		
 		MsgBoxManager.render();
 	}
 	
@@ -116,6 +145,11 @@ public class UserInterface
 			this.lifeTime = lifeTime;
 		}
 		
+	}
+
+	public static void levelUp() {
+		levelUp = true;
+		levelUpTime = System.currentTimeMillis();
 	}
 
 }

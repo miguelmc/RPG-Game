@@ -10,6 +10,7 @@ import game.util.Writer;
 import game.util.Writer.Fonts;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.util.Dimension;
@@ -218,4 +219,9 @@ public abstract class SuperEntity extends Entity
 	public abstract int getHP();
 
 	public abstract void setHP(int hp);
+	
+	public List<Skill> getSkills()
+	{
+		return skills;
+	}
 }
