@@ -42,6 +42,6 @@ public class MainMenu {
 		Writer.write("MAIN MENU", new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/2 - 40), Writer.CENTER);
 		Writer.write("Press any key to continue...", new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/2), Writer.CENTER);
 		if(blink)
-			Writer.write("|", new Point(582, 375));
+			Writer.write("|", new Point(710, 375));
 	}
 }

@@ -38,18 +38,23 @@ public class MapManager
 		Player player;
 		Point spawnPoint = playerPos;
 
-		if(getMap() == null || getMap().id() == 2 && id == 1)
+		if(getMap() == null && id == 0)
 			SoundManager.loopMusic("Ciudad");
 		
-		if(getMap().id() == 0 && id == 2)
-			SoundManager.loopMusic("Sewer");
-
-		if(getMap().id() == 7 && id == 5)
-			SoundManager.loopMusic("Sewer");
-
-		if(id == 7)
-			SoundManager.loopMusic("Boss");
-
+		if(getMap() != null)
+		{
+			if(getMap().id() == 2 && id == 0)
+				SoundManager.loopMusic("Ciudad");
+			
+			if(getMap().id() == 0 && id == 2)
+				SoundManager.loopMusic("Sewer");
+	
+			if(getMap().id() == 7 && id == 5)
+				SoundManager.loopMusic("Sewer");
+	
+			if(id == 7)
+				SoundManager.loopMusic("Boss");
+		}
 		
 		
 		if (currentMap == null) // if this is the starting map, create player

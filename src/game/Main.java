@@ -120,7 +120,7 @@ public class Main {
 			}
 			
 			Display.update(); // update the screen
-			Display.sync(60); // set fps to 60
+			Display.sync(100); // set fps to 60
 		}
 		
 		org.lwjgl.openal.AL.destroy();

@@ -89,11 +89,11 @@ public class WindowManager {
 	
 	public static void mouse()
 	{
-		if(activeWindows.isEmpty())
-			return;
-		
 		if(isShopOpen())
 			shop.mouseInput();
+		
+		if(activeWindows.isEmpty())
+			return;
 		else if(Util.inRange(MouseManager.getPosition(), activeWindows.lastElement().getPosition(), activeWindows.lastElement().size))
 		{
 			activeWindows.lastElement().mouse();

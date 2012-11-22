@@ -365,12 +365,19 @@ public class Player extends SuperEntity {
 
 	public void loseItem(int id, int amount) {
 		if (hasItem(id, amount)) {
-			getItem(id).setQuantity(getItem(id).getQuantity() - amount);
-			if (amount > 0)
-				UserInterface.sendNotification("You lost an item: "
-						+ getItem(id).getName() + " x" + amount + ".");
-			if (getItem(id).getQuantity() <= 0) {
-				items.remove(getItem(id));
+			Item item = getItem(id);
+			if(item instanceof EquipItem)
+			{
+				items.remove(item);
+			}else
+			{
+				item.setQuantity(item.getQuantity() - amount);
+				if (amount > 0)
+					UserInterface.sendNotification("You lost an item: "
+							+ item.getName() + " x" + amount + ".");
+				if (item.getQuantity() <= 0) {
+					items.remove(item);
+				}
 			}
 		}
 	}

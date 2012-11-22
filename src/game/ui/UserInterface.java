@@ -58,10 +58,10 @@ public class UserInterface
 		Writer.useFont(Fonts.Monaco_White_Plain_25);
 		renderNotifications(importantNotifications, new Point(Main.DIM.getWidth()/2, Main.DIM.getHeight()/4), Writer.CENTER);
 			
-		glColor4f(1, 1, 1, .5f); //border
+		//glColor4f(1, 1, 1, .5f); //border
 
-		Renderer.render(new Builder(skillShortcuts, SHORTCUTS_POS, SHORTCUTS_SIZE).imageSize(256, 56));
-		glColor4f(1, 1, 1, 1); //border
+		//Renderer.render(new Builder(skillShortcuts, SHORTCUTS_POS, SHORTCUTS_SIZE).imageSize(256, 56));
+		//glColor4f(1, 1, 1, 1); //border
 
 		Player player = MapManager.getMap().getPlayer();
 		

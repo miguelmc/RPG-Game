@@ -49,7 +49,6 @@ public class Shop extends GameObject{
 
 	private void parseShop() 
 	{
-		
 		XMLParser parser = new XMLParser("shop/" + hexID() + "/data.xml");
 		
 		List<Map<String, String>> shopItems = parser.getChildrenAttributes("Shop/items");
@@ -59,7 +58,6 @@ public class Shop extends GameObject{
 			items.add((Item) Entity.createEntity(Integer.parseInt(item.get("id"), 16)));
 			System.out.println(items.get(items.size()-1).getQuantity());
 		}
-		
 	}
 	
 	public void render()
@@ -137,14 +135,14 @@ public class Shop extends GameObject{
 		}
 	}
 	
-	private Item getItemInPosition(Point position) // FIXME NOT WORKING PROPERLY
+	private Item getItemInPosition(Point position)
 	{
 			
 		if(position.getX()<137 || position.getY()>300)
 			return null;
 		
 		int row = (position.getY() - 55)/32 - 2;
-		
+				
 		if(position.getX() > 304)
 		{
 			
@@ -167,13 +165,13 @@ public class Shop extends GameObject{
 	}
 	
 	public void mouseInput() {
-		
+				
 		if(MsgBoxManager.isActive())
 			return;
 		
 		if(Mouse.getEventButtonState())
 		{
-			
+						
 			int x = Mouse.getX();
 			int y = Main.DIM.getHeight() - Mouse.getY() + 1;
 			Item selection = getItemInPosition(new Point(Mouse.getX(), Main.DIM.getHeight() - Mouse.getY() + 1));
@@ -193,8 +191,7 @@ public class Shop extends GameObject{
 				}
 			}
 			lastItemSelection = System.currentTimeMillis();
-		}
-		
+		}	
 	}
 	
 	public Item getItemByID(int id)
@@ -227,7 +224,6 @@ public class Shop extends GameObject{
 				MsgBoxManager.sendMessage("Make up your mind...", MsgBoxManager.OK);
 			}else
 			{
-				System.out.println(itemSelected.getQuantity());
 				if(player.gainItem(itemSelected))
 					player.gainGold(-itemSelected.getPrice());
 				else
