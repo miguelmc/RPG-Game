@@ -42,7 +42,7 @@ public class Main {
 	
 	public static boolean DEBUG = false;
 	
-	public static int state = 0;
+	private static int state = 0;
 	public static final int MAIN_MENU = 0, SETTINGS = 2, GAME = 3, DEAD = 4;
 	static // static initializer
 	{
