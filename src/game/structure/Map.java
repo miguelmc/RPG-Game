@@ -61,12 +61,8 @@ public class Map extends GameObject
 		// initialize matrix
 		matrix = new Slot[size.getWidth()][size.getHeight()];
 		for (int i = 0; i < matrix.length; i++)
-		{
 			for (int j = 0; j < matrix[0].length; j++)
-			{
 				matrix[i][j] = new Slot();
-			}
-		}
 		
 		// Parse tiles
 		Queue<Integer> tileQueue = new LinkedList<Integer>();
@@ -84,14 +80,19 @@ public class Map extends GameObject
 		
 
 		for (int i = 0; i < size.getHeight(); i++)
-		{
 			for (int j = 0; j < size.getWidth(); j++)
 			{
 				Tile tile = new Tile(tileQueue.poll());
 				add(tile, new Point(j, i));
 			}
-		}
 		
+		// Parse switches
+		List<java.util.Map<String, String>> switches = parser.getChildrenAttributes("Map/Switches");
+		for (java.util.Map<String, String> data : switches) {
+			Point position = new Point(Integer.parseInt(data.get("x")), Integer.parseInt(data.get("y")));
+			get(position).getTile().setSwitch(Integer.parseInt(data.get("id"), 16));
+		}
+				
 		// Parse all other entities
 		String xmlElements[] = { "Portals", "Monsters", "NPCs", "Objects" };
 
@@ -141,12 +142,8 @@ public class Map extends GameObject
 		get(pos).add(entity);
 
 		if (entity instanceof Object && !entity.isStrong())
-		{
 			for (Block block : ((Object) entity).getBlocks())
-			{
 				add(block, block.position());
-			}
-		}
 
 		if (entity instanceof Player)
 		{

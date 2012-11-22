@@ -29,10 +29,10 @@ public abstract class SuperEntity extends Entity
 	private ArrayList<Integer> damages = new ArrayList<Integer>(); // TODO change to queue
 	private ArrayList<Long> damageTime = new ArrayList<Long>();
 	
-	private Texture texture;
-	private List<Animation> moveAnimations = new ArrayList<Animation>();
+	protected Texture texture;
+	protected List<Animation> moveAnimations = new ArrayList<Animation>();
 	protected Animation moveAnimation;
-	private int textureOffset = 0;
+	protected int textureOffset = 0;
 	protected Point animationPosition = new Point();
 	
 	public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
@@ -42,35 +42,14 @@ public abstract class SuperEntity extends Entity
 		super(id);
 		setStrong();
 		
-		texture = Util.getTexture("player/2600/texture.png");
-		moveAnimations.add(new Animation("player/2600/animations/front.xml", texture));
-		moveAnimations.add(new Animation("player/2600/animations/side.xml", texture));
-		moveAnimations.add(new Animation("player/2600/animations/back.xml", texture));
+		texture = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/texture.png");
 		
 		face(DOWN);
 	}
 	
 	protected void face(int dir)
 	{
-		if(moveAnimation != null && moveAnimation.rendering())
-			return;
-		
 		facing = dir;
-		switch(dir)
-		{
-		case UP:
-			textureOffset = 2;
-			moveAnimation = moveAnimations.get(2);
-			break;
-		case RIGHT:
-		case LEFT:
-			textureOffset = 1;
-			moveAnimation = moveAnimations.get(1);
-			break;
-		case DOWN:
-			textureOffset = 0;
-			moveAnimation = moveAnimations.get(0);
-		}
 	}
 
 	public void move(int dir)
@@ -83,7 +62,6 @@ public abstract class SuperEntity extends Entity
 
 	protected boolean canMove(int dir)
 	{
-		
 		if (moveAnimation.rendering())
 			return false;
 
@@ -129,6 +107,10 @@ public abstract class SuperEntity extends Entity
 		
 		Point renderPos = getPositionInGrid();
 		
+		int rotation = 0;
+		if(this instanceof Monster)
+			rotation = (getFacingDir() + 2)%4;
+		
 		if(!moveAnimation.rendering())
 		{
 				Renderer.render(new Builder(
@@ -138,13 +120,14 @@ public abstract class SuperEntity extends Entity
 						.flipX(getFacingDir() == LEFT)
 						.imageSize(moveAnimation.getImageSize().getHeight(), moveAnimation.getImageSize().getWidth())
 						.textureOffset(new Point(0, textureOffset*moveAnimation.getImageSize().getHeight()))
-						.renderOffset(getOffset()));
+						.renderOffset(getOffset())
+						.rotate(rotation));
 		}else
 		{
 			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
 			Point position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))),
 									   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))));
-			moveAnimation.render(new Point(position.getX() + getOffset().getX(), position.getY() + getOffset().getY()), new Dimension(Slot.SIZE, Slot.SIZE), getFacingDir() == LEFT);
+			moveAnimation.render(new Point(position.getX() + getOffset().getX(), position.getY() + getOffset().getY()), new Dimension(Slot.SIZE, Slot.SIZE), getFacingDir() == LEFT, rotation);
 		}
 	}
 	

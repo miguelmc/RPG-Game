@@ -21,6 +21,7 @@ import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
 import game.ui.window.WindowManager;
+import game.util.Animation;
 import game.util.SoundManager;
 import game.util.Timer;
 import game.util.Util;
@@ -52,12 +53,14 @@ public class Player extends SuperEntity {
 	private Skill activeSkill;
 	private transient long nextAtk = 0;
 	private transient boolean once = false;
+	private transient boolean animationLastFrame = false;
 
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
 		addSkill(0x0701);
 		addSkill(0x0701);
 		setOffset(0,-7);
+		
 		activeSkill = getSkill(0x0701);
 
 		stats.put(BASE + MAXHP.ID, 50);
@@ -78,13 +81,19 @@ public class Player extends SuperEntity {
 		Timer timer = new Timer(this, "regen", 3000);
 		timer.start();
 
+		moveAnimations.add(new Animation("player/2600/animations/front.xml", texture));
+		moveAnimations.add(new Animation("player/2600/animations/side.xml", texture));
+		moveAnimations.add(new Animation("player/2600/animations/back.xml", texture));
+		moveAnimation = moveAnimations.get(0);
+		
 	}
 	
-	public void regen() {
+	public void regen() 
+	{
 		setHP(getHP() + HPREGEN);
 		setMP(getMP() + MPREGEN);
 	}
-
+	
 	public void input() {
 		if (Keyboard.getEventKeyState()) {
 			switch (Keyboard.getEventKey()) {
@@ -177,6 +186,25 @@ public class Player extends SuperEntity {
 			return;
 		
 		super.face(dir);
+		
+		if(moveAnimation == null)
+			return;
+		
+		switch(dir)
+		{
+		case UP:
+			textureOffset = 2;
+			moveAnimation = moveAnimations.get(2);
+			break;
+		case RIGHT:
+		case LEFT:
+			textureOffset = 1;
+			moveAnimation = moveAnimations.get(1);
+			break;
+		case DOWN:
+			textureOffset = 0;
+			moveAnimation = moveAnimations.get(0);
+		}
 	}
 
 	public void moveTo(Point pos)
@@ -259,6 +287,16 @@ public class Player extends SuperEntity {
 		if (MsgBoxManager.isActive() || WindowManager.isShopOpen())
 			return;
 
+		if(moveAnimation.rendering())
+			animationLastFrame = true;
+		
+		if(!moveAnimation.rendering() && animationLastFrame)
+		{
+			getMap().get(position()).getTile().step();
+			animationLastFrame = false;
+		}
+			
+		
 		// handles movement
 		int moveKeys[] = { Keyboard.KEY_UP, Keyboard.KEY_RIGHT,
 				Keyboard.KEY_DOWN, Keyboard.KEY_LEFT };
