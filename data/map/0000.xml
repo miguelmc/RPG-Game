@@ -80,4 +80,7 @@
 		<Object id="2701" x="18" y="10" />
 		<Object id="2701" x="23" y="3" />
 	</Objects>
+	<Switches>
+	    <switch id="0A00" x="0" y="0" />
+	</Switches>
 </Map>

@@ -5,6 +5,7 @@ import game.entities.Entity;
 import game.entities.item.Item;
 import game.features.Quest;
 import game.structure.Slot;
+import game.util.Animation;
 import game.util.Renderer;
 import game.util.SoundManager;
 import game.util.Writer;
@@ -67,6 +68,8 @@ public class Monster extends SuperEntity
 		
 		setHP(getMaxHP());
 		calculateMovePeriod();
+		
+		moveAnimation = new Animation("monster/" + hexID() + "/animations/move.xml", texture);
 	}
 
 	public void UIRender()

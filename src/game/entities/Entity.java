@@ -101,6 +101,7 @@ public abstract class Entity extends GameObject
 		if (position() != null)
 			getMap().get(position()).remove(this);
 		getMap().get(pos).add(this);
+		
 		position = new Point(pos); // save a reference to the position
 	}
 

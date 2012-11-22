@@ -46,11 +46,16 @@ public class Animation{
 		lastRenderTime = System.currentTimeMillis();
 	}
 	
-	public void render(Point position, Dimension size, boolean flipX)
+	public void render(Point position, Dimension size, boolean flipX, int rotation)
 	{
 		if(iterator != null && currentFrame < coordinates.size())
 		{
-			Renderer.render(builder.setPosition(position).setSize(size).textureOffset(coordinates.get(currentFrame)).flipX(flipX));
+			Renderer.render(builder
+							.setPosition(position)
+							.setSize(size)
+							.textureOffset(coordinates.get(currentFrame))
+							.flipX(flipX)
+							.rotate(rotation));
 			
 			if(System.currentTimeMillis() > lastRenderTime + timePerFrame)
 			{
