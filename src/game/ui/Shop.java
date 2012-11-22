@@ -54,10 +54,7 @@ public class Shop extends GameObject{
 		List<Map<String, String>> shopItems = parser.getChildrenAttributes("Shop/items");
 		
 		for(Map<String, String> item: shopItems)
-		{
 			items.add((Item) Entity.createEntity(Integer.parseInt(item.get("id"), 16)));
-			System.out.println(items.get(items.size()-1).getQuantity());
-		}
 	}
 	
 	public void render()
@@ -80,6 +77,7 @@ public class Shop extends GameObject{
 			
 			if (!(playerItems.get(i) instanceof EquipItem))
 			{
+				Writer.useFont(Fonts.Courier_White_Bold_14);
 				Writer.write(Integer.toString(playerItems.get(i).getQuantity()),
 							 new Point(sellX + 7 + 32 * (i % 5) + 3, Y + 30 + 32 * (i / 5)));
 			}
@@ -91,7 +89,7 @@ public class Shop extends GameObject{
 					new Point(buyX + 7 + 32 * (i % 5),  Y + 30 + 32 * (i / 5)),
 					new Dimension(32, 32)));
 		}
-				
+		Writer.useFont(Fonts.Courier_White_Bold_28);
 		Writer.write(Integer.toString(MapManager.getMap().getPlayer().getGold()),
 					 new Point(goldX,goldY));
 		

@@ -15,6 +15,7 @@ import game.entities.item.UsableItem;
 import game.features.Quest;
 import game.features.Skill;
 import game.features.Stat;
+import game.scripting.PortalActionManager;
 import game.structure.Map;
 import game.structure.MapManager;
 import game.structure.Slot;
@@ -94,11 +95,11 @@ public class Player extends SuperEntity {
 		if (Keyboard.getEventKeyState()) {
 			switch (Keyboard.getEventKey()) {
 			case Keyboard.KEY_M:
-				for (Slot s : getMap().getAllSlots()) {
+				/*for (Slot s : getMap().getAllSlots()) {
 					Monster monster = s.getMonster();
 					if (monster != null)
 						monster.die();
-				}
+				}*/
 				break;
 			case Keyboard.KEY_SPACE:
 				action(getMap().get(Util.addRelPoints(position(), new Point(0, 1), getFacingDir())));
@@ -268,7 +269,8 @@ public class Player extends SuperEntity {
 		setHP(getStat(TOTAL+MAXHP.ID));
 		setMP(getStat(TOTAL+MAXHP.ID));
 		gainExp(-getExp());
-
+		SoundManager.loopMusic("Ciudad");
+		
 		for(Slot slot: MapManager.getMap().getAllSlots())
 		{
 			Monster monster = slot.getMonster();

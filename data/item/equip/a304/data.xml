@@ -1,3 +1,0 @@
-<EquipItem name="Old Leggings" description="A pair of old leggings..." type="bottomwear" price="4">
-    <stats maxhp="0" maxmp="5" atk="1" def="2" str="1" />
-</EquipItem>

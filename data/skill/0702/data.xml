@@ -1,3 +1,0 @@
-<Skill name="Triple Slash" delay="2500" description="Three powerful slashes.." maxLevel="5" mp="4">
-    	<Damage damage=".7" increase=".05" />
-</Skill>

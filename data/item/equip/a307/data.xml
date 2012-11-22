@@ -1,3 +1,0 @@
-<EquipItem name="Stick" description="Seems good for a weapon" type="weapon" price="4">
-    <stats maxhp="0" maxmp="0" atk="6" def="1" str="1" />
-</EquipItem>

@@ -1,3 +1,0 @@
-<Skill name="Slash" delay="500" description="A weak slash.." maxLevel="1" mp="0">
-	<Damage damage="2" increase="0" />
-</Skill>
