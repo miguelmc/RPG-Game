@@ -50,10 +50,8 @@ public class Player extends SuperEntity {
 	private java.util.Map<EquipType, EquipItem> equips = new HashMap<EquipType, EquipItem>();
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
-	private Skill activeSkill;
-	private transient long nextAtk = 0;
-	private transient boolean once = false;
 	private transient boolean animationLastFrame = false;
+	private int skillPoints = 0;
 
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
@@ -61,8 +59,6 @@ public class Player extends SuperEntity {
 		addSkill(0x0702);
 		setOffset(0,-7);
 		
-		activeSkill = getSkill(0x0702);
-
 		stats.put(BASE + MAXHP.ID, 50);
 		stats.put(BASE + MAXMP.ID, 30);
 		stats.put(BASE + ATK.ID, 1);
@@ -108,7 +104,16 @@ public class Player extends SuperEntity {
 				action(getMap().get(Util.addRelPoints(position(), new Point(0, 1), getFacingDir())));
 				break;
 			case Keyboard.KEY_Z:
-				activeSkill.attack();
+				attack(getSkill(0x0701));
+				break;
+			case Keyboard.KEY_1:
+				attack(getSkill(0x0702));
+				break;
+			case Keyboard.KEY_2:
+				break;
+			case Keyboard.KEY_3:
+				break;
+			case Keyboard.KEY_4:
 				break;
 			case Keyboard.KEY_X:
 				Portal portal = getMap().get(position()).getPortal();
@@ -212,7 +217,6 @@ public class Player extends SuperEntity {
 		animationPosition.setLocation(position());
 		super.moveTo(pos);
 		moveAnimation.play();
-		getMap().centerView();
 	}
 
 	private void action(Slot slot) {
@@ -237,13 +241,9 @@ public class Player extends SuperEntity {
 		if(isMoving())
 			return;
 		
-		if (System.currentTimeMillis() < nextAtk)
+		if (!skill.attack())
 		{
-			if(!once)
-			{
-				delayAttack(500);
-				once = true;
-			}
+			skill.delaySkill(500);
 			return;
 		}
 
@@ -253,17 +253,11 @@ public class Player extends SuperEntity {
 			return;
 		}
 		super.attack(skill);
-		once = false;
-		delayAttack(skill.getDelay());
 		useMP(1);
 	}
 
 	public double getAverageDamage() {
 		return getStat(TOTAL + ATK.ID) * 2 + getStat(TOTAL + STR.ID);
-	}
-
-	public void delayAttack(int mili) {
-		nextAtk = System.currentTimeMillis() + mili;
 	}
 
 	public void die() {
@@ -417,6 +411,7 @@ public class Player extends SuperEntity {
 		setMP(getStat(TOTAL + MAXHP.ID));
 		UserInterface.levelUp();
 		SoundManager.playSound("Level_Up");
+		skillPoints += 2;
 	}
 
 	public void useMP(int amount) 
@@ -594,6 +589,23 @@ public class Player extends SuperEntity {
 	public boolean isMoving()
 	{
 		return moveAnimation.rendering();
+	}
+	
+	public int getSkillPoints()
+	{
+		return skillPoints;
+	}
+	
+	public void raiseSkill(Skill skill)
+	{
+		if(skillPoints == 0)
+		{
+			UserInterface.sendNotification("You don't have enough skill points to raise the skill.");
+			return;
+		}
+		
+		if(skill.raiseLevel())
+			skillPoints--;
 	}
 
 }

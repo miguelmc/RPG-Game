@@ -72,11 +72,6 @@ public class SkillActionManager extends AbstractScriptManager
 		return slot == null ? true : slot.getStrongEntity() != null;
 	}
 
-	public String[] getVariables(int i)
-	{
-		return activeAttack.getSkill().getVariables(i);
-	}
-
 	public int getLevel()
 	{
 		return activeAttack.getSkill().getLevel();
@@ -90,5 +85,10 @@ public class SkillActionManager extends AbstractScriptManager
 	public void stop()
 	{
 		activeAttack.stop();
+	}
+	
+	public float getDamage()
+	{
+		return activeAttack.getSkill().getDamage();
 	}
 }
