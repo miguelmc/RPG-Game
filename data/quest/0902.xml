@@ -1,18 +1,18 @@
-<Quest name="Test Quest" description="You need to kill two \(2400) and hand them back to \(3001).">
+<Quest name="The Master Rat" description="You need to kill the big rat deep in the sewers.">
     <requirements>
         <monster_kills>
-            <monster id="2400" amount="3"/>
+            <monster id="2402" amount="1"/>
         </monster_kills>
         <items>
-            <item id="6300" amount="2"/>
         </items>
         <gold amount="0"/>
     </requirements>
     <rewards>
-        <exp amount="30"/>
-        <gold amount="100"/>
+        <exp amount="70"/>
+        <gold amount="60"/>
         <items>
-            <item id="6301" amount="3"/>
+            <item id="6300" amount="5"/>
+            <item id="6301" amount="5"/>
         </items>
     </rewards>
 </Quest>
