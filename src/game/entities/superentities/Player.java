@@ -108,7 +108,7 @@ public class Player extends SuperEntity {
 				action(getMap().get(Util.addRelPoints(position(), new Point(0, 1), getFacingDir())));
 				break;
 			case Keyboard.KEY_Z:
-				attack(activeSkill);
+				activeSkill.attack();
 				break;
 			case Keyboard.KEY_X:
 				Portal portal = getMap().get(position()).getPortal();
@@ -234,6 +234,9 @@ public class Player extends SuperEntity {
 
 	protected void attack(Skill skill) {
 
+		if(isMoving())
+			return;
+		
 		if (System.currentTimeMillis() < nextAtk)
 		{
 			if(!once)
@@ -586,6 +589,11 @@ public class Player extends SuperEntity {
 	public void setActiveSkill(Skill skill)
 	{
 
+	}
+	
+	public boolean isMoving()
+	{
+		return moveAnimation.rendering();
 	}
 
 }

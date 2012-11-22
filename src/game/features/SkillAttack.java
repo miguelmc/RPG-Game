@@ -48,9 +48,8 @@ public class SkillAttack
 	{
 		if(animation != null)
 		{
-			System.out.println(animation.currentFrame());
 			animation.render(new Point(renderPos.getX()*Slot.SIZE, renderPos.getY()*Slot.SIZE), new Dimension(Slot.SIZE, Slot.SIZE), false, (facingDir+3)%4);
-			if(stop && animation.currentFrame() == animation.totalFrames())
+			if(stop && animation.currentFrame() == animation.totalFrames() - 1)
 				active = false;
 		}
 	}
