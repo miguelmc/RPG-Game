@@ -38,6 +38,21 @@ public class MapManager
 		Player player;
 		Point spawnPoint = playerPos;
 
+		if(getMap() == null || getMap().id() == 2 && id == 1)
+			SoundManager.loopMusic("Ciudad");
+		
+		switch(id)
+		{
+		case 2:
+		case 5:
+			SoundManager.loopMusic("Sewer");
+			break;
+		case 7:
+			SoundManager.loopMusic("Boss");
+			break;
+		}
+		
+		
 		if (currentMap == null) // if this is the starting map, create player
 		{
 			player = new Player(spawnPoint);
@@ -54,19 +69,6 @@ public class MapManager
 				currentMap = map;
 
 		currentMap.add(player, spawnPoint);
-		
-		switch(id)
-		{
-		case 0:
-			break;
-		case 2:
-		case 5:
-			SoundManager.loopMusic("Sewer");
-			break;
-		case 7:
-			SoundManager.loopMusic("Boss");
-			break;
-		}
 		
 		
 	}

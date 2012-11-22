@@ -21,6 +21,7 @@ public class SoundManager {
 		addSound("Pick_Up", "data/sound_effects/Pick_Up.wav");
 		addMusic("Sewer", "data/music/Sewer.wav");
 		addMusic("Boss", "data/music/Boss.wav");
+		addMusic("Ciudad", "data/music/Ciudad.wav");
 	}
 	
 	public static void addSound(String name, String path)
