@@ -1,4 +1,4 @@
-<Map name="Sewers_-2" width="30" height="30">
+<Map name="Sewers - 2" width="30" height="30">
 	<Tiles>
 		<Tile id="2102" amount="62" />
 		<Tile id="2107" amount="3" />

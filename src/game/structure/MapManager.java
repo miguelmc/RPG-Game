@@ -1,6 +1,7 @@
 package game.structure;
 
 import game.entities.superentities.Player;
+import game.util.SoundManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,6 +54,21 @@ public class MapManager
 				currentMap = map;
 
 		currentMap.add(player, spawnPoint);
+		
+		switch(id)
+		{
+		case 0:
+			break;
+		case 2:
+		case 5:
+			SoundManager.loopMusic("Sewer");
+			break;
+		case 7:
+			SoundManager.loopMusic("Boss");
+			break;
+		}
+		
+		
 	}
 
 	

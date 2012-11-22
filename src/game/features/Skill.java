@@ -28,6 +28,7 @@ public class Skill extends GameObject
 	private Texture thumbnail;
 	private long lastAttack = 0;
 	private boolean delayed = false;
+	private int mp;
 
 	public Skill(int id, SuperEntity attacker)
 	{
@@ -41,6 +42,7 @@ public class Skill extends GameObject
 		delay = Integer.parseInt(parser.getAttribute("Skill", "delay"));
 		description = parser.getAttribute("Skill", "description");
 		maxLevel = Integer.parseInt(parser.getAttribute("Skill", "maxLevel"));
+		mp = Integer.parseInt(parser.getAttribute("Skill", "mp"));
 		
 		damage = Float.parseFloat(parser.getAttribute("Skill/Damage", "damage"));
 		damageIncrease = Float.parseFloat(parser.getAttribute("Skill/Damage", "increase"));
@@ -153,6 +155,10 @@ public class Skill extends GameObject
 			lastAttack += time;
 			delayed = true;
 		}
+	}
+
+	public int getMP() {
+		return mp;
 	}
 	
 }

@@ -247,13 +247,13 @@ public class Player extends SuperEntity {
 			return;
 		}
 
-		if (getMP() < 1) //TODO check for the skill mp
+		if (getMP() < skill.getMP()) //TODO check for the skill mp
 		{
 			UserInterface.sendNotification("You don't have enough MP to use this skill.");
 			return;
 		}
 		super.attack(skill);
-		useMP(1);
+		useMP(skill.getMP());
 	}
 
 	public double getAverageDamage() {
