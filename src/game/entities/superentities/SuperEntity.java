@@ -62,11 +62,6 @@ public abstract class SuperEntity extends Entity
 
 	protected boolean canMove(int dir)
 	{
-		if (moveAnimation.rendering())
-			return false;
-
-		// check the slot were its gonna move so that it has no other strong
-		// entity
 		int xMove = 0;
 		int yMove = 0;
 
@@ -179,7 +174,7 @@ public abstract class SuperEntity extends Entity
 	}
 
 	protected void attack(Skill skill)
-	{
+	{			
 		skill.attack();
 	}
 

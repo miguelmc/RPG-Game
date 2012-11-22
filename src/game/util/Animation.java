@@ -61,7 +61,6 @@ public class Animation{
 				lastRenderTime = System.currentTimeMillis();
 				currentFrame++;
 			}
-			System.out.println(currentFrame + " -- " + coordinates.size());
 		}
 	}
 		

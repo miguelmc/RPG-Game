@@ -139,4 +139,10 @@ public class Skill extends GameObject
 	{
 		return texture;
 	}
+	
+	public boolean hasAttacks()
+	{
+		return !attacks.isEmpty();
+	}
+	
 }
