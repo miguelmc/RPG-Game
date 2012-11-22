@@ -51,6 +51,7 @@ public class Monster extends SuperEntity
 		{
 			setRenderSize(2, 2);
 			setOffset(-Slot.SIZE/2, -Slot.SIZE/2);
+			angry = true;
 		}
 		
 		this.respawn = respawn;

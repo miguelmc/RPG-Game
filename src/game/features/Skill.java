@@ -19,7 +19,7 @@ public class Skill extends GameObject
 {
 
 	private Texture texture;
-	private int level = 1, maxLevel, delay;
+	private int level = 0, maxLevel, delay;
 	private String description, name;
 	private List<SkillAttack> attacks = new ArrayList<SkillAttack>();
 	private float damage, damageIncrease;
@@ -48,6 +48,9 @@ public class Skill extends GameObject
 		damageIncrease = Float.parseFloat(parser.getAttribute("Skill/Damage", "increase"));
 		
 		texture = Util.getTexture("skill/" + hexID() + "/texture.png");
+		
+		if(id == 0x0701) raiseLevel();
+		
 	}
 
 	public String getDescription()

@@ -1,3 +1,0 @@
-<EquipItem name="Knife" description="Simple kitchen knife" type="weapon" price="10">
-    <stats maxhp="0" maxmp="0" atk="8" def="0" str="2"/>
-</EquipItem>

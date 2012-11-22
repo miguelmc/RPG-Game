@@ -1,7 +1,0 @@
-<Animation imageWidth="64" imageHeight="64" timePerFrame="100">
-    <Coordinates>
-        <coordinate x="64" y="0"/>
-        <coordinate x="0" y="0"/>
-        <coordinate x="64" y="0"/>
-    </Coordinates>
-</Animation>
