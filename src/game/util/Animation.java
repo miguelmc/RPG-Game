@@ -3,7 +3,6 @@ package game.util;
 import game.util.Renderer.Builder;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import org.newdawn.slick.opengl.Texture;
 public class Animation{
 
 	private List<Point> coordinates = new ArrayList<Point>();
-	private Iterator<Point> iterator;
 	private Builder builder;
 	private int timePerFrame;
 	private long lastRenderTime = 0;

@@ -6,6 +6,7 @@ import game.util.Util;
 import game.util.XMLParser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.newdawn.slick.opengl.Texture;
@@ -19,12 +20,14 @@ public class Skill extends GameObject
 
 	private Texture texture;
 	private int level = 1, maxLevel, delay;
-	private String description, subDescription, name;
-	private ArrayList<String[]> variables = new ArrayList<String[]>();
-	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>();
+	private String description, name;
+	private List<SkillAttack> attacks = new ArrayList<SkillAttack>();
+	private float damage, damageIncrease;
 	private SuperEntity attacker;
 	private int timePerFrame;
 	private Texture thumbnail;
+	private long lastAttack = 0;
+	private boolean delayed = false;
 
 	public Skill(int id, SuperEntity attacker)
 	{
@@ -37,12 +40,10 @@ public class Skill extends GameObject
 		name = parser.getAttribute("Skill", "name");
 		delay = Integer.parseInt(parser.getAttribute("Skill", "delay"));
 		description = parser.getAttribute("Skill", "description");
-		subDescription = parser.getAttribute("Skill/details", "data");
-
-		// TODO make custom lists in xml
-
-		String levelList = parser.getAttribute("Skill/details/list", "level");
-		variables.add(levelList.split(","));
+		maxLevel = Integer.parseInt(parser.getAttribute("Skill", "maxLevel"));
+		
+		damage = Float.parseFloat(parser.getAttribute("Skill/Damage", "damage"));
+		damageIncrease = Float.parseFloat(parser.getAttribute("Skill/Damage", "increase"));
 		
 		texture = Util.getTexture("skill/" + hexID() + "/texture.png");
 	}
@@ -55,22 +56,6 @@ public class Skill extends GameObject
 	public int getDelay()
 	{
 		return delay;
-	}
-
-	public String getSubDescription()
-	{
-		int i = 0;
-		while (subDescription.contains("%"))
-		{
-			int index = subDescription.indexOf("%");
-			String newString = subDescription.substring(0, index) + variables.get(i)[level];
-			if (index != subDescription.length() - 1)
-				newString.concat(subDescription.substring(index + 1));
-			subDescription = newString;
-			i++;
-		}
-		subDescription.replace("\\", "%");
-		return subDescription;
 	}
 
 	public int getMaxLevel()
@@ -100,14 +85,17 @@ public class Skill extends GameObject
 			sa.render();
 	}
 
-	public String[] getVariables(int i)
+	public boolean attack()
 	{
-		return variables.get(i);
-	}
-
-	public void attack()
-	{
-		attacks.add(new SkillAttack(this));
+		if(System.currentTimeMillis() > lastAttack + getDelay())
+		{
+			attacks.add(new SkillAttack(this));
+			lastAttack = System.currentTimeMillis();
+			delayed = false;
+			return true;
+		}
+		
+		return false;
 	}
 
 	public SuperEntity getAttacker()
@@ -143,6 +131,28 @@ public class Skill extends GameObject
 	public boolean hasAttacks()
 	{
 		return !attacks.isEmpty();
+	}
+	
+	public float getDamage()
+	{
+		return damage + (getLevel() - 1) * damageIncrease;
+	}
+
+	public boolean raiseLevel() {
+		if(getLevel() == getMaxLevel())
+			return false;
+		
+		level++;
+		return true;
+	}
+	
+	public void delaySkill(int time)
+	{
+		if(!delayed)
+		{
+			lastAttack += time;
+			delayed = true;
+		}
 	}
 	
 }
