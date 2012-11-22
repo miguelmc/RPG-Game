@@ -38,7 +38,6 @@ public class Tile extends Entity
 	
 	public void step()
 	{
-		System.out.println("asdljnasdkjbas");
 		if(tileSwitch == -1)
 			return;
 		

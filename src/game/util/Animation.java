@@ -41,14 +41,13 @@ public class Animation{
 	
 	public void play()
 	{
-		iterator = coordinates.iterator();
 		currentFrame = 0;
 		lastRenderTime = System.currentTimeMillis();
 	}
 	
 	public void render(Point position, Dimension size, boolean flipX, int rotation)
 	{
-		if(iterator != null && currentFrame < coordinates.size())
+		if(currentFrame < coordinates.size())
 		{
 			Renderer.render(builder
 							.setPosition(position)
@@ -62,6 +61,7 @@ public class Animation{
 				lastRenderTime = System.currentTimeMillis();
 				currentFrame++;
 			}
+			System.out.println(currentFrame + " -- " + coordinates.size());
 		}
 	}
 		

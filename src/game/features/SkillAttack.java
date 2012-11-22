@@ -3,6 +3,7 @@ package game.features;
 import game.scripting.SkillActionManager;
 import game.structure.MapManager;
 import game.structure.Slot;
+import game.util.Animation;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,6 +12,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
 
 /**
@@ -19,15 +21,15 @@ import org.lwjgl.util.Point;
 public class SkillAttack
 {
 
-	private long time = 0, lastFrameTime = 0;
-	private int frame = 0;
-	private boolean active = true, stopCall = false;
-	private int state = -1;
+	private int step = 0;
+	private boolean active = true;
 	private ScriptEngine engine;
 	private Skill skill;
-	private boolean playAnimation = false;
 	private Point renderPos;
 	private int facingDir;
+	private Animation animation;
+	private boolean stop = false;
+	private long lastAttack;
 
 	public SkillAttack(Skill s)
 	{
@@ -39,31 +41,24 @@ public class SkillAttack
 			engine = new ScriptEngineManager().getEngineByName("JavaScript");
 			engine.put("sm", new SkillActionManager(this));
 		}
+		
 	}
 
 	public void render()
 	{
-		if (playAnimation)
+		if(animation != null)
 		{
-			if(System.currentTimeMillis() > lastFrameTime + skill.getTimePerFrame())
-			{
-				state++;
-				lastFrameTime = System.currentTimeMillis();
-			}
-			skill.getSprites()[state].render(renderPos.getX() * Slot.SIZE, renderPos.getY() * Slot.SIZE, (facingDir + 3)%4);
-			if (state == skill.getSprites().length - 1)
-			{
-				state = 0;
-				playAnimation = false;
-				if(stopCall)
-					active = false;
-			}
+			System.out.println(animation.currentFrame());
+			animation.render(new Point(renderPos.getX()*Slot.SIZE, renderPos.getY()*Slot.SIZE), new Dimension(Slot.SIZE, Slot.SIZE), false, (facingDir+3)%4);
+			if(stop && animation.currentFrame() == animation.totalFrames())
+				active = false;
 		}
 	}
 
 	public void play(Point position)
 	{
-		playAnimation = true;
+		animation = new Animation("skill/" + skill.hexID() + "/animation.xml", skill.getTexture());
+		animation.play();
 		Point offset = MapManager.getMap().getOffSet();
 		position.setLocation(position.getX() - offset.getX(), position.getY() - offset.getY());
 		renderPos = position;
@@ -71,12 +66,12 @@ public class SkillAttack
 
 	public void update()
 	{
-		if (System.currentTimeMillis() > time + skill.getTimePerFrame() && !stopCall)
+		if(!stop && System.currentTimeMillis() >= lastAttack + 10) //EXECUTE SCRIPT EVERY 10 MILISECONDS
 		{
-			time = System.currentTimeMillis();
+			lastAttack = System.currentTimeMillis();
 			try
 			{
-				engine.put("frame", frame);
+				engine.put("step", step++);
 				engine.eval(new FileReader("data/skill/" + skill.hexID() + "/script.js"));
 			} catch (FileNotFoundException e)
 			{
@@ -86,13 +81,12 @@ public class SkillAttack
 			{
 				e.printStackTrace();
 			}
-			frame++;
 		}
 	}
 
 	public void stop()
 	{
-		stopCall = true;
+		stop = true;
 	}
 
 	public Skill getSkill()

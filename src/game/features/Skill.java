@@ -2,17 +2,12 @@ package game.features;
 
 import game.entities.superentities.SuperEntity;
 import game.structure.GameObject;
-import game.util.SubImage;
 import game.util.Util;
 import game.util.XMLParser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
-import org.lwjgl.util.Dimension;
-import org.lwjgl.util.Point;
 import org.newdawn.slick.opengl.Texture;
 
 /**
@@ -22,11 +17,11 @@ import org.newdawn.slick.opengl.Texture;
 public class Skill extends GameObject
 {
 
-	private SubImage sprites[]; // each frame of the animation
+	private Texture texture;
 	private int level = 1, maxLevel, delay;
 	private String description, subDescription, name;
 	private ArrayList<String[]> variables = new ArrayList<String[]>();
-	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>(); // TODO change to a stack?
+	private ArrayList<SkillAttack> attacks = new ArrayList<SkillAttack>();
 	private SuperEntity attacker;
 	private int timePerFrame;
 	private Texture thumbnail;
@@ -49,25 +44,7 @@ public class Skill extends GameObject
 		String levelList = parser.getAttribute("Skill/details/list", "level");
 		variables.add(levelList.split(","));
 		
-		parser.setDocument("skill/" + hexID() + "/coordinates.xml");
-
-		int width = Integer.parseInt(parser.getAttribute("Coordinates", "width"));
-		int height = Integer.parseInt(parser.getAttribute("Coordinates", "height"));
-		timePerFrame = Integer.parseInt(parser.getAttribute("Coordinates", "timePerFrame"));
-
-		Dimension size = new Dimension(width, height);
-
-		List<Map<String, String>> coordinates = parser.getChildrenAttributes("Coordinates");
-
-		sprites = new SubImage[coordinates.size()];
-		Texture spriteSheet = Util.getTexture("skill/" + hexID() + "/texture.png");
-
-		for (int i = 0; i < sprites.length; i++)
-		{
-			sprites[i] = new SubImage(spriteSheet, new Point(Integer.parseInt(coordinates.get(i).get("x")),
-															 Integer.parseInt(coordinates.get(i).get("y"))), size);
-		
-		}
+		texture = Util.getTexture("skill/" + hexID() + "/texture.png");
 	}
 
 	public String getDescription()
@@ -128,11 +105,6 @@ public class Skill extends GameObject
 		return variables.get(i);
 	}
 
-	public SubImage[] getSprites()
-	{
-		return sprites;
-	}
-
 	public void attack()
 	{
 		attacks.add(new SkillAttack(this));
@@ -161,5 +133,10 @@ public class Skill extends GameObject
 	public String getName()
 	{
 		return name;
+	}
+	
+	public Texture getTexture()
+	{
+		return texture;
 	}
 }

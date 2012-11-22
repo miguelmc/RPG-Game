@@ -58,10 +58,10 @@ public class Player extends SuperEntity {
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
 		addSkill(0x0701);
-		addSkill(0x0701);
+		addSkill(0x0702);
 		setOffset(0,-7);
 		
-		activeSkill = getSkill(0x0701);
+		activeSkill = getSkill(0x0702);
 
 		stats.put(BASE + MAXHP.ID, 30);
 		stats.put(BASE + MAXMP.ID, 30);
