@@ -41,16 +41,15 @@ public class MapManager
 		if(getMap() == null || getMap().id() == 2 && id == 1)
 			SoundManager.loopMusic("Ciudad");
 		
-		switch(id)
-		{
-		case 2:
-		case 5:
+		if(getMap().id() == 0 && id == 2)
 			SoundManager.loopMusic("Sewer");
-			break;
-		case 7:
+
+		if(getMap().id() == 7 && id == 5)
+			SoundManager.loopMusic("Sewer");
+
+		if(id == 7)
 			SoundManager.loopMusic("Boss");
-			break;
-		}
+
 		
 		
 		if (currentMap == null) // if this is the starting map, create player
