@@ -24,6 +24,9 @@ public class MapManager
 		maps.add(new Map(1));
 		maps.add(new Map(2));
 		maps.add(new Map(3));
+		maps.add(new Map(4));
+		maps.add(new Map(5));
+		maps.add(new Map(6));
 		setMap(startMap, new Point(4, 6));
 
 	}
