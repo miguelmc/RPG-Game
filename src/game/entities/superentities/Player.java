@@ -238,7 +238,7 @@ public class Player extends SuperEntity {
 	public void die() {
 		UserInterface.sendNotification("You died.");
 		super.die();
-		Main.state = 4;
+		Main.setScene(Main.MAIN_MENU);
 		MapManager.setMap(0, new Point(4, 5));
 		setHP(getStat(TOTAL+MAXHP.ID));
 		setMP(getStat(TOTAL+MAXHP.ID));
@@ -277,7 +277,7 @@ public class Player extends SuperEntity {
 	}
 
 	public boolean hit(int damage) {
-		damage -= getStat(TOTAL+DEF.ID)/10;
+		damage -= getStat(TOTAL + DEF.ID)/10;
 		SoundManager.playSound("Hit_1");
 
 		if(damage < 0) damage = 0;

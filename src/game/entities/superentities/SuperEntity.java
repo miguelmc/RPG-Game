@@ -186,9 +186,13 @@ public abstract class SuperEntity extends Entity
 	
 	public void moveTo(Point pos)
 	{
-		animationPosition.setLocation(position() != null ? position() : new Point(0 ,0));
-		super.moveTo(pos);
-		moveAnimation.play();
+		if(position() != null)
+		{
+			animationPosition.setLocation(position());
+			super.moveTo(pos);
+			moveAnimation.play();
+		}else 
+			super.moveTo(pos);
 	}
 
 	protected void attack(Skill skill)

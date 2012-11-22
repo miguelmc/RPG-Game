@@ -74,5 +74,14 @@ public class MapManager
 	{
 		return currentMap;
 	}
+	
+	public static Map getMap(int id)
+	{
+		for(Map m: maps)
+			if(m.id() == id)
+				return m;
+		
+		return null;
+	}
 
 }
