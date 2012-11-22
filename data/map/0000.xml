@@ -77,10 +77,11 @@
 	<Objects>
 		<Object id="2700" x="0" y="10" />
 		<Object id="2701" x="2" y="16" />
+		<Object id="2708" x="13" y="5" />
 		<Object id="2701" x="18" y="10" />
 		<Object id="2701" x="23" y="3" />
 	</Objects>
 	<Switches>
-	    <switch id="0A00" x="0" y="0" />
+	    <Switch id="0A09" x="13" y="7" />
 	</Switches>
 </Map>

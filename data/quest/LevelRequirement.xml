@@ -1,3 +1,5 @@
 <Requirement>
-    <quest id="0900" level="2" />
+    <quest id="0900" level="1" />
+    <quest id="0901" level="1" />
+    <quest id="0902" level="1" />
 </Requirement>

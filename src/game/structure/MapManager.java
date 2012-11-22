@@ -28,13 +28,10 @@ public class MapManager
 		maps.add(new Map(5));
 		maps.add(new Map(6));
 		setMap(startMap, new Point(4, 6));
-
 	}
 	
 	public static void setMap(int id, Point playerPos)
 	{
-		// TODO each map should have a spawn point
-
 		Player player;
 		Point spawnPoint = playerPos;
 

@@ -1,0 +1,15 @@
+<Map name="House" width="6" height="6">
+	<Tiles>
+		<Tile id="2114" amount="36" />
+	</Tiles>
+	<Portals>
+	</Portals>
+	<Monsters>
+	</Monsters>
+	<NPCs>
+	</NPCs>
+	<Objects>
+	</Objects>
+	<Switches>
+	</Switches>
+</Map>
