@@ -1,18 +1,18 @@
-var quest1 = 2304;
+var quest = 2305;
 switch(cm.getState()){
 case 0:
 	if(cm.isQuestInProgress(quest)){
 		if(cm.isQuestComplete(quest)){
 			cm.turnQuestIn(quest);
-			cm.sendOk("Thanks!!");
+			cm.sendOk("Great!! Here's your reward.");
 		}else{
-			cm.sendOk("You haven't yet finished the quest.");
+			cm.sendOk("You are not done yet.");
 		}
 	}else{
 		if(cm.isQuestTurnedIn(quest) || !cm.isQuestAvailable(quest)){
-			cm.sendOk("Have a nice day.");
+			cm.sendOk("Hi. My name is Mathew.");
 		}else{
-			cm.sendYesNo("Can you kill 3 rats and bring me 2 HP potions?", 1, 2);
+			cm.sendYesNo("There's rats everywhere. Could you please kill 5 rats and come back. I heard they come from the sewer next to the store.", 1, 2);
 		}
 	}
 	break;
@@ -21,6 +21,6 @@ case 1:
 	cm.activateQuest(quest);
 	break;
 case 2:
-	cm.sendOk("...");
+	cm.sendOk("Come back later.");
 	break;
 }

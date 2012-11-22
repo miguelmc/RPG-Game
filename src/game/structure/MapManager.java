@@ -28,6 +28,7 @@ public class MapManager
 		maps.add(new Map(5));
 		maps.add(new Map(6));
 		maps.add(new Map(7));
+		maps.add(new Map(8));
 		setMap(startMap, new Point(4, 6));
 	}
 	

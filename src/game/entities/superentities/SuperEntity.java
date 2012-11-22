@@ -111,8 +111,8 @@ public abstract class SuperEntity extends Entity
 				Renderer.render(new Builder(
 						texture,
 						new Point(renderPos.getX()*Slot.SIZE, renderPos.getY()*Slot.SIZE),
-						new Dimension(Slot.SIZE, Slot.SIZE))
-						.flipX(getFacingDir() == LEFT)
+						new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getWidth()*Slot.SIZE))
+						.flipX((this instanceof Player) ? (getFacingDir() == LEFT) : (getFacingDir() != LEFT))
 						.imageSize(moveAnimation.getImageSize().getHeight(), moveAnimation.getImageSize().getWidth())
 						.textureOffset(new Point(0, textureOffset*moveAnimation.getImageSize().getHeight()))
 						.renderOffset(getOffset())
@@ -122,7 +122,7 @@ public abstract class SuperEntity extends Entity
 			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
 			Point position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))),
 									   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))));
-			moveAnimation.render(new Point(position.getX() + getOffset().getX(), position.getY() + getOffset().getY()), new Dimension(Slot.SIZE, Slot.SIZE), getFacingDir() == LEFT, rotation);
+			moveAnimation.render(new Point(position.getX() + getOffset().getX(), position.getY() + getOffset().getY()), new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getWidth()*Slot.SIZE), (this instanceof Player) ? (getFacingDir() == LEFT) : (getFacingDir() != LEFT), rotation);
 		}
 	}
 	

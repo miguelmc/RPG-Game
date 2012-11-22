@@ -47,6 +47,12 @@ public class Monster extends SuperEntity
 	{
 		super(id);
 
+		if(id == 0x2402)
+		{
+			setRenderSize(2, 2);
+			setOffset(-Slot.SIZE/2, -Slot.SIZE/2);
+		}
+		
 		this.respawn = respawn;
 		
 		XMLParser parser = new XMLParser(path() + "data.xml");
