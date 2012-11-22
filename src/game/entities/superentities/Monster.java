@@ -36,7 +36,7 @@ public class Monster extends SuperEntity
 	private boolean angry = false, dead = false, respawn;
 	private Map<Integer, Integer> dropList  = new HashMap<Integer, Integer>();
 	private long nextAtk = 0L;
-
+	
 	public Monster(int id)
 	{
 		this(id, true);
@@ -72,13 +72,24 @@ public class Monster extends SuperEntity
 	public void UIRender()
 	{
 		if (dead) return;
+		
+		Point position;
+		if(moveAnimation.rendering())
+		{
+			Point renderPos = getPositionInGrid();
+			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
+			position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1))) + getOffset().getX()),
+					   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))) + getOffset().getY());
+		}else
+			position = new Point(getPositionInGrid().getX() * Slot.SIZE + getOffset().getX(), getPositionInGrid().getY() * Slot.SIZE + getOffset().getY());
+		
 
 		float hp = (float)getHP() / (float)getMaxHP(); // current hp percentage
 
 		// HP BAR
 		glColor3f(1f, 0f, 0f); // Red
-		Renderer.renderQuad(new Point((int) (Slot.SIZE * (getPositionInGrid().getX() + .13)),
-									  (int) (Slot.SIZE * (getPositionInGrid().getY() + .07))),
+		Renderer.renderQuad(new Point((int) (position.getX() + Slot.SIZE*.13),
+									  (int) (position.getY() + Slot.SIZE*.07)),
 						    new Dimension((int) (Slot.SIZE * .74 * hp),
 						    			  (int) (Slot.SIZE * .13f)));
 
@@ -86,8 +97,8 @@ public class Monster extends SuperEntity
 		glColor3f(0f, 0f, 0f);
 		
 		Renderer.renderLines(1,
-							 new Point((int) (Slot.SIZE * (getPositionInGrid().getX() + .13)),
-									   (int) (Slot.SIZE * (getPositionInGrid().getY() + .07))), 
+							 new Point((int) (position.getX() + Slot.SIZE * .13),
+									   (int) (position.getY() + Slot.SIZE *.07)), 
 							 new Point[]{new Point(0, 0),
 										 new Point((int) (Slot.SIZE * .74), 0),
 										 new Point((int) (Slot.SIZE * .74), (int) (Slot.SIZE * .13)),
@@ -97,8 +108,8 @@ public class Monster extends SuperEntity
 
 		Writer.useFont(Fonts.Arial_White_Bold_10);
 		Writer.write(getName(), 
-				     new Point((int)((getPositionInGrid().getX() + .5)*Slot.SIZE),
-							   getPositionInGrid().getY()*Slot.SIZE - Writer.fontHeight()), 
+				     new Point((int)((position.getX() + Slot.SIZE*.5)),
+				    		 position.getY() - Writer.fontHeight()), 
 					 Writer.CENTER);
 
 		super.UIRender();

@@ -15,15 +15,11 @@ import game.entities.item.UsableItem;
 import game.features.Quest;
 import game.features.Skill;
 import game.features.Stat;
-import game.structure.Map;
 import game.structure.MapManager;
 import game.structure.Slot;
 import game.ui.MsgBoxManager;
 import game.ui.UserInterface;
 import game.ui.window.WindowManager;
-import game.util.Animation;
-import game.util.Renderer;
-import game.util.Renderer.Builder;
 import game.util.SoundManager;
 import game.util.Timer;
 import game.util.Util;
@@ -37,9 +33,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.Dimension;
 import org.lwjgl.util.Point;
-import org.newdawn.slick.opengl.Texture;
 
 public class Player extends SuperEntity {
 
@@ -47,11 +41,6 @@ public class Player extends SuperEntity {
 	public static final int HELMET = 0, TOPWEAR = 1, BOTTOMWEAR = 2, SHOES = 3, WEAPON = 4;
 	private static final int HPREGEN = 1;
 	private static final int MPREGEN = 2;
-	private static Texture texture;
-	private static List<Animation> moveAnimations = new ArrayList<Animation>();
-	private static Animation moveAnimation;
-	private int textureOffset = 0;
-	private Point animationPosition = new Point();
 	
 	private int level = 1, exp = 0, gold = 0, mp;
 	private volatile int hp;
@@ -60,21 +49,13 @@ public class Player extends SuperEntity {
 	private ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
 	private Skill activeSkill;
-	private transient long nextAtk = 0, nextMove = 0;
-
-	static
-	{
-		texture = Util.getTexture("player/2600/texture.png");
-		moveAnimations.add(new Animation("player/2600/animations/front.xml", texture));
-		moveAnimations.add(new Animation("player/2600/animations/side.xml", texture));
-		moveAnimations.add(new Animation("player/2600/animations/back.xml", texture));
-	}
+	private transient long nextAtk = 0;
 	
 	public Player(Point pos) {
 		super(Integer.parseInt("2600", 16));
 		addSkill(0x0701);
 		addSkill(0x0701);
-		
+						
 		activeSkill = getSkill(0x0701);
 
 		stats.put(BASE + MAXHP.ID, 30);
@@ -94,32 +75,6 @@ public class Player extends SuperEntity {
 
 		Timer timer = new Timer(this, "regen", 3000);
 		timer.start();
-		
-		animationPosition.setLocation(pos);
-	}
-	
-	public void render()
-	{
-		Point renderPos = getPositionInGrid();
-		
-		if(!moveAnimation.rendering())
-		{
-			if (!isInvisible())
-				Renderer.render(new Builder(
-						texture,
-						new Point(renderPos.getX()*Slot.SIZE, renderPos.getY()*Slot.SIZE),
-						new Dimension(Slot.SIZE, Slot.SIZE))
-						.flipX(getFacingDir() == LEFT)
-						.imageSize(48, 48)
-						.offset(new Point(0, textureOffset*48)));
-		}else
-		{
-			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
-			Point position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))),
-									   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))));
-			moveAnimation.render(position, new Dimension(Slot.SIZE, Slot.SIZE), getFacingDir() == LEFT);
-		}
-	
 	}
 	
 	public void regen() {
@@ -157,54 +112,30 @@ public class Player extends SuperEntity {
 		boolean moveCamera = false;
 		int dir = 0;
 
-		switch (key) {
+		switch (key) 
+		{
 		case Keyboard.KEY_UP:
 			dir = UP;
-			moveCamera = getPositionInGrid().getY() - 1 < Map.VIEW_LIMIT
-					&& getMap().isPointInMap(
-							new Point(0, -1 + getMap().getOffSet().getY()));
 			break;
 		case Keyboard.KEY_RIGHT:
 			dir = RIGHT;
-			moveCamera = getPositionInGrid().getX() + 1 >= Main.GRIDSIZE
-					.getWidth() - Map.VIEW_LIMIT
-					&& getMap().isPointInMap(
-							new Point(Main.GRIDSIZE.getWidth()
-									+ getMap().getOffSet().getX(), 0));
 			break;
 		case Keyboard.KEY_DOWN:
 			dir = DOWN;
-			moveCamera = getPositionInGrid().getY() + 1 >= Main.GRIDSIZE
-					.getHeight() - Map.VIEW_LIMIT
-					&& getMap().isPointInMap(
-							new Point(0, Main.GRIDSIZE.getHeight()
-									+ getMap().getOffSet().getY()));
 			break;
 		case Keyboard.KEY_LEFT:
 			dir = LEFT;
-			moveCamera = getPositionInGrid().getX() - 1 < Map.VIEW_LIMIT
-					&& getMap().isPointInMap(
-							new Point(getMap().getOffSet().getX() - 1, 0));
 			break;
 		default:
 			return;
 		}
 
-		if (moveAnimation.rendering())
-			return;
-
-		Point oldPos = position();
-
 		face(dir);
-
+		
 		if (!canMove(dir))
 			return;
-
+		
 		moveTo(Util.addRelPoints(position(), new Point(0, 1), dir));
-		moveAnimation.play();
-
-		if (moveCamera)
-			getMap().moveView(getX() - oldPos.getX(), getY() - oldPos.getY());
 
 		List<Item> items = getMap().get(position()).getItems();
 
@@ -212,32 +143,6 @@ public class Player extends SuperEntity {
 			for (ListIterator<Item> li = items.listIterator(); li.hasNext();)
 				if (gainItem(li.next()))
 					li.remove();
-	}
-
-	public void face(int dir)
-	{
-		super.face(dir);
-		switch(dir)
-		{
-		case UP:
-			textureOffset = 2;
-			moveAnimation = moveAnimations.get(2);
-			break;
-		case RIGHT:
-		case LEFT:
-			textureOffset = 1;
-			moveAnimation = moveAnimations.get(1);
-			break;
-		case DOWN:
-			textureOffset = 0;
-			moveAnimation = moveAnimations.get(0);
-		}
-	}
-	
-	public void moveTo(Point pos)
-	{
-		animationPosition.setLocation(position());
-		super.moveTo(pos);
 	}
 	
 	private void action(Slot slot) {
@@ -272,6 +177,12 @@ public class Player extends SuperEntity {
 		useMP(2);
 	}
 
+	public void moveTo(Point pos)
+	{
+		super.moveTo(pos);
+		MapManager.getMap().centerView();
+	}
+	
 	public double getAverageDamage() {
 		return getStat(TOTAL + ATK.ID) * 2 + getStat(TOTAL + STR.ID);
 	}

@@ -28,7 +28,7 @@ public class SubImage
 		Renderer.render(new Builder(spriteSheet,
 									new Point(x, y),
 									new Dimension(Slot.SIZE, Slot.SIZE))
-									.offset(pos)
+									.textureOffset(pos)
 									.rotate(rotation)
 									.imageSize(size.getWidth(), size.getHeight()));
 	/*	

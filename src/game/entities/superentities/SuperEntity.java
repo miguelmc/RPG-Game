@@ -5,6 +5,7 @@ import game.features.Skill;
 import game.structure.Slot;
 import game.util.Renderer;
 import game.util.Renderer.Builder;
+import game.util.Animation;
 import game.util.Util;
 import game.util.Writer;
 import game.util.Writer.Fonts;
@@ -27,33 +28,49 @@ public abstract class SuperEntity extends Entity
 	private ArrayList<Skill> skills = new ArrayList<Skill>();
 	private ArrayList<Integer> damages = new ArrayList<Integer>(); // TODO change to queue
 	private ArrayList<Long> damageTime = new ArrayList<Long>();
-	private Texture textures[] = new Texture[4];
+	
+	private Texture texture;
+	private List<Animation> moveAnimations = new ArrayList<Animation>();
+	protected Animation moveAnimation;
+	private int textureOffset = 0;
+	protected Point animationPosition = new Point();
+	
 	public static final int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
 
 	public SuperEntity(int id)
 	{
 		super(id);
 		setStrong();
-
-		if(!(this instanceof Player))
-		{
-			textures[UP] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/back.png");
-			textures[RIGHT] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/side.png");
-			textures[DOWN] = Util.getTexture(getClass().getSimpleName().toLowerCase() + "/" + hexID() + "/front.png");
-			textures[LEFT] = textures[RIGHT];
-		}
-
+		
+		texture = Util.getTexture("player/2600/texture.png");
+		moveAnimations.add(new Animation("player/2600/animations/front.xml", texture));
+		moveAnimations.add(new Animation("player/2600/animations/side.xml", texture));
+		moveAnimations.add(new Animation("player/2600/animations/back.xml", texture));
+		
 		face(DOWN);
-	}
-
-	public Texture getTexture()
-	{
-		return textures[getFacingDir()];
 	}
 	
 	protected void face(int dir)
 	{
+		if(moveAnimation != null && moveAnimation.rendering())
+			return;
+		
 		facing = dir;
+		switch(dir)
+		{
+		case UP:
+			textureOffset = 2;
+			moveAnimation = moveAnimations.get(2);
+			break;
+		case RIGHT:
+		case LEFT:
+			textureOffset = 1;
+			moveAnimation = moveAnimations.get(1);
+			break;
+		case DOWN:
+			textureOffset = 0;
+			moveAnimation = moveAnimations.get(0);
+		}
 	}
 
 	public void move(int dir)
@@ -61,14 +78,15 @@ public abstract class SuperEntity extends Entity
 		face(dir);
 
 		if (canMove(dir))
-		{
 			moveTo(Util.addRelPoints(position(), new Point(0, 1), dir));
-			// TODO play move animation
-		}
 	}
 
 	protected boolean canMove(int dir)
 	{
+		
+		if (moveAnimation.rendering())
+			return false;
+
 		// check the slot were its gonna move so that it has no other strong
 		// entity
 		int xMove = 0;
@@ -106,12 +124,28 @@ public abstract class SuperEntity extends Entity
 
 	public void render()
 	{
-		if (!isInvisible())
-			Renderer.render(new Builder(
-					getTexture(),
-					new Point(Util.pointArithmetic(Slot.SIZE, getOffset(), getPositionInGrid())),
-					new Dimension(getRenderSize().getWidth()*Slot.SIZE, getRenderSize().getHeight()*Slot.SIZE))
-					.flipX(getFacingDir() == LEFT));
+		if (isInvisible())
+			return;
+		
+		Point renderPos = getPositionInGrid();
+		
+		if(!moveAnimation.rendering())
+		{
+				Renderer.render(new Builder(
+						texture,
+						new Point(renderPos.getX()*Slot.SIZE, renderPos.getY()*Slot.SIZE),
+						new Dimension(Slot.SIZE, Slot.SIZE))
+						.flipX(getFacingDir() == LEFT)
+						.imageSize(moveAnimation.getImageSize().getHeight(), moveAnimation.getImageSize().getWidth())
+						.textureOffset(new Point(0, textureOffset*moveAnimation.getImageSize().getHeight()))
+						.renderOffset(getOffset()));
+		}else
+		{
+			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
+			Point position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))),
+									   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))));
+			moveAnimation.render(new Point(position.getX() + getOffset().getX(), position.getY() + getOffset().getY()), new Dimension(Slot.SIZE, Slot.SIZE), getFacingDir() == LEFT);
+		}
 	}
 	
 	public void midRender()
@@ -122,14 +156,24 @@ public abstract class SuperEntity extends Entity
 
 	public void UIRender() // superentities can be attacked, so their damage is displayed above them at an UI level
 	{
+		Point position;
+		if(moveAnimation.rendering())
+		{
+			Point renderPos = getPositionInGrid();
+			Point prevRenderPos = new Point(animationPosition.getX() - getMap().getOffSet().getX(), animationPosition.getY() - getMap().getOffSet().getY());
+			position = new Point((int) (Slot.SIZE*(prevRenderPos.getX() + (renderPos.getX() - prevRenderPos.getX()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1))) + getOffset().getX()),
+					   (int) (Slot.SIZE*(prevRenderPos.getY() + (renderPos.getY() - prevRenderPos.getY()) * ((float)moveAnimation.currentFrame()/(moveAnimation.totalFrames()+1)))) + getOffset().getY());
+		}else
+			position = new Point(getPositionInGrid().getX() * Slot.SIZE, getPositionInGrid().getY() * Slot.SIZE);
+		
 		for (int i = 0; i < damages.size(); i++)
 		{
 			if (damageTime.get(i) > System.currentTimeMillis())
 			{
 				Writer.useFont(Fonts.Arial_White_Bold_10);
 				Writer.write(damages.get(i).toString(),
-							 new Point((int) ((getPositionInGrid().getX()+.5)*Slot.SIZE),
-									   getPositionInGrid().getY()*Slot.SIZE - 20 - Writer.fontHeight() * (damages.size() - 1) + i * Writer.fontHeight()),
+							 new Point((int) ((position.getX() + Slot.SIZE*.5)),
+									 position.getY() - 20 - Writer.fontHeight() * (damages.size() - 1) + i * Writer.fontHeight()),
 							 Writer.CENTER);
 			} else
 			{
@@ -138,6 +182,13 @@ public abstract class SuperEntity extends Entity
 				i--;
 			}
 		}
+	}
+	
+	public void moveTo(Point pos)
+	{
+		animationPosition.setLocation(position() != null ? position() : new Point(0 ,0));
+		super.moveTo(pos);
+		moveAnimation.play();
 	}
 
 	protected void attack(Skill skill)

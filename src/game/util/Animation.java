@@ -18,8 +18,8 @@ public class Animation{
 	private Builder builder;
 	private int timePerFrame;
 	private long lastRenderTime = 0;
-	private Point offset;
 	private int currentFrame;
+	private Dimension imageSize = new Dimension();
 	
 	public Animation(String xmlDoc, Texture texture)
 	{	
@@ -27,7 +27,6 @@ public class Animation{
 		
 		timePerFrame = Integer.parseInt(parser.getAttribute("Animation", "timePerFrame"));
 		
-		Dimension imageSize = new Dimension();
 		imageSize.setWidth(Integer.parseInt(parser.getAttribute("Animation", "imageWidth")));
 		imageSize.setHeight(Integer.parseInt(parser.getAttribute("Animation", "imageHeight")));
 		
@@ -51,7 +50,7 @@ public class Animation{
 	{
 		if(iterator != null && currentFrame < coordinates.size())
 		{
-			Renderer.render(builder.setPosition(position).setSize(size).offset(coordinates.get(currentFrame)).flipX(flipX));
+			Renderer.render(builder.setPosition(position).setSize(size).textureOffset(coordinates.get(currentFrame)).flipX(flipX));
 			
 			if(System.currentTimeMillis() > lastRenderTime + timePerFrame)
 			{
@@ -73,6 +72,11 @@ public class Animation{
 
 	public boolean rendering() {
 		return currentFrame < coordinates.size();
+	}
+	
+	public Dimension getImageSize()
+	{
+		return imageSize;
 	}
 	
 }

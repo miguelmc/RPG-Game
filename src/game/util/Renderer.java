@@ -40,7 +40,7 @@ public class Renderer {
 		glEnable(GL_TEXTURE_2D);
 		builder.texture.bind();
 		glLoadIdentity();
-		glTranslatef(builder.position.getX(), builder.position.getY(), 0);
+		glTranslatef(builder.position.getX() + builder.renderOffset.getX(), builder.position.getY() + builder.renderOffset.getY(), 0);
 		glBegin(GL_QUADS);
 		for (int i=0; i<4; i++)
 		{
@@ -103,6 +103,7 @@ public class Renderer {
 		private Point position;
 		private Dimension size;
 		private Point offset = new Point(0, 0);
+		private Point renderOffset = new Point(0, 0);
 		
 		public Builder(Texture texture, Point position, Dimension size)
 		{
@@ -134,9 +135,15 @@ public class Renderer {
 			return this;
 		}
 
-		public Builder offset(Point offset)
+		public Builder textureOffset(Point offset)
 		{
 			this.offset.setLocation(offset);
+			return this;
+		}
+		
+		public Builder renderOffset(Point offset)
+		{
+			this.renderOffset.setLocation(offset);
 			return this;
 		}
 		

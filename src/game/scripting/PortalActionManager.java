@@ -22,7 +22,6 @@ public class PortalActionManager extends AbstractScriptManager
 	public void setPosition(int x, int y)
 	{
 		getPlayer().moveTo(new Point(x, y));
-		MapManager.getMap().centerView();
 	}
 
 	public void setPosition(Point pos)

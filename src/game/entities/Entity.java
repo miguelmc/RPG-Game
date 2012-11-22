@@ -129,7 +129,7 @@ public abstract class Entity extends GameObject
 	
 	protected Point getOffset()
 	{
-		return new Point(offset);
+		return offset;
 	}
 
 	public void setOffset(int x, int y)

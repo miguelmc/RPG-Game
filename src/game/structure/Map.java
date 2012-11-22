@@ -117,14 +117,10 @@ public class Map extends GameObject
 	public void update()
 	{
 		for (Slot s : getAllSlots())
-		{
 			s.update();
-		}
 
 		for (Spawner spawner : spawners)
-		{
 			spawner.update();
-		}
 
 	}
 
@@ -204,7 +200,7 @@ public class Map extends GameObject
 			return;		
 
 		while (getPlayer().getX() >= Main.GRIDSIZE.getWidth() - Map.VIEW_LIMIT + offset.getX()
-				&& get(new Point(Main.GRIDSIZE.getWidth() + getOffSet().getX(), 0)).getTile() != null)
+				&& get(new Point(Main.GRIDSIZE.getWidth() + getOffSet().getX(), 0)) != null)
 			offset.setX(offset.getX() + 1);
 
 		while (getPlayer().getY() >= Main.GRIDSIZE.getHeight() - Map.VIEW_LIMIT + offset.getY() && 
