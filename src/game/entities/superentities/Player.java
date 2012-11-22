@@ -60,10 +60,10 @@ public class Player extends SuperEntity {
 		setOffset(0,-7);
 		activeSkill = getSkill(0x0701);
 
-		stats.put(BASE + MAXHP.ID, 30);
+		stats.put(BASE + MAXHP.ID, 50);
 		stats.put(BASE + MAXMP.ID, 30);
 		stats.put(BASE + ATK.ID, 1);
-		stats.put(BASE + STR.ID, 10);
+		stats.put(BASE + STR.ID, 7);
 		stats.put(BASE + DEF.ID, 5);
 
 		stats.put(EXTRA + MAXHP.ID, 0);
@@ -216,7 +216,7 @@ public class Player extends SuperEntity {
 			return;
 		}
 
-		if (getMP() < 2) //TODO check for the skill mp
+		if (getMP() < 1) //TODO check for the skill mp
 		{
 			UserInterface.sendNotification("You don't have enough MP to use this skill.");
 			return;
@@ -224,7 +224,7 @@ public class Player extends SuperEntity {
 		super.attack(skill);
 		once = false;
 		delayAttack(skill.getDelay());
-		useMP(2);
+		useMP(1);
 	}
 
 	public double getAverageDamage() {
