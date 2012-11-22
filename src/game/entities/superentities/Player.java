@@ -57,7 +57,7 @@ public class Player extends SuperEntity {
 		super(Integer.parseInt("2600", 16));
 		addSkill(0x0701);
 		addSkill(0x0701);
-
+		setOffset(0,-7);
 		activeSkill = getSkill(0x0701);
 
 		stats.put(BASE + MAXHP.ID, 30);
